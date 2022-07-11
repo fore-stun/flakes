@@ -7,4 +7,5 @@ in
 lib.forSystems systems (system: {
   packages.${system}.${pname} =
     nixpkgs.legacyPackages.${system}.callPackage ./package.nix { };
+  nixosModules.gomon = import ./gomon.nix { pkgs = self.packages.${system}; };
 })
