@@ -1,0 +1,60 @@
+diff --git 1/agent.yml 2/agent.yml
+index b4d8012..3a07796 100644
+--- 1/agent.yml
++++ 2/agent.yml
+@@ -5,7 +5,7 @@ pluginHealthCheckInterval: "10m"
+ plugins:
+   gomon:
+     disabled: false
+-    exec: "/snap/oracle-cloud-agent/current/plugins/gomon/gomon"
++    exec: "@plugin@/bin/.gomon"
+     elevated: false
+     args: []
+   unifiedmonitoring:
+@@ -23,7 +23,7 @@ plugins:
+     disableByShape:
+       - "VM.Standard.E2.1.Micro"
+     disabled: false
+-    exec: "/snap/oracle-cloud-agent/current/plugins/unifiedmonitoring/unifiedmonitoring"
++    exec: "@plugin@/bin/.unifiedmonitoring"
+     args: []
+   bastions:
+     disabled: false
+@@ -32,11 +32,11 @@ plugins:
+       - "oc3"
+       - "oc6"
+       - "oc7"
+-    exec: "/var/snap/oracle-cloud-agent/common/bastions"
++    exec: "@plugin@/bin/.bastions"
+     elevated: false
+     args: []
+   oci-vulnerabilityscan:
+-    exec: "/snap/oracle-cloud-agent/current/plugins/oci-vulnerabilityscan/oci-vulnerabilityscan"
++    exec: "@plugin@/bin/.oci-vulnerabilityscan"
+     elevated: false
+     args: []
+     disabled: false
+@@ -46,7 +46,7 @@ plugins:
+       - "oc6"
+       - "oc7"
+   oci-managementagent:
+-    exec: "/snap/oracle-cloud-agent/current/plugins/oci-managementagent/oci-managementagent"
++    exec: "@plugin@/bin/.oci-managementagent"
+     elevated: false
+     args: []
+     disabled: false
+@@ -59,12 +59,12 @@ plugins:
+       - "oc11"
+       - "oc12"
+   oci-jms:
+-    exec: "/snap/oracle-cloud-agent/current/plugins/oci-jms/oci-jms"
++    exec: "@plugin@/bin/.oci-jms"
+     elevated: true
+     args:
+       - "-Djms.agentType=OCA"
+       - "-jar"
+-      - "oracle-jms-agent.jar"
++      - "@plugin@/lib/oracle-jms-agent.jar"
+     runas: "root"
+     disabled: false
+     disableByRealm:
