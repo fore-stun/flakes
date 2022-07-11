@@ -1,4 +1,4 @@
-{ lib, nixpkgs, ... }:
+{ self, lib, nixpkgs, ... }:
 
 let
   pname = "oracle-cloud-agent";
@@ -7,5 +7,9 @@ in
 lib.forSystems systems (system: {
   packages.${system}.${pname} =
     nixpkgs.legacyPackages.${system}.callPackage ./package.nix { };
+  apps.${system}.gomon = {
+    type = "app";
+    program = self.packages.${system}.${pname}.plugin + "/bin/gomon";
+  };
   nixosModules.gomon = import ./gomon.nix { pkgs = self.packages.${system}; };
 })
