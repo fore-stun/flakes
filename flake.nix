@@ -14,5 +14,6 @@
         foldMap (file: import file (inputs // { inherit lib; }));
     in
     mergeFlakeOutputs [
+      ./servers/oracle-cloud-agent
     ] // { inherit lib; };
 }

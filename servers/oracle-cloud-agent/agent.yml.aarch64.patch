@@ -1,0 +1,27 @@
+diff --git 1/agent.yml 2/agent.yml
+index c5199ad..5ae16fa 100644
+--- 1/agent.yml
++++ 2/agent.yml
+@@ -5,7 +5,7 @@ pluginHealthCheckInterval: "10m"
+ plugins:
+   gomon:
+     disabled: false
+-    exec: "/snap/oracle-cloud-agent/current/plugins/gomon/gomon"
++    exec: "@plugin@/bin/gomon"
+     elevated: false
+     args: []
+   bastions:
+@@ -15,11 +15,11 @@ plugins:
+       - "oc3"
+       - "oc6"
+       - "oc7"
+-    exec: "/var/snap/oracle-cloud-agent/common/bastions"
++    exec: "@plugin@/bin/bastions"
+     elevated: false
+     args: []
+   oci-vulnerabilityscan:
+-    exec: "/snap/oracle-cloud-agent/current/plugins/oci-vulnerabilityscan/oci-vulnerabilityscan"
++    exec: "@plugin@/bin/oci-vulnerabilityscan"
+     elevated: false
+     args: []
+     disabled: false
