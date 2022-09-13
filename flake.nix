@@ -3,15 +3,10 @@
 
   outputs = { nixpkgs, ... }@inputs:
     let
-      lib = nixpkgs.lib // { inherit foldMap forSystems mergeFlakeOutputs; };
-
-      foldMap = f:
-        builtins.foldl' (acc: x: lib.recursiveUpdate acc (f x)) { };
-
-      forSystems = lib.flip foldMap;
+      lib = import ./flake-lib.nix { inherit nixpkgs; };
 
       mergeFlakeOutputs =
-        foldMap (file: import file (inputs // { inherit lib; }));
+        lib.foldMap (file: import file (inputs // { inherit lib; }));
     in
     mergeFlakeOutputs [
       ./servers/oracle-cloud-agent
