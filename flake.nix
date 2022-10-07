@@ -13,6 +13,8 @@
     mergeFlakeOutputs [
       ./utils/writers
 
+      ./scripts/pandoc
+
       ./servers/oracle-cloud-agent
     ] // { inherit lib; };
 }
