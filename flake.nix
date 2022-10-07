@@ -3,7 +3,9 @@
 
   outputs = { nixpkgs, ... }@inputs:
     let
-      lib = import ./flake-lib.nix { inherit nixpkgs; };
+      lib = import ./lib {
+        lib = import ./flake-lib.nix { inherit nixpkgs; };
+      };
 
       mergeFlakeOutputs =
         lib.foldMap (file: import file (inputs // { inherit lib; }));
