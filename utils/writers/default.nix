@@ -1,7 +1,7 @@
 { lib, nixpkgs, ... }:
 
 let
-  pnames = [ "writeZshBin" ];
+  pnames = [ "writePythonBin" "writeZshBin" ];
 in
 lib.foldFor pnames (pname: lib.foldFor lib.platforms.all (system: {
   packages.${system}.writers.${pname} =
