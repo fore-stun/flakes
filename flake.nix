@@ -14,6 +14,7 @@
       ./utils/writers
 
       ./scripts/pandoc
+      ./scripts/text
 
       ./servers/oracle-cloud-agent
     ] // { inherit lib; };
