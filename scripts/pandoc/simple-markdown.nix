@@ -26,7 +26,8 @@ let
           return pandoc.Code(c.text)
         end,
         CodeBlock = function(c)
-          return pandoc.CodeBlock(c.text)
+          local cls = #c.classes == 0 and pandoc.List({ "unk" }) or c.classes
+          return pandoc.CodeBlock(c.text, pandoc.Attr(c.identifier, cls))
         end,
       },
     }
