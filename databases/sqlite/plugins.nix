@@ -71,6 +71,28 @@ let
     names: lib.listToAttrs (builtins.map bundle names)
   ;
 
+  sqlean =
+    let
+      version = "0.17.1";
+
+      src = fetchFromGitHub {
+        owner = "nalgeon";
+        repo = "sqlean";
+        rev = "74116426cf9645d055238d136a837a7474ccab31";
+        hash = "sha256-lUsDu+air7dnC1yO6STcFJt77VR3Z0S9N0QoVWSgONI=";
+      };
+
+      mkSqlean = name: mkSqliteExt {
+        inherit name version src;
+        sourceFiles = [ "src/sqlite3-${name}.c" ];
+      };
+
+      bundle = name:
+        { inherit name; value = callPackage (mkSqlean name) { }; };
+    in
+    names: lib.listToAttrs (builtins.map bundle names)
+  ;
+
 in
 bundled
   [
@@ -100,4 +122,7 @@ bundled
     "uuid"
     "wholenumber"
     "zorder"
-  ]
+  ] //
+sqlean [
+  "define"
+]
