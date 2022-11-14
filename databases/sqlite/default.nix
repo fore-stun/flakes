@@ -1,14 +1,17 @@
 { self, lib, nixpkgs, ... }:
 
-lib.foldFor lib.platforms.all (system: {
-  packages.${system} = {
-    sqlite =
-      nixpkgs.legacyPackages.${system}.callPackage ./package.nix {
-        inherit (self.packages.${system}) sqlitePlugins;
-      };
-    sqlitePlugins =
-      nixpkgs.legacyPackages.${system}.callPackage ./plugins.nix { };
+{
+  overlays.sqlite = final: prev: {
+    sqlite = prev.callPackage ./package.nix {
+      inherit (final) sqlitePlugins;
+    };
+    sqlitePlugins = prev.callPackage ./plugins.nix { };
   };
+} //
+lib.foldFor lib.platforms.all (system: {
+  packages.${system} = self.overlays.sqlite
+    self.packages.${system}
+    nixpkgs.legacyPackages.${system};
 
   apps.${system}.sqlite = {
     type = "app";
