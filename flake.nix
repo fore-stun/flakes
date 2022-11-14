@@ -11,6 +11,8 @@
         lib.foldMap (file: import file (inputs // { inherit lib; }));
     in
     mergeFlakeOutputs [
+      ./databases/sqlite
+
       ./utils/writers
 
       ./scripts/pandoc
