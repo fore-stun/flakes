@@ -15,8 +15,11 @@
         {
           inherit lib;
 
-          overlays.default = builtins.attrValues
-            (lib.filterAttrs (n: _: n != "default") self.overlays);
+          overlays.default = lib.pipe self.overlays [
+            (lib.filterAttrs (n: _: n != "default"))
+            builtins.attrValues
+            lib.composeManyExtensions
+          ];
         };
 
     in
