@@ -1,4 +1,6 @@
 { lib
+, callPackage
+, fetchFromGitHub
 , fetchzip
 }:
 
@@ -48,4 +50,54 @@ let
       '';
     };
 
-in { }
+  bundled =
+    let
+      version = "3.39.3";
+
+      src = fetchzip {
+        name = "sqlite-${version}-source";
+        url = "https://www.sqlite.org/src/tarball/sqlite.tar.gz?r=version-${version}";
+        hash = "sha256-DkF8tP5Tbg40ZLsFqY7xYndhyFeF4H8N3WMb/HVaptk=";
+      };
+
+      mkBundle = name: mkSqliteExt {
+        inherit name version src;
+        sourceFiles = [ "ext/misc/${name}.c" ];
+      };
+
+      bundle = name:
+        { inherit name; value = callPackage (mkBundle name) { }; };
+    in
+    names: lib.listToAttrs (builtins.map bundle names)
+  ;
+
+in
+bundled
+  [
+    "amatch"
+    "btreeinfo"
+    "closure"
+    "completion"
+    "decimal"
+    "eval"
+    "explain"
+    "fileio"
+    "fuzzer"
+    "ieee754"
+    "nextchar"
+    "percentile"
+    "prefixes"
+    "regexp"
+    "rot13"
+    "series"
+    "sha1"
+    "shathree"
+    "spellfix"
+    "stmt"
+    "totype"
+    "uint"
+    "unionvtab"
+    "uuid"
+    "wholenumber"
+    "zorder"
+  ]
