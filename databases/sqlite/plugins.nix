@@ -122,6 +122,11 @@ bundled
     "uuid"
     "wholenumber"
     "zorder"
+    # "compress"
+    # "dbdump"
+    # "scrub"
+    # "sqlar"
+    # "zipfile"
   ] //
 sqlean [
   "define"
