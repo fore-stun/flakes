@@ -2,7 +2,7 @@
 
 {
   overlays.sqlite = final: prev: {
-    sqlite = prev.callPackage ./package.nix {
+    sqlite-extended = prev.callPackage ./package.nix {
       inherit (final) sqlitePlugins;
     };
     sqlitePlugins = prev.callPackage ./plugins.nix { };
