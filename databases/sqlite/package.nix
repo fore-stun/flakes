@@ -8,8 +8,7 @@
 let
   pathType = if stdenvNoCC.isDarwin then "DYLD" else "LD";
 
-  plugins =
-    lib.filter lib.isDerivation (builtins.attrValues sqlitePlugins);
+  plugins = lib.filterAttrs (_: a: lib.isDerivation a) sqlitePlugins;
 
 in
 symlinkJoin {
@@ -25,5 +24,5 @@ symlinkJoin {
     wrapProgram "$out/bin/sqlite3" \
       --prefix ${pathType}_LIBRARY_PATH : "$out/lib/sqlite/ext"
   '';
-  paths = [ sqlite ] ++ plugins;
+  paths = [ sqlite ] ++ builtins.attrValues plugins;
 }
