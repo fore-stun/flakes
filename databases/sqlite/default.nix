@@ -5,7 +5,8 @@
     sqlite-extended = prev.callPackage ./package.nix {
       inherit (final) sqlitePlugins;
     };
-    sqlitePlugins = prev.callPackage ./plugins.nix { };
+    sqlitePlugins = prev.sqlitePlugins or { }
+    // prev.callPackage ./plugins.nix { };
   };
 } //
 lib.foldFor lib.platforms.all (system: {
