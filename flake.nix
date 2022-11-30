@@ -29,6 +29,7 @@
       ./utils/writers
 
       ./scripts/pandoc
+      ./scripts/sync
       ./scripts/text
 
       ./servers/oracle-cloud-agent
