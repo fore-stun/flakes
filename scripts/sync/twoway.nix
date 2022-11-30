@@ -101,7 +101,7 @@ let
       cmds+=("$LOCAL_FILE" "$REMOTE_FILE")
     else
       # remote newer
-      OUTCOME_MESSAGE="restore from local file"
+      OUTCOME_MESSAGE="restore from remote file"
       cmds+=("$REMOTE_FILE" "$LOCAL_FILE")
     fi
 
