@@ -12,10 +12,10 @@ let
 in
 {
   overlays.python = final: prev: {
-    python3 = prev.python3.override {
-      packageOverrides = lib.composeManyExtensions [
+    python3 = prev.python3 // {
+      pkgs = prev.python3.pkgs.overrideScope (lib.composeManyExtensions [
         (_: _: newPackages final prev)
-      ];
+      ]);
     };
 
     python3Packages = final.python3.pkgs;
