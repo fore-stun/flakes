@@ -1,7 +1,7 @@
 { self, lib, nixpkgs, ... }:
 
 let
-  pnames = [ ];
+  pnames = [ "yamldown" ];
 
   newPackages = final: prev: lib.foldFor pnames (pname: {
     ${pname} = prev.callPackage (./. + "/${pname}.nix") {
