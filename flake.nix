@@ -24,6 +24,8 @@
 
     in
     buildFlakeFrom [
+      ./dependencies/python
+
       ./databases/sqlite
 
       ./utils/writers
