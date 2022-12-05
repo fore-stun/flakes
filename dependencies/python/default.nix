@@ -16,6 +16,12 @@ in
       pkgs = prev.python3.pkgs.overrideScope (lib.composeManyExtensions [
         (_: _: newPackages final prev)
       ]);
+
+      packageOverrides = lib.warn ''
+        `python3.packageOverrides` does not compose;
+        instead, manually replace the `pkgs` attr of `python3` with `python3.pkgs.overrideScope` applied to the overrides.
+      ''
+        prev.python3.packageOverrides;
     };
 
     python3Packages = final.python3.pkgs;
