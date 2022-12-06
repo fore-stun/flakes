@@ -1,7 +1,7 @@
 { self, lib, nixpkgs, ... }:
 
 let
-  pnames = [ "markdown-to-sqlite" ];
+  pnames = [ "markdown-to-sqlite" "sqlitebiter" ];
 in
 {
   overlays.sqlite = final: prev: {
