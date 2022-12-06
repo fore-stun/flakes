@@ -1,7 +1,22 @@
 { self, lib, nixpkgs, ... }:
 
 let
-  pnames = [ "yamldown" ];
+  pnames = [
+    "DataProperty"
+    "SimpleSQLite"
+    "appconfigpy"
+    "envinfopy"
+    "excelrd"
+    "mbstrdecoder"
+    "msgfy"
+    "pytablereader"
+    "retryrequests"
+    "sqliteschema"
+    "tabledata"
+    "tcolorpy"
+    "typepy"
+    "yamldown"
+  ];
 
   newPackages = final: prev: lib.foldFor pnames (pname: {
     ${pname} = prev.callPackage (./. + "/${pname}.nix") {
