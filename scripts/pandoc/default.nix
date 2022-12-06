@@ -1,7 +1,10 @@
 { self, lib, nixpkgs, ... }:
 
 let
-  pnames = [ "simple-markdown" ];
+  pnames = [
+    "csvs-from-markdown-tables"
+    "simple-markdown"
+  ];
 in
 {
   overlays.pandoc = final: prev: lib.foldFor pnames (pname: {
