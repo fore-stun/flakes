@@ -1,11 +1,13 @@
 { self, lib, nixpkgs, ... }:
 
 let
-  pnames = [ ];
+  pnames = [ "marksman" ];
 in
 {
   overlays.language-server = final: prev: lib.foldFor pnames (pname: {
-    ${pname} = prev.callPackage (./. + "/${pname}.nix") { };
+    ${pname} = prev.callPackage (./. + "/${pname}.nix") {
+      inherit self;
+    };
   });
 } //
 lib.foldFor lib.platforms.all (system: {
