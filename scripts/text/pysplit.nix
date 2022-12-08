@@ -9,15 +9,18 @@ writers.writePythonBin "pysplit"
       inherit (python3Packages) pysbd;
     };
 } ''
-  import pysbd
+  from itertools import groupby
   import sys
+
+  import pysbd
 
 
   def main():
-      text = sys.stdin.read()
+      text = sys.stdin.read().splitlines()
       seg = pysbd.Segmenter(language="en", clean=False)
-      for t in seg.segment(text):
-          print(t.rstrip())
+      for chunk in ("\n".join(l) for _, l in groupby(text, lambda x: x != "")):
+          for t in seg.segment(chunk) or [""]:
+              print(t.rstrip())
 
 
   if __name__ == "__main__":
