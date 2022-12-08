@@ -28,6 +28,8 @@
 
       ./databases/sqlite
 
+      ./editors/language-server
+
       ./utils/writers
 
       ./scripts/pandoc
