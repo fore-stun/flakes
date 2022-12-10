@@ -1,6 +1,11 @@
 {
   description = "Miscellaneous custom packages";
 
+  inputs = {
+    mtags.url = "github:dbaynard/mtags";
+    mtags.inputs.nixpkgs.follows = "nixpkgs";
+  };
+
   outputs = { self, nixpkgs, ... }@inputs:
     let
       lib = import ./lib {
@@ -10,6 +15,10 @@
       mergeFlakeOutputs =
         lib.foldMap (file: import file (inputs // { inherit lib; }));
 
+      flakeOverlays = [
+        inputs.mtags.overlays.default
+      ];
+
       buildFlakeFrom = files: lib.recursiveUpdate
         (mergeFlakeOutputs files)
         {
@@ -18,6 +27,7 @@
           overlays.default = lib.pipe self.overlays [
             (lib.filterAttrs (n: _: n != "default"))
             builtins.attrValues
+            (o: o ++ flakeOverlays)
             lib.composeManyExtensions
           ];
         };
