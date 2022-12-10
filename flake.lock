@@ -29,11 +29,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1670633999,
-        "narHash": "sha256-fCH1Wr5BkAD4PMiGWEzs1lMdN6wojDbI70fYDl2f15g=",
+        "lastModified": 1670636405,
+        "narHash": "sha256-I1oBD2TJH6cbBS5AYCvC2by/+p7TKBAG4wbdF5kQJYs=",
         "owner": "dbaynard",
         "repo": "mtags",
-        "rev": "7117473fbc7bc9563d4ccd19d872532c298b103c",
+        "rev": "b06c9e61f78d6b0cf678dcb23f4bfa6ed6b017ea",
         "type": "github"
       },
       "original": {
