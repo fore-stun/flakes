@@ -1,5 +1,47 @@
 {
   "nodes": {
+    "dbaynard": {
+      "inputs": {
+        "nixpkgs": [
+          "mtags",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1670524546,
+        "narHash": "sha256-ux4hUByieObd7FofACR1a8Fkj3gKyMAeO6T9Mk4AOB0=",
+        "owner": "dbaynard",
+        "repo": "flakes",
+        "rev": "8ed97379296daa9b46766fa9dcdd5c2450215f94",
+        "type": "github"
+      },
+      "original": {
+        "owner": "dbaynard",
+        "repo": "flakes",
+        "type": "github"
+      }
+    },
+    "mtags": {
+      "inputs": {
+        "dbaynard": "dbaynard",
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1670633999,
+        "narHash": "sha256-fCH1Wr5BkAD4PMiGWEzs1lMdN6wojDbI70fYDl2f15g=",
+        "owner": "dbaynard",
+        "repo": "mtags",
+        "rev": "7117473fbc7bc9563d4ccd19d872532c298b103c",
+        "type": "github"
+      },
+      "original": {
+        "owner": "dbaynard",
+        "repo": "mtags",
+        "type": "github"
+      }
+    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1669411043,
@@ -16,6 +58,7 @@
     },
     "root": {
       "inputs": {
+        "mtags": "mtags",
         "nixpkgs": "nixpkgs"
       }
     }
