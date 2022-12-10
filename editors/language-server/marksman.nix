@@ -1,6 +1,7 @@
 { lib
 , buildDotnetModule
 , fetchFromGitHub
+, glibcLocales
 }:
 
 let
@@ -20,6 +21,8 @@ let
 in
 buildDotnetModule {
   inherit pname version src;
+
+  LOCALE_ARCHIVE = "${glibcLocales}/lib/locale/locale-archive";
 
   postPatch = ''
     substituteInPlace ./Marksman/Marksman.fsproj \
