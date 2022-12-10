@@ -23,6 +23,7 @@ python3Packages.buildPythonPackage {
   checkInputs = builtins.attrValues {
     inherit (python3Packages)
       pytest
+      pytest-runner
       ;
   };
 
