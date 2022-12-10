@@ -1,6 +1,11 @@
 {
   description = "Miscellaneous custom packages";
 
+  inputs = {
+    mtags.url = "github:dbaynard/mtags";
+    mtags.inputs.nixpkgs.follows = "nixpkgs";
+  };
+
   outputs = { self, nixpkgs, ... }@inputs:
     let
       lib = import ./lib {
