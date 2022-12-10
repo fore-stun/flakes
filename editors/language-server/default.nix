@@ -5,9 +5,7 @@ let
 in
 {
   overlays.language-server = final: prev: lib.foldFor pnames (pname: {
-    ${pname} = prev.callPackage (./. + "/${pname}.nix") {
-      inherit self;
-    };
+    ${pname} = prev.callPackage (./. + "/${pname}.nix") { };
   });
 } //
 lib.foldFor lib.platforms.all (system: {

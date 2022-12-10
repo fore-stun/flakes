@@ -1,7 +1,6 @@
 { lib
 , buildDotnetModule
 , fetchFromGitHub
-, self
 }:
 
 let
@@ -27,7 +26,7 @@ buildDotnetModule {
       --replace 'git describe --always --dirty' 'echo ${rev}'
   '';
 
-  nugetDeps = self + "/editors/language-server/marksman-deps.nix";
+  nugetDeps = ./marksman-deps.nix;
 
   executables = [ "marksman" ];
 
