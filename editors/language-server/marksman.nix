@@ -1,7 +1,6 @@
 { lib
 , buildDotnetModule
 , fetchFromGitHub
-, glibcLocales
 }:
 
 let
@@ -22,14 +21,22 @@ in
 buildDotnetModule {
   inherit pname version src;
 
-  LOCALE_ARCHIVE = "${glibcLocales}/lib/locale/locale-archive";
+  patches = [
+    (builtins.path {
+      name = "${pname}.patch";
+      path = ./marksman.patch;
+    })
+  ];
 
   postPatch = ''
     substituteInPlace ./Marksman/Marksman.fsproj \
-      --replace 'git describe --always --dirty' 'echo ${rev}'
+      --subst-var-by "rev" ${lib.substring 0 7 rev}
   '';
 
-  nugetDeps = ./marksman-deps.nix;
+  nugetDeps = builtins.path {
+    name = "${pname}-deps.nix";
+    path = ./marksman-deps.nix;
+  };
 
   executables = [ "marksman" ];
 
