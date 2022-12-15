@@ -40,6 +40,7 @@
 
       ./editors/language-server
 
+      ./utils/email
       ./utils/writers
 
       ./scripts/pandoc
