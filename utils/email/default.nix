@@ -1,7 +1,7 @@
 { self, lib, nixpkgs, ... }:
 
 let
-  pnames = [ ];
+  pnames = [ "eml2html" ];
 in
 {
   overlays.email = final: prev: lib.foldFor pnames (pname: {
