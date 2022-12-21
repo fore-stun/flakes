@@ -79,12 +79,12 @@ let
 
     local LOCAL
     if (( LOCAL_FILE_EXISTS )); then
-      ${coreutils}/bin/stat -c"%Z" "$LOCAL_FILE" | read -r LOCAL
+      ${coreutils}/bin/stat -c"%Y" "$LOCAL_FILE" | read -r LOCAL
     fi
 
     local REMOTE
     if (( REMOTE_FILE_EXISTS )); then
-      ${coreutils}/bin/stat -c"%Z" "$REMOTE_FILE" | read -r REMOTE
+      ${coreutils}/bin/stat -c"%Y" "$REMOTE_FILE" | read -r REMOTE
     fi
 
     if ! (( LOCAL - REMOTE )); then
