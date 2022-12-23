@@ -53,8 +53,12 @@ let
         ${coreutils}/bin/sha256sum "$FILE" \
           | cut -d" " -f1
       else
-        read -rsq "CONFIRM_0?Create $LABEL file $FILE? (y/N) " || :
-        [[ "$CONFIRM_0" = "y" ]] || { print -- "\nExiting" >&2 ; return 4 }
+        if (( OPT_dry_run )); then
+          print -- "Would create $LABEL file $FILE" >&2
+        else
+          read -rsq "CONFIRM_0?Create $LABEL file $FILE? (y/N) " || :
+          [[ "$CONFIRM_0" = "y" ]] || { print -- "\nExiting" >&2 ; return 4 }
+        fi
       fi
     }
 
