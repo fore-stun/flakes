@@ -36,6 +36,8 @@
     buildFlakeFrom [
       ./dependencies/python
 
+      ./deploy/org-formation
+
       ./databases/sqlite
 
       ./editors/language-server
