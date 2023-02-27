@@ -1,7 +1,7 @@
 { self, lib, nixpkgs, ... }:
 
 let
-  pnames = [ ];
+  pnames = [ "names" ];
 in
 {
   overlays.generators = final: prev: lib.foldFor pnames (pname: {
