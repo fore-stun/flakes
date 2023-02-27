@@ -2,6 +2,9 @@
   description = "Miscellaneous custom packages";
 
   inputs = {
+    rust.url = "github:oxalica/rust-overlay";
+    rust.inputs.nixpkgs.follows = "nixpkgs";
+
     mtags.url = "github:dbaynard/mtags";
     mtags.inputs.nixpkgs.follows = "nixpkgs";
   };
