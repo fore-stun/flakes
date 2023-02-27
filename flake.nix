@@ -43,6 +43,7 @@
       ./editors/language-server
 
       ./utils/email
+      ./utils/generators
       ./utils/writers
 
       ./scripts/pandoc
