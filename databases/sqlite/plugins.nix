@@ -54,9 +54,10 @@ let
     let
       hashes = {
         "3.39.3" = "sha256-DkF8tP5Tbg40ZLsFqY7xYndhyFeF4H8N3WMb/HVaptk=";
+        "3.40.1" = "sha256-Oye/JeXKVflfWxUq3OU3JG+wR0DDZw6GdvyJS3OGjFI=";
       };
 
-      version = "3.39.3";
+      version = "3.40.1";
 
       src = fetchzip {
         name = "sqlite-${version}-source";
