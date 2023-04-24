@@ -52,12 +52,18 @@ let
 
   bundled =
     let
-      version = "3.39.3";
+      hashes = {
+        "3.39.3" = "sha256-DkF8tP5Tbg40ZLsFqY7xYndhyFeF4H8N3WMb/HVaptk=";
+        "3.40.1" = "sha256-Oye/JeXKVflfWxUq3OU3JG+wR0DDZw6GdvyJS3OGjFI=";
+        "3.41.2" = "sha256-OKvBvk0vtgvOgds6MpiKFeKjezk2gp6lBKP6BdANGOc=";
+      };
+
+      version = "3.41.2";
 
       src = fetchzip {
         name = "sqlite-${version}-source";
         url = "https://www.sqlite.org/src/tarball/sqlite.tar.gz?r=version-${version}";
-        hash = "sha256-DkF8tP5Tbg40ZLsFqY7xYndhyFeF4H8N3WMb/HVaptk=";
+        hash = hashes.${version};
       };
 
       mkBundle = name: mkSqliteExt {
