@@ -35,6 +35,11 @@ let
     buildDotnetModule {
       inherit pname version src;
 
+      nugetDeps = builtins.path {
+        name = "${pname}-deps.nix";
+        path = ./csharp-ls-deps.nix;
+      };
+
       dotnet-sdk = dotnetCorePackages.sdk_7_0;
       dotnet-runtime = dotnetCorePackages.aspnetcore_7_0;
       inherit projectFile;
