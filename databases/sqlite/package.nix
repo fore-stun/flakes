@@ -20,6 +20,8 @@ symlinkJoin {
     libPaths = lib.mapAttrs (_: d: d.libPath) plugins;
   };
 
+  meta.mainProgram = "sqlite3";
+
   postBuild = ''
     wrapProgram "$out/bin/sqlite3" \
       --prefix ${pathType}_LIBRARY_PATH : "$out/lib/sqlite/ext"
