@@ -20,9 +20,4 @@ lib.foldFor lib.platforms.all (system: {
   packages.${system} = self.overlays.sqlite
     self.packages.${system}
     nixpkgs.legacyPackages.${system};
-
-  apps.${system}.sqlite = {
-    type = "app";
-    program = self.packages.${system}.sqlite + "/bin/sqlite3";
-  };
 })

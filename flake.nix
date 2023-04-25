@@ -41,6 +41,7 @@
 
       ./deploy/org-formation
 
+      ./databases/postgres
       ./databases/sqlite
 
       ./editors/language-server
