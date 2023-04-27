@@ -1,7 +1,7 @@
 { self, lib, nixpkgs, ... }:
 
 let
-  pnames = [ "pgperms" ];
+  pnames = [ "pgperms" "storage-api" ];
 in
 {
   overlays.postgres = final: prev: lib.foldFor pnames (pname: {
