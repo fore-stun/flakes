@@ -21,6 +21,13 @@ buildNpmPackage {
 
   nativeBuildInputs = [ python3 ];
 
+  patches = [
+    (builtins.path {
+      name = "${pname}.patch";
+      path = ./storage-api.patch;
+    })
+  ];
+
   meta = {
     description = "S3 compatible object storage service that stores metadata in Postgres";
     homepage = "https://supabase.com/docs/guides/storage";
