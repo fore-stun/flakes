@@ -54,6 +54,7 @@
       ./scripts/sync
       ./scripts/text
 
+      ./servers/caddy
       ./servers/oracle-cloud-agent
     ];
 }
