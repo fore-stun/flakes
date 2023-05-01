@@ -1,7 +1,7 @@
 { self, lib, nixpkgs, ... }:
 
 let
-  pnames = [ "caddy" ];
+  pnames = [ "caddy-extended" ];
 in
 {
   overlays.caddy = final: prev: lib.foldFor pnames (pname: {
