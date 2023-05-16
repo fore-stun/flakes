@@ -39,6 +39,7 @@
     buildFlakeFrom [
       ./dependencies/python
 
+      ./deploy/aztfexport
       ./deploy/org-formation
 
       ./databases/postgres
