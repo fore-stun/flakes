@@ -7,16 +7,16 @@
 
 let
   pname = "csharp-ls";
-  version = "0.7.1";
+  version = "0.8.0";
   name = "${pname}-${version}";
-  rev = "aebb2c77e4f33a71c803a78b9549a31541894e17";
+  rev = "df4a17901ce0c69076708a09a9d016f362dc7164";
 
   src = fetchFromGitHub {
     name = "${name}-src";
     owner = "razzmatazz";
     repo = "csharp-language-server";
     inherit rev;
-    hash = "sha256-6ZCbhY4TgfgKn5ofJLh29nuazWlxa4rLK6jzDlm2IwM=";
+    hash = "sha256-JIUYlvZ+9XnisRIgPm0lWsUvgnudUY19rL81iX0Utd4=";
   };
 
   # Need to add the following to the fetch-deps script.
