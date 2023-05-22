@@ -23,6 +23,7 @@
 
       flakeOverlays = [
         inputs.mtags.overlays.default
+        inputs.deno2nix.overlay
       ];
 
       buildFlakeFrom = files: lib.recursiveUpdate
