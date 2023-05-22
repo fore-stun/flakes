@@ -2,6 +2,9 @@
   description = "Miscellaneous custom packages";
 
   inputs = {
+    deno2nix.url = "github:SnO2WMaN/deno2nix";
+    deno2nix.inputs.nixpkgs.follows = "nixpkgs";
+
     rust.url = "github:oxalica/rust-overlay";
     rust.inputs.nixpkgs.follows = "nixpkgs";
 
