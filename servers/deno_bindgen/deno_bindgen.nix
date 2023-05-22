@@ -1,6 +1,6 @@
 { lib
 , fetchFromGitHub
-, rustPlatform
+, deno2nix
 }:
 
 let
@@ -15,11 +15,10 @@ let
     hash = "sha256-YTs/nkyUpifF40qBvN1xfyHacoPr8RtnngGQpg1O5kg=";
   };
 in
-rustPlatform.buildRustPackage {
+deno2nix.mkExecutable {
   inherit pname version src;
 
-  cargoHash = "sha256-gUkqil6lyeR4Jy6PMuBJWeRK5ElKKBPZ3mcLkVk7j1c=";
-  doCheck = false;
+  entrypoint = "cli.ts";
 
   meta = {
     description = "Simplified glue code generation for Deno FFI libraries written in Rust.";
