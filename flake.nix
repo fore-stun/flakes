@@ -56,6 +56,7 @@
       ./scripts/text
 
       ./servers/caddy
+      ./servers/deno_bindgen
       ./servers/oracle-cloud-agent
     ];
 }
