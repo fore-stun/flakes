@@ -5,7 +5,7 @@
 
 (caddy.override ({
   buildGoModule = args: buildGoModule (args // {
-    vendorHash = "sha256-J6wIbJ+7R33gwjCuERjZm387jGcTrIy6709aChjZezY=";
+    vendorHash = "sha256-M1VpxNQ1G4BOD/lmciiL1qylUKjrnucpi6LBfIi1+MY=";
     patches = [
       (builtins.path {
         name = "caddy.patch";
