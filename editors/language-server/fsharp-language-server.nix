@@ -6,39 +6,34 @@
 }:
 
 let
-  pname = "fsautocomplete";
-  version = "0.59.6";
+  pname = "fsharp-language-server";
+  version = "unstable-2022-10-21";
   name = "${pname}-${version}";
 
   src = fetchFromGitHub {
     name = "${name}-src";
-    owner = "fsharp";
-    repo = "FsAutoComplete";
-    rev = "549607397090b8e256bb99c56871795233d02f27";
-    hash = "sha256-ttmWNQIyE1SC1Mrdy/LsPlQPRWRApMGVHKEmQXILFGA=";
+    owner = "fsprojects";
+    repo = pname;
+    rev = "989490a77a07f34c7b14ce1f5258852d6beb59f0";
+    hash = "sha256-ph+N0gmJTCxfsKgA3FyIP7KSYZ4u8sKpHoYWKyXqSY8=";
   };
 
   # Need to add the following to the fetch-deps script.
   # projectFiles+=( "src/csharp-language-server.sln" )
-  projectFile = "FsAutoComplete/FsAutoComplete.fsproj";
-
-  overrides = old: {
-    passthru.fetch-deps = old.passthru.fetch-deps.overrideAttrs (fd: {
-      text = lib.replaceStrings
-        [ "projectFiles=(" ] [ "projectFiles=( ${projectFile}" ]
-        fd.text;
-    });
-  };
-
+  projectFile = "fsharp-language-server.sln";
 
   module =
     buildDotnetModule {
-      inherit pname version;
+      inherit pname version src;
 
-      src = src + "/src";
+      nugetDeps = builtins.path {
+        name = "${pname}-deps.nix";
+        path = ./fsharp-language-server-deps.nix;
+      };
 
       dotnet-sdk = dotnetCorePackages.sdk_8_0;
       dotnet-runtime = dotnetCorePackages.aspnetcore_8_0;
+      inherit projectFile;
 
       # executables = [ "CSharpLanguageServer" ];
 
@@ -50,9 +45,9 @@ let
 
       meta = {
         description = "F# language server using Language Server Protocol";
-        license = lib.licenses.asl20;
+        license = lib.licenses.mit;
       };
     };
 
 in
-module.overrideAttrs overrides
+module
