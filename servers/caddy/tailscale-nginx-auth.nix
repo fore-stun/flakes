@@ -1,6 +1,7 @@
 { lib
 , buildGoModule
 , fetchFromGitHub
+, stdenvNoCC
 }:
 
 let
@@ -30,6 +31,17 @@ buildGoModule {
 
   CGO_ENABLED = 0;
   doCheck = false;
+
+  postInstall = lib.optionalString stdenvNoCC.isLinux ''
+    mkdir -p "$out/lib/systemd/system"
+
+    install -D -m0444 -t "$out/lib/systemd/system" \
+      "$src/cmd/nginx-auth/tailscale.nginx-auth.service"
+    install -D -m0444 -t "$out/lib/systemd/system" \
+      "$src/cmd/nginx-auth/tailscale.nginx-auth.socket"
+
+    sed -i -e "s#/usr/sbin#$out/bin#" "$out/lib/systemd/system/tailscale.nginx-auth.service"
+  '';
 
   meta = {
     description = "Use Tailscale Whois authentication with NGINX/Caddy as a reverse proxy";
