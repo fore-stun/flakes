@@ -1,7 +1,7 @@
 { self, lib, nixpkgs, ... }:
 
 let
-  pnames = [ "caddy-extended" ];
+  pnames = [ "caddy-extended" "tailscale-nginx-auth" ];
 in
 {
   overlays.caddy = final: prev: lib.foldFor pnames (pname: {
