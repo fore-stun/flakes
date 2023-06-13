@@ -48,6 +48,7 @@
       ./editors/language-server
       ./editors/formatter
 
+      ./utils/dotnet
       ./utils/email
       ./utils/generators
       ./utils/writers
