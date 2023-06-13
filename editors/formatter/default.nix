@@ -1,7 +1,7 @@
 { self, lib, nixpkgs, ... }:
 
 let
-  pnames = [ ];
+  pnames = [ "rustywind" ];
 in
 {
   overlays.formetter = final: prev: lib.foldFor pnames (pname: {
