@@ -46,6 +46,7 @@
       ./databases/sqlite
 
       ./editors/language-server
+      ./editors/formatter
 
       ./utils/email
       ./utils/generators
