@@ -5,19 +5,19 @@
 
 let
   pname = "pgperms";
-  version = "0.1.0";
+  version = "0.1.1";
   src = fetchFromGitHub {
     name = "${pname}-${version}-src";
     owner = "SnoozeThis-org";
     repo = pname;
-    rev = "9e23a87bece464ed54e5206a24fbba0270cf5c2f";
-    hash = "sha256-obUXIL59BiKNP45h2nU9wwWTsFgIDlPDLFlmHlzqeFE=";
+    rev = "a50358c5ba504ad2d6744fb63c6db04959814c96";
+    hash = "sha256-S1+cBmHSwHIOv+FLSfpGflXyAKTDnsgmth7YhugFpCI=";
   };
 in
 buildGoModule {
   inherit pname version src;
 
-  vendorHash = "sha256-X1IB1vRK1yJfzEkl40ZH7kw2r61WfMYNaEhyDpifPSQ=";
+  vendorHash = "sha256-LV1Lndbh1UGaukgBVAiHdcqZVyE19LpC+asErVORbfU=";
 
   doCheck = false;
 
