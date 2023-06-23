@@ -2,15 +2,18 @@
 
 let
   pnames = [ "pgperms" "storage-api" ];
+
+  pgs = [ "" "_15" "_14" ];
 in
 {
-  overlays.postgres = final: prev: {
-    postgresql = prev.postgresql.overrideAttrs (old: {
-      passthru = lib.recursiveUpdate old.passthru or { } {
-        pkgs = prev.callPackage ./plugins.nix { };
-      };
-    });
-  } // lib.foldFor pnames
+  overlays.postgres = final: prev: lib.foldFor pgs
+    (pg: {
+      "postgresql${pg}" = prev."postgresql${pg}".overrideAttrs (old: {
+        passthru = lib.recursiveUpdate old.passthru or { } {
+          pkgs = prev.callPackage ./plugins.nix { postgresql = prev."postgresql${pg}"; };
+        };
+      });
+    }) // lib.foldFor pnames
     (pname: {
       ${pname} = prev.callPackage (./. + "/${pname}.nix") { };
     });
