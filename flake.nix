@@ -52,6 +52,7 @@
       ./utils/generators
       ./utils/writers
 
+      ./scripts/nix
       ./scripts/pandoc
       ./scripts/sync
       ./scripts/text
