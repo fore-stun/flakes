@@ -1,7 +1,9 @@
 { self, lib, nixpkgs, ... }:
 
 let
-  pnames = [ ];
+  pnames = [
+    "nix-load-systemd-unit"
+  ];
 in
 {
   overlays.nix-script = final: prev: lib.foldFor pnames (pname: {
