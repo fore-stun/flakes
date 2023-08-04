@@ -42,5 +42,6 @@ python3Packages.buildPythonPackage {
   meta = {
     description = "A CLI tool to convert CSV / Excel / HTML / JSON / Jupyter Notebook / LDJSON / LTSV / Markdown / SQLite / SSV / TSV / Google-Sheets to a SQLite database file";
     license = lib.licenses.mit;
+    mainProgram = pname;
   };
 }

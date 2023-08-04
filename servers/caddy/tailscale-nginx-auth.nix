@@ -50,5 +50,6 @@ buildGoModule {
   meta = {
     description = "Use Tailscale Whois authentication with NGINX/Caddy as a reverse proxy";
     license = lib.licenses.bsd3;
+    mainProgram = pname;
   };
 }

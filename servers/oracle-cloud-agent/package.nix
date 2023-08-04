@@ -48,6 +48,7 @@ let
     homepage = "https://docs.oracle.com/en-us/iaas/Content/Compute/Tasks/manage-plugins.htm";
     platforms = [ "x86_64-linux" "aarch64-linux" ];
     license = lib.licenses.upl;
+    mainProgram = "oci";
   };
 
   PLUGINS = [

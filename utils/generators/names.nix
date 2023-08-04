@@ -25,5 +25,6 @@ rustPlatform.buildRustPackage {
     description = "Random name generator for Rust";
     homepage = "https://github.com/${owner}/${repo}";
     license = lib.licenses.mit;
+    mainProgram = pname;
   };
 }

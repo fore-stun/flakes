@@ -32,6 +32,7 @@ stdenvNoCC.mkDerivation {
     description = "Language Server Protocol implementation for Tailwind CSS, used by Tailwind CSS IntelliSense for VS Code.";
     homepage = "https://github.com/tailwindlabs/tailwindcss-intellisense/tree/master/packages/tailwindcss-language-server";
     license = lib.licenses.mit;
+    mainProgram = pname;
   };
 }
 

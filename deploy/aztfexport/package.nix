@@ -23,5 +23,6 @@ buildGoModule {
   meta = {
     description = "A tool to bring existing Azure resources under Terraform's management";
     license = lib.licenses.mpl20;
+    mainProgram = pname;
   };
 }

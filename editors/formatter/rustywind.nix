@@ -25,5 +25,6 @@ rustPlatform.buildRustPackage {
     description = "CLI for organizing Tailwind CSS classes";
     homepage = "https://github.com/${owner}/${repo}";
     license = lib.licenses.mit;
+    mainProgram = pname;
   };
 }

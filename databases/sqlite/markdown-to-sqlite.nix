@@ -40,5 +40,6 @@ python3Packages.buildPythonPackage {
   meta = {
     description = "CLI tool for loading markdown files into a SQLite database";
     license = lib.licenses.asl20;
+    mainProgram = pname;
   };
 }
