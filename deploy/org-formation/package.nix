@@ -26,5 +26,6 @@ buildNpmPackage {
     homepage = "https://github.com/org-formation/org-formation-cli";
     description = "An Infrastructure as Code (IaC) tool for AWS Organizations";
     license = lib.licenses.mit;
+    mainProgram = pname;
   };
 }

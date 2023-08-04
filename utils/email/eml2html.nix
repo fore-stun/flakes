@@ -22,5 +22,6 @@ buildGoModule {
   meta = {
     description = "Go library and command line tool to convert eml files to html";
     license = lib.licenses.mit;
+    mainProgram = pname;
   };
 }

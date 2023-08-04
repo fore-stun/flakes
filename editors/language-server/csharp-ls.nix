@@ -55,6 +55,7 @@ let
       meta = {
         description = "Roslyn-based LSP language server for C♯";
         license = lib.licenses.mit;
+        mainProgram = pname;
       };
     };
 

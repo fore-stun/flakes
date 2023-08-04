@@ -24,5 +24,6 @@ buildGoModule {
   meta = {
     description = "Declarative PostgreSQL permissions as code";
     license = lib.licenses.mit;
+    mainProgram = pname;
   };
 }
