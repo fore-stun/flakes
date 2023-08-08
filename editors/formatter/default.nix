@@ -1,7 +1,7 @@
 { self, lib, nixpkgs, ... }:
 
 let
-  pnames = [ "rustywind" ];
+  pnames = [ "prettier-plugin-svelte" "rustywind" ];
 in
 {
   overlays.formetter = final: prev: lib.foldFor pnames (pname: {
