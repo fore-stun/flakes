@@ -1,11 +1,14 @@
 { self, lib, nixpkgs, ... }:
 
 let
-  pnames = [ ];
+  pnames = [ "exif-copy" ];
 in
 {
   overlays.exif = final: prev: lib.foldFor pnames (pname: {
-    ${pname} = prev.callPackage (./. + "/${pname}.nix") { };
+    ${pname} = prev.callPackage (./. + "/${pname}.nix") {
+      inherit (final) writers;
+      inherit lib;
+    };
   });
 } //
 lib.foldFor lib.platforms.all (system: {
