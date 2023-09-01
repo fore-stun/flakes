@@ -49,6 +49,7 @@
       ./editors/formatter
 
       ./utils/email
+      ./utils/exif
       ./utils/generators
       ./utils/writers
 
