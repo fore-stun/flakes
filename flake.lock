@@ -74,10 +74,28 @@
         "type": "indirect"
       }
     },
+    "postgrest": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1691675518,
+        "narHash": "sha256-fEmGPj9Y6K9Ni97oIABbje7zzkuraCbUkHLnxAE/Njw=",
+        "owner": "PostgREST",
+        "repo": "postgrest",
+        "rev": "c820efb64a2839c5cb7a6a82b9145c3d7065474c",
+        "type": "github"
+      },
+      "original": {
+        "owner": "PostgREST",
+        "ref": "v11.2.0",
+        "repo": "postgrest",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "mtags": "mtags",
         "nixpkgs": "nixpkgs",
+        "postgrest": "postgrest",
         "rust": "rust"
       }
     },
