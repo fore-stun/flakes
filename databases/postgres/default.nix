@@ -1,9 +1,13 @@
-{ self, lib, nixpkgs, ... }:
+{ self, lib, nixpkgs, postgrest, ... }:
 
 let
-  pnames = [ "pgperms" "storage-api" ];
+  pnames = [ "pgperms" "postgrest" "storage-api" ];
 
   pgs = [ "" "_15" "_14" ];
+
+  extras = {
+    postgrest = { inherit postgrest; };
+  };
 in
 {
   overlays.postgres = final: prev: lib.foldFor pgs
@@ -15,7 +19,9 @@ in
       });
     }) // lib.foldFor pnames
     (pname: {
-      ${pname} = prev.callPackage (./. + "/${pname}.nix") { };
+      ${pname} = prev.callPackage
+        (./. + "/${pname}.nix")
+        (extras."${pname}" or { });
     });
 } //
 lib.foldFor lib.platforms.all (system: {

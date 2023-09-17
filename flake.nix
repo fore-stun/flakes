@@ -7,6 +7,9 @@
 
     mtags.url = "github:dbaynard/mtags";
     mtags.inputs.nixpkgs.follows = "nixpkgs";
+
+    postgrest.url = "github:PostgREST/postgrest/v11.2.0";
+    postgrest.flake = false;
   };
 
   outputs = { self, nixpkgs, ... }@inputs:
