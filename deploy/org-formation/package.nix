@@ -1,6 +1,7 @@
 { lib
 , buildNpmPackage
 , fetchFromGitHub
+, nodejs_latest
 }:
 
 let
@@ -9,18 +10,18 @@ let
 
   src = fetchFromGitHub {
     name = "${pname}-${version}-src";
-    owner = pname;
+    owner = "fore-stun";
     repo = "${pname}-cli";
-    rev = "d85980f5e1eaa586bf044a5be0f557295f210689";
-    hash = "sha256-RLH+5vEOVX444J3Ct0x1HqlSpbAyyBj1bYdgPJ9N8Ec=";
+    rev = "83f4d373ed90ccd6763c98d9ec20ce8da630333b";
+    hash = "sha256-a10nsOkguDh/1hsfSUc1zznQ0GuRqYN5B0sV5e4xqx4=";
   };
 
 in
 
-buildNpmPackage {
+buildNpmPackage.override { nodejs = nodejs_latest; } {
   inherit pname version src;
 
-  npmDepsHash = "sha256-edOc1cp4RdoplHG6UCV8XQ1ohi3zRxMkp9iMJfTHNak=";
+  npmDepsHash = "sha256-+vsY9zxIYAKkh2QnssuotM/BnzC6Vn0isYn48FOlkOw=";
 
   meta = {
     homepage = "https://github.com/org-formation/org-formation-cli";
