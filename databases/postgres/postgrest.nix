@@ -1,10 +1,5 @@
-{ lib
-, postgrest
+{ postgrest
 , system
 }:
 
-let
-  p = import postgrest.outPath { inherit system; };
-
-in
-p.postgrestStatic
+postgrest.packages."${system}".default

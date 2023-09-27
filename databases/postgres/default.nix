@@ -3,7 +3,7 @@
 let
   pnames = [ "pgperms" "postgrest" "storage-api" ];
 
-  pgs = [ "" "_15" "_14" ];
+  pgs = [ "" "_16" "_15" "_14" ];
 
   extras = {
     postgrest = { inherit postgrest; };
