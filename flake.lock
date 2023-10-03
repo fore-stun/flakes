@@ -93,11 +93,11 @@
         "nixpkgs": "nixpkgs_2"
       },
       "locked": {
-        "lastModified": 1695853738,
-        "narHash": "sha256-0RMiwqz/X077t/r/pFfohosG74JLFKnvrjSaOJX8usA=",
+        "lastModified": 1696302239,
+        "narHash": "sha256-gm0SiQmyV4B82m9Vx+Y1e/CLAdlYQYyFqZ84eli37oE=",
         "owner": "fore-stun",
         "repo": "postgrest",
-        "rev": "19dba7ce0fd3ffd4c9a5b5e71694e840ff5278b9",
+        "rev": "23ff5468528c046d3c9e307bd1e5ecadad6712f8",
         "type": "github"
       },
       "original": {
