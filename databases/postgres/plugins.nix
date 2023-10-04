@@ -1,10 +1,13 @@
 { lib
 , callPackage
+, hostPlatform
 , fetchFromGitHub
 , postgresql
 }:
 
 let
+  usePlatformExtension = (hostPlatform.isDarwin && postgresql.psqlSchema >= "16");
+
   pg_uuidv7 = { lib, stdenv, postgresql }:
     let
       pname = "pg_uuidv7";
@@ -37,7 +40,14 @@ let
       };
     };
 
+  setDLSUFFIX = old: {
+    buildFlags = old.buildFlags or [ ] ++ [ ''DLSUFFIX=".so"'' ];
+  };
+
 in
+lib.optionalAttrs usePlatformExtension
+  (lib.mapAttrs (n: a: a.overrideAttrs setDLSUFFIX) postgresql.passthru.pkgs)
+  //
 lib.mapAttrs (n: f: callPackage f { inherit postgresql; }) {
   inherit
     pg_uuidv7
