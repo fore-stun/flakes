@@ -26,6 +26,8 @@ let
 
       buildInputs = [ postgresql ];
 
+      buildFlags = lib.optionals usePlatformExtension [ ''DLSUFFIX=".so"'' ];
+
       installPhase = ''
         install -D -t "$out/lib" *.so
         install -D -t "$out/share/postgresql/extension" *.sql
