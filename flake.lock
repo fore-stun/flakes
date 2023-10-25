@@ -76,16 +76,18 @@
     },
     "nixpkgs_2": {
       "locked": {
-        "lastModified": 1691006197,
-        "narHash": "sha256-DbtxVWPt+ZP5W0Usg7jAyTomIM//c3Jtfa59Ht7AV8s=",
+        "lastModified": 1679734080,
+        "narHash": "sha256-z846xfGLlon6t9lqUzlNtBOmsgQLQIZvR6Lt2dImk1M=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "66aedfd010204949cb225cf749be08cb13ce1813",
+        "rev": "dbf5322e93bcc6cfc52268367a8ad21c09d76fea",
         "type": "github"
       },
       "original": {
-        "id": "nixpkgs",
-        "type": "indirect"
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "dbf5322e93bcc6cfc52268367a8ad21c09d76fea",
+        "type": "github"
       }
     },
     "postgrest": {
@@ -93,11 +95,11 @@
         "nixpkgs": "nixpkgs_2"
       },
       "locked": {
-        "lastModified": 1696302239,
-        "narHash": "sha256-gm0SiQmyV4B82m9Vx+Y1e/CLAdlYQYyFqZ84eli37oE=",
+        "lastModified": 1698247767,
+        "narHash": "sha256-iprU4gepqVX+BxCRtIfzu0DvbzZKQDOeKvR4eqOmAYM=",
         "owner": "fore-stun",
         "repo": "postgrest",
-        "rev": "23ff5468528c046d3c9e307bd1e5ecadad6712f8",
+        "rev": "14050fd87a361b6871e0fdc21a84a31efe4baee0",
         "type": "github"
       },
       "original": {
