@@ -1,7 +1,7 @@
 { self, lib, nixpkgs, ... }:
 
 let
-  pnames = [ ];
+  pnames = [ "postman-agent" ];
 in
 {
   overlays.postman = final: prev: lib.foldFor pnames (pname: {
