@@ -61,6 +61,7 @@
       ./utils/email
       ./utils/exif
       ./utils/generators
+      ./utils/postman
       ./utils/writers
 
       ./scripts/nix
