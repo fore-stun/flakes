@@ -1,7 +1,7 @@
-{ self, lib, nixpkgs, ... }:
+{ self, lib, nixpkgs, spanx, ... }:
 
 let
-  pnames = [ "caddy-extended" "tailscale-nginx-auth" ];
+  pnames = [ "tailscale-nginx-auth" ];
 in
 {
   overlays.caddy = final: prev: lib.foldFor pnames (pname: {
@@ -11,5 +11,7 @@ in
 lib.foldFor lib.platforms.all (system: {
   packages.${system} = self.overlays.caddy
     self.packages.${system}
-    nixpkgs.legacyPackages.${system};
+    nixpkgs.legacyPackages.${system} // {
+    caddy-extended = spanx.packages.${system}.default;
+  };
 })

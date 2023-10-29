@@ -2,13 +2,20 @@
   description = "Miscellaneous custom packages";
 
   inputs = {
+    flake-utils.url = "github:numtide/flake-utils";
+
     rust.url = "github:oxalica/rust-overlay";
     rust.inputs.nixpkgs.follows = "nixpkgs";
+    rust.inputs.flake-utils.follows = "flake-utils";
 
     mtags.url = "github:dbaynard/mtags";
     mtags.inputs.nixpkgs.follows = "nixpkgs";
 
     postgrest.url = "github:fore-stun/postgrest/flake";
+
+    spanx.url = "github:fore-stun/spanx";
+    spanx.inputs.nixpkgs.follows = "nixpkgs";
+    spanx.inputs.flake-utils.follows = "flake-utils";
   };
 
   outputs = { self, nixpkgs, ... }@inputs:
@@ -22,6 +29,7 @@
 
       flakeOverlays = [
         inputs.mtags.overlays.default
+        inputs.spanx.overlays.default
       ];
 
       buildFlakeFrom = files: lib.recursiveUpdate
