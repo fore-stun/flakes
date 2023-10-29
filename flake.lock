@@ -26,16 +26,42 @@
         "systems": "systems"
       },
       "locked": {
-        "lastModified": 1681202837,
-        "narHash": "sha256-H+Rh19JDwRtpVPAWp64F+rlEtxUWBAQW28eAi3SRSzg=",
+        "lastModified": 1694529238,
+        "narHash": "sha256-zsNZZGTGnMOf9YpHKJqMSsa0dXbfmxeoJ7xHlrt+xmY=",
         "owner": "numtide",
         "repo": "flake-utils",
-        "rev": "cfacdce06f30d2b68473a46042957675eebb3401",
+        "rev": "ff7b65b44d01cf9ba6a71320833626af21126384",
         "type": "github"
       },
       "original": {
         "owner": "numtide",
         "repo": "flake-utils",
+        "type": "github"
+      }
+    },
+    "gomod2nix": {
+      "inputs": {
+        "flake-utils": [
+          "spanx",
+          "flake-utils"
+        ],
+        "nixpkgs": [
+          "spanx",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1698345661,
+        "narHash": "sha256-aHdDJ/2R4mk4BeJ03W4OV94Op8PVYvfjSyQucl0W9DQ=",
+        "owner": "fore-stun",
+        "repo": "gomod2nix",
+        "rev": "1340c2a983bfde3bf4417e44f4b69e7e354b3642",
+        "type": "github"
+      },
+      "original": {
+        "owner": "fore-stun",
+        "ref": "fix-recursive-symlinker",
+        "repo": "gomod2nix",
         "type": "github"
       }
     },
@@ -111,15 +137,19 @@
     },
     "root": {
       "inputs": {
+        "flake-utils": "flake-utils",
         "mtags": "mtags",
         "nixpkgs": "nixpkgs",
         "postgrest": "postgrest",
-        "rust": "rust"
+        "rust": "rust",
+        "spanx": "spanx"
       }
     },
     "rust": {
       "inputs": {
-        "flake-utils": "flake-utils",
+        "flake-utils": [
+          "flake-utils"
+        ],
         "nixpkgs": [
           "nixpkgs"
         ]
@@ -135,6 +165,30 @@
       "original": {
         "owner": "oxalica",
         "repo": "rust-overlay",
+        "type": "github"
+      }
+    },
+    "spanx": {
+      "inputs": {
+        "flake-utils": [
+          "flake-utils"
+        ],
+        "gomod2nix": "gomod2nix",
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1698611956,
+        "narHash": "sha256-tJkx4nxgtl336fcZ1REhaqsA4UChKxnox8OZeSvkg8g=",
+        "owner": "fore-stun",
+        "repo": "spanx",
+        "rev": "b6137fc45e731c09310b7184ae0b193ac18639e0",
+        "type": "github"
+      },
+      "original": {
+        "owner": "fore-stun",
+        "repo": "spanx",
         "type": "github"
       }
     },
