@@ -29,6 +29,7 @@
 
       flakeOverlays = [
         inputs.mtags.overlays.default
+        inputs.spanx.overlays.default
       ];
 
       buildFlakeFrom = files: lib.recursiveUpdate
