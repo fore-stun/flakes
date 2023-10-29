@@ -12,6 +12,10 @@
     mtags.inputs.nixpkgs.follows = "nixpkgs";
 
     postgrest.url = "github:fore-stun/postgrest/flake";
+
+    spanx.url = "github:fore-stun/spanx";
+    spanx.inputs.nixpkgs.follows = "nixpkgs";
+    spanx.inputs.flake-utils.follows = "flake-utils";
   };
 
   outputs = { self, nixpkgs, ... }@inputs:
