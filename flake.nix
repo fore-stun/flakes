@@ -2,8 +2,11 @@
   description = "Miscellaneous custom packages";
 
   inputs = {
+    flake-utils.url = "github:numtide/flake-utils";
+
     rust.url = "github:oxalica/rust-overlay";
     rust.inputs.nixpkgs.follows = "nixpkgs";
+    rust.inputs.flake-utils.follows = "flake-utils";
 
     mtags.url = "github:dbaynard/mtags";
     mtags.inputs.nixpkgs.follows = "nixpkgs";
