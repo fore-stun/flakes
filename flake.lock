@@ -121,11 +121,11 @@
         "nixpkgs": "nixpkgs_2"
       },
       "locked": {
-        "lastModified": 1698247767,
-        "narHash": "sha256-iprU4gepqVX+BxCRtIfzu0DvbzZKQDOeKvR4eqOmAYM=",
+        "lastModified": 1698616295,
+        "narHash": "sha256-/lfd+mfVQ//jP7qw+juVu7cTi+p4gw09bxsZDjvpFcs=",
         "owner": "fore-stun",
         "repo": "postgrest",
-        "rev": "14050fd87a361b6871e0fdc21a84a31efe4baee0",
+        "rev": "d566d5be88f41610d4cab434c0b543e314620654",
         "type": "github"
       },
       "original": {
