@@ -10,7 +10,10 @@ in
   overlays.postgres = final: prev:
     let
       extras = {
-        postgrest = { inherit postgrest; };
+        postgrest = {
+          inherit postgrest;
+          postgresql = final.postgresql_15;
+        };
       };
     in
     lib.foldFor pgs
