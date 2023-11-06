@@ -42,11 +42,9 @@
     "gomod2nix": {
       "inputs": {
         "flake-utils": [
-          "spanx",
           "flake-utils"
         ],
         "nixpkgs": [
-          "spanx",
           "nixpkgs"
         ]
       },
@@ -138,6 +136,7 @@
     "root": {
       "inputs": {
         "flake-utils": "flake-utils",
+        "gomod2nix": "gomod2nix",
         "mtags": "mtags",
         "nixpkgs": "nixpkgs",
         "postgrest": "postgrest",
@@ -173,7 +172,9 @@
         "flake-utils": [
           "flake-utils"
         ],
-        "gomod2nix": "gomod2nix",
+        "gomod2nix": [
+          "gomod2nix"
+        ],
         "nixpkgs": [
           "nixpkgs"
         ]
