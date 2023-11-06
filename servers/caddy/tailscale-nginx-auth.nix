@@ -1,7 +1,7 @@
 { lib
 , buildGoModule
 , fetchFromGitHub
-, stdenvNoCC
+, hostPlatform
 }:
 
 let
@@ -14,6 +14,7 @@ let
     rev = "a353ae079b8b0c5205278585c8c0a42ba00185a6";
     hash = "sha256-OntCgV5vQig5neCaKvKXJKK1FiwcmrdilE+qTdsVn1I=";
   };
+
 in
 buildGoModule {
   inherit pname version src;
@@ -32,7 +33,7 @@ buildGoModule {
   CGO_ENABLED = 0;
   doCheck = false;
 
-  postInstall = lib.optionalString stdenvNoCC.isLinux ''
+  postInstall = lib.optionalString hostPlatform.isLinux ''
     mkdir -p "$out/lib/systemd/system"
 
     install -D -m0444 -t "$out/lib/systemd/system" \
@@ -41,7 +42,7 @@ buildGoModule {
       "$src/cmd/nginx-auth/tailscale.nginx-auth.socket"
 
     sed -i -e "s#/usr/sbin#$out/bin#" "$out/lib/systemd/system/tailscale.nginx-auth.service"
-  '' + lib.optionalString stdenvNoCC.isDarwin ''
+  '' + lib.optionalString hostPlatform.isDarwin ''
     mkdir -p "$out/Library/LaunchAgents"
     cp ${./tailscale-nginx-auth.plist} "$out/Library/LaunchAgents/org.nixos.tailscale.nginx-auth.plist"
     substituteInPlace $out/Library/LaunchAgents/org.nixos.tailscale.nginx-auth.plist --subst-var out
