@@ -1,7 +1,8 @@
 { lib
 , buildGoModule
 , fetchFromGitHub
-, stdenvNoCC
+, hostPlatform
+, aarch64-linux ? false
 }:
 
 let
@@ -14,6 +15,7 @@ let
     rev = "a353ae079b8b0c5205278585c8c0a42ba00185a6";
     hash = "sha256-OntCgV5vQig5neCaKvKXJKK1FiwcmrdilE+qTdsVn1I=";
   };
+
 in
 buildGoModule {
   inherit pname version src;
@@ -32,7 +34,14 @@ buildGoModule {
   CGO_ENABLED = 0;
   doCheck = false;
 
-  postInstall = lib.optionalString stdenvNoCC.isLinux ''
+  preInstall = lib.optionalString aarch64-linux ''
+    mkdir -p "$out/bin"
+    dir="$GOPATH/bin"
+    [ -e "$dir" ] && mv -v "$dir/linux_arm64/"* "$dir/"
+    rm -rv "$dir/linux_arm64/"
+  '';
+
+  postInstall = lib.optionalString hostPlatform.isLinux ''
     mkdir -p "$out/lib/systemd/system"
 
     install -D -m0444 -t "$out/lib/systemd/system" \
@@ -41,10 +50,15 @@ buildGoModule {
       "$src/cmd/nginx-auth/tailscale.nginx-auth.socket"
 
     sed -i -e "s#/usr/sbin#$out/bin#" "$out/lib/systemd/system/tailscale.nginx-auth.service"
-  '' + lib.optionalString stdenvNoCC.isDarwin ''
+    sed -i -e "s#/var/run/#/run/#" "$out/lib/systemd/system/tailscale.nginx-auth.socket"
+  '' + lib.optionalString hostPlatform.isDarwin ''
     mkdir -p "$out/Library/LaunchAgents"
     cp ${./tailscale-nginx-auth.plist} "$out/Library/LaunchAgents/org.nixos.tailscale.nginx-auth.plist"
     substituteInPlace $out/Library/LaunchAgents/org.nixos.tailscale.nginx-auth.plist --subst-var out
+  '' + ''
+    for i in "$out/bin/"*; do
+      ln -sv "$i" "$out/bin/tailscale.''${i##*/}"
+    done
   '';
 
   meta = {
