@@ -12,6 +12,7 @@ lib.foldFor lib.platforms.all (system: {
   packages.${system} = self.overlays.caddy
     self.packages.${system}
     nixpkgs.legacyPackages.${system} // {
-    caddy-extended = spanx.packages.${system}.default;
+    caddy-extended = let spanxPkgs = spanx.packages.${system}; in
+      spanxPkgs.${system} or spanxPkgs.default;
   };
 })
