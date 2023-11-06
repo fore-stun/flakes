@@ -1,11 +1,15 @@
 { lib
 , dockerTools
+, glibc
 , gmp
 , haskellPackages
 , hostPlatform
 , jq
-, postgrest
+, keyutils
+, krb5
+, openssl
 , postgresql
+, postgrest
 , stdenvNoCC
 , system
 , zlib
@@ -25,20 +29,29 @@ let
     finalImageTag = "v11.2.1-arm";
   };
 
+  RPATH_INPUTS = [
+    zlib
+    gmp
+    postgresql.lib
+  ];
+
   postgrestBin = stdenvNoCC.mkDerivation {
     inherit pname src version;
     meta = meta // {
       license = lib.licenses.mit;
     };
 
+    inherit RPATH_INPUTS;
+
     nativeBuildInputs = [
       jq
     ];
 
-    buildInputs = [
-      zlib
-      postgresql.lib
-      gmp
+    buildInputs = RPATH_INPUTS ++ [
+      glibc
+      keyutils.lib
+      krb5
+      openssl.out
     ];
 
     dontUnpack = true;
@@ -51,9 +64,15 @@ let
 
       mkdir -p "$out/bin"
       mv usr/bin/postgrest "$out/bin/postgrest"
-      patchelf --add-rpath "${zlib}/lib" "$out/bin/postgrest"
-      patchelf --add-rpath "${gmp}/lib"  "$out/bin/postgrest"
-      patchelf --add-rpath "${postgresql.lib}/lib" "$out/bin/postgrest"
+    '';
+
+    postFixup = ''
+      for i in ''${RPATH_INPUTS[@]}; do
+        echo "Patching for $i" >&2
+        patchelf --add-rpath "$i/lib" "$out/bin/postgrest"
+        patchelf --print-rpath "$out/bin/postgrest"
+      done
+      patchelf --set-interpreter "${glibc.bin}/bin/ld.so" "$out/bin/postgrest"
     '';
   };
 
