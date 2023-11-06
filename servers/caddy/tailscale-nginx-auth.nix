@@ -50,6 +50,7 @@ buildGoModule {
       "$src/cmd/nginx-auth/tailscale.nginx-auth.socket"
 
     sed -i -e "s#/usr/sbin#$out/bin#" "$out/lib/systemd/system/tailscale.nginx-auth.service"
+    sed -i -e "s#/var/run/#/run/#" "$out/lib/systemd/system/tailscale.nginx-auth.socket"
   '' + lib.optionalString hostPlatform.isDarwin ''
     mkdir -p "$out/Library/LaunchAgents"
     cp ${./tailscale-nginx-auth.plist} "$out/Library/LaunchAgents/org.nixos.tailscale.nginx-auth.plist"
