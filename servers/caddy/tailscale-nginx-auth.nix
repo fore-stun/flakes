@@ -2,6 +2,7 @@
 , buildGoModule
 , fetchFromGitHub
 , hostPlatform
+, aarch64-linux ? false
 }:
 
 let
@@ -32,6 +33,13 @@ buildGoModule {
 
   CGO_ENABLED = 0;
   doCheck = false;
+
+  preInstall = lib.optionalString aarch64-linux ''
+    mkdir -p "$out/bin"
+    dir="$GOPATH/bin"
+    [ -e "$dir" ] && mv -v "$dir/linux_arm64/"* "$dir/"
+    rm -rv "$dir/linux_arm64/"
+  '';
 
   postInstall = lib.optionalString hostPlatform.isLinux ''
     mkdir -p "$out/lib/systemd/system"
