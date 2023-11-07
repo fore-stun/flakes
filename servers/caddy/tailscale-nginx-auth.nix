@@ -55,6 +55,10 @@ buildGoModule {
     mkdir -p "$out/Library/LaunchAgents"
     cp ${./tailscale-nginx-auth.plist} "$out/Library/LaunchAgents/org.nixos.tailscale.nginx-auth.plist"
     substituteInPlace $out/Library/LaunchAgents/org.nixos.tailscale.nginx-auth.plist --subst-var out
+  '' + ''
+    for i in "$out/bin/"*; do
+      ln -sv "$i" "$out/bin/tailscale.''${i##*/}"
+    done
   '';
 
   meta = {
