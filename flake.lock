@@ -180,11 +180,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1698611956,
-        "narHash": "sha256-tJkx4nxgtl336fcZ1REhaqsA4UChKxnox8OZeSvkg8g=",
+        "lastModified": 1699501022,
+        "narHash": "sha256-qooXqT282oUZYQ4JxtbeJqDKLuv4vXO7qdfd0Ia98Jc=",
         "owner": "fore-stun",
         "repo": "spanx",
-        "rev": "b6137fc45e731c09310b7184ae0b193ac18639e0",
+        "rev": "e59e072c2acf5c0f854d75db621c96894cbfc68f",
         "type": "github"
       },
       "original": {
