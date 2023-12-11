@@ -123,7 +123,32 @@ let
     names: lib.listToAttrs (builtins.map bundle names)
   ;
 
+  pivot_vtab =
+    let
+      name = "pivot_vtab";
+      version = "unstable-2023-11-14";
+
+      src = fetchFromGitHub {
+        owner = "dmagyari";
+        repo = "pivot_vtab";
+        rev = "1e0379e1e4a33528a1d3cc3886fb0f230acfac2f";
+        hash = "sha256-3e/9B1WQJU/XkbhCeoNu8az0hj3DlasBUIsFygo5Iew=";
+      };
+
+      mkExt = mkSqliteExt {
+        inherit name version src;
+        sourceFiles = [ "${name}.c" ];
+      };
+    in
+    callPackage mkExt { }
+  ;
+
 in
+{
+  inherit
+    pivot_vtab
+    ;
+} //
 bundled [
   "amatch"
   "btreeinfo"
