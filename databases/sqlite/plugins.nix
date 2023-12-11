@@ -101,6 +101,28 @@ let
     names: lib.listToAttrs (builtins.map bundle names)
   ;
 
+  sqlean-incubator =
+    let
+      version = "unstable-2023-11-14";
+
+      src = fetchFromGitHub {
+        owner = "nalgeon";
+        repo = "sqlean";
+        rev = "d609530b3f6e12d796aa322a850650ed87b5fd76";
+        hash = "sha256-jEMnGrLQWOInZAPOnOqyn9RZj8FOq5hvrong+RgZGhc=";
+      };
+
+      mkSqleanI = name: mkSqliteExt {
+        inherit name version src;
+        sourceFiles = [ "src/${name}.c" ];
+      };
+
+      bundle = name:
+        { inherit name; value = callPackage (mkSqleanI name) { }; };
+    in
+    names: lib.listToAttrs (builtins.map bundle names)
+  ;
+
 in
 bundled [
   "amatch"
@@ -137,4 +159,6 @@ bundled [
 ] //
 sqlean [
   "define"
+] //
+sqlean-incubator [
 ]
