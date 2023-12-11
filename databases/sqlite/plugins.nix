@@ -57,9 +57,10 @@ let
         "3.40.1" = "sha256-Oye/JeXKVflfWxUq3OU3JG+wR0DDZw6GdvyJS3OGjFI=";
         "3.41.2" = "sha256-OKvBvk0vtgvOgds6MpiKFeKjezk2gp6lBKP6BdANGOc=";
         "3.42.0" = "sha256-IPNn0kN/dvIwJQRqD7B3aDkGYenic69QKa6NUDHZuu8=";
+        "3.43.2" = "sha256-selyWeeq/D2ljq5X99TrF/ce+mcr7x2gV6W5gJEMcos=";
       };
 
-      version = "3.42.0";
+      version = "3.43.2";
 
       src = fetchzip {
         name = "sqlite-${version}-source";
@@ -80,13 +81,13 @@ let
 
   sqlean =
     let
-      version = "0.17.1";
+      version = "0.21.8";
 
       src = fetchFromGitHub {
         owner = "nalgeon";
         repo = "sqlean";
-        rev = "74116426cf9645d055238d136a837a7474ccab31";
-        hash = "sha256-lUsDu+air7dnC1yO6STcFJt77VR3Z0S9N0QoVWSgONI=";
+        rev = "a08c9c63d257c1ecd4b08d157c715fd6ec2117bd";
+        hash = "sha256-NNA0Ha67Jvy8vNi5n1xSU8UscNoiISyQXyQPdOzQWrA=";
       };
 
       mkSqlean = name: mkSqliteExt {
@@ -100,41 +101,102 @@ let
     names: lib.listToAttrs (builtins.map bundle names)
   ;
 
+  sqlean-incubator =
+    let
+      version = "unstable-2023-11-14";
+
+      src = fetchFromGitHub {
+        owner = "nalgeon";
+        repo = "sqlean";
+        rev = "d609530b3f6e12d796aa322a850650ed87b5fd76";
+        hash = "sha256-jEMnGrLQWOInZAPOnOqyn9RZj8FOq5hvrong+RgZGhc=";
+      };
+
+      mkSqleanI = name: mkSqliteExt {
+        inherit name version src;
+        sourceFiles = [ "src/${name}.c" ];
+      };
+
+      bundle = name:
+        { inherit name; value = callPackage (mkSqleanI name) { }; };
+    in
+    names: lib.listToAttrs (builtins.map bundle names)
+  ;
+
+  pivot_vtab =
+    let
+      name = "pivot_vtab";
+      version = "unstable-2023-11-14";
+
+      src = fetchFromGitHub {
+        owner = "dmagyari";
+        repo = "pivot_vtab";
+        rev = "1e0379e1e4a33528a1d3cc3886fb0f230acfac2f";
+        hash = "sha256-3e/9B1WQJU/XkbhCeoNu8az0hj3DlasBUIsFygo5Iew=";
+      };
+
+      mkExt = mkSqliteExt {
+        inherit name version src;
+        sourceFiles = [ "${name}.c" ];
+      };
+    in
+    callPackage mkExt { }
+  ;
+
 in
-bundled
-  [
-    "amatch"
-    "btreeinfo"
-    "closure"
-    "completion"
-    "decimal"
-    "eval"
-    "explain"
-    "fileio"
-    "fuzzer"
-    "ieee754"
-    "nextchar"
-    "percentile"
-    "prefixes"
-    "regexp"
-    "rot13"
-    "series"
-    "sha1"
-    "shathree"
-    "spellfix"
-    "stmt"
-    "totype"
-    "uint"
-    "unionvtab"
-    "uuid"
-    "wholenumber"
-    "zorder"
-    # "compress"
-    # "dbdump"
-    # "scrub"
-    # "sqlar"
-    # "zipfile"
-  ] //
+{
+  inherit
+    pivot_vtab
+    ;
+} //
+bundled [
+  "amatch"
+  "btreeinfo"
+  "closure"
+  "completion"
+  "decimal"
+  "eval"
+  "explain"
+  "fileio"
+  "fuzzer"
+  "ieee754"
+  "nextchar"
+  "percentile"
+  "prefixes"
+  "regexp"
+  "rot13"
+  "series"
+  "sha1"
+  "shathree"
+  "spellfix"
+  "stmt"
+  "totype"
+  "uint"
+  "unionvtab"
+  "uuid"
+  "wholenumber"
+  "zorder"
+  # "compress"
+  # "dbdump"
+  # "scrub"
+  # "sqlar"
+  # "zipfile"
+] //
 sqlean [
   "define"
+  "ipaddr"
+  "math"
+  "stats"
+  "text"
+  "unicode"
+  "vsv"
+] //
+sqlean-incubator [
+  # "array"
+  "bloom"
+  # "cron"
+  # "path"
+  # "pivotvtab"
+  "stats2"
+  "stats3"
 ]
