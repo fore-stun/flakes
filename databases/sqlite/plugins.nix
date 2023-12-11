@@ -159,6 +159,12 @@ bundled [
 ] //
 sqlean [
   "define"
+  "ipaddr"
+  "math"
+  "stats"
+  "text"
+  "unicode"
+  "vsv"
 ] //
 sqlean-incubator [
 ]
