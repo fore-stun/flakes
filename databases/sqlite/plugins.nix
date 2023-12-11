@@ -167,4 +167,11 @@ sqlean [
   "vsv"
 ] //
 sqlean-incubator [
+  # "array"
+  "bloom"
+  # "cron"
+  # "path"
+  # "pivotvtab"
+  "stats2"
+  "stats3"
 ]
