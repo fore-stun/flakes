@@ -41,7 +41,7 @@ let
         IFS='' read -ra SOURCES <<< "''${SOURCES_SEP?}"
         "$CC" -v -g -fPIC ${if stdenv.isDarwin then "-dynamiclib" else "-shared"} \
           -I"${sqlite.dev}/include" \
-          "''${SOURCES[@]}" \
+          ''${SOURCES[@]} \
           -o ${outFile}
       '';
 
