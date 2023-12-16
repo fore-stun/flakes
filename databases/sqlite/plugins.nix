@@ -98,7 +98,8 @@ let
 
       mkSqlean = name: mkSqliteExt {
         inherit name version src;
-        sourceFiles = [ "src/sqlite3-${name}.c" ];
+        sourceFiles = [ "src/sqlite3-${name}.c" "src/${name}/*.c" ];
+        includeDirs = [ "src" ];
       };
 
       bundle = name:
