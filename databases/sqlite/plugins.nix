@@ -10,6 +10,7 @@ let
     , version
     , src
     , sourceFiles # relative to $src
+    , includeDirs ? [ ] # relative to $src
     , outName ? name
     }:
 
@@ -28,8 +29,9 @@ let
 
       dontConfigure = true;
 
-      SOURCES = sourceFiles;
+      SOURCES_SEP = lib.concatStringsSep "" sourceFiles;
       inherit EXT_DIR;
+      INCLUDES_SEP = lib.concatMapStringsSep "" (d: "-I${d}") includeDirs;
 
       passthru = {
         # Consumers need to know the actual output file
@@ -37,9 +39,13 @@ let
       };
 
       buildPhase = ''
+        shopt -s nullglob
+        IFS='' read -ra SOURCES <<< "''${SOURCES_SEP?}"
+        IFS='' read -ra INCLUDES <<< "''${INCLUDES_SEP?}"
         "$CC" -v -g -fPIC ${if stdenv.isDarwin then "-dynamiclib" else "-shared"} \
           -I"${sqlite.dev}/include" \
-          "''${SOURCES[@]}" \
+          ''${INCLUDES[@]} \
+          ''${SOURCES[@]} \
           -o ${outFile}
       '';
 
@@ -92,7 +98,8 @@ let
 
       mkSqlean = name: mkSqliteExt {
         inherit name version src;
-        sourceFiles = [ "src/sqlite3-${name}.c" ];
+        sourceFiles = [ "src/sqlite3-${name}.c" "src/${name}/*.c" ];
+        includeDirs = [ "src" ];
       };
 
       bundle = name:
