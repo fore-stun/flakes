@@ -161,12 +161,17 @@ let
     callPackage mkExt { }
   ;
 
+  imported = {
+    xlite = callPackage ./xlite.nix { };
+  };
+
 in
 {
   inherit
     pivot_vtab
     ;
 } //
+imported //
 bundled [
   "amatch"
   "btreeinfo"
