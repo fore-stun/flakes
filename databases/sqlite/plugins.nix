@@ -181,7 +181,6 @@ bundled [
   "nextchar"
   "percentile"
   "prefixes"
-  "regexp"
   "rot13"
   "series"
   "sha1"
@@ -204,6 +203,11 @@ sqlean [
   "define"
   "ipaddr"
   "math"
+  {
+    name = "regexp";
+    includeFiles = [ "src/regexp/constants.h" ];
+    sourceFiles = [ "src/regexp/pcre2/*.c " ];
+  }
   "stats"
   "text"
   "unicode"
