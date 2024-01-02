@@ -11,6 +11,7 @@ let
     , src
     , sourceFiles # relative to $src
     , includeDirs ? [ ] # relative to $src
+    , includeFiles ? [ ] # relative to $src
     , outName ? name
     }:
 
@@ -32,6 +33,7 @@ let
       SOURCES_SEP = lib.concatStringsSep "" sourceFiles;
       inherit EXT_DIR;
       INCLUDE_DIRS_SEP = lib.concatMapStringsSep "" (d: "-I${d}") includeDirs;
+      INCLUDE_FILES_SEP = lib.concatMapStringsSep "" (f: "-include${f}") includeFiles;
 
       passthru = {
         # Consumers need to know the actual output file
@@ -42,9 +44,11 @@ let
         shopt -s nullglob
         IFS='' read -ra SOURCES <<< "''${SOURCES_SEP?}"
         IFS='' read -ra INCLUDE_DIRS <<< "''${INCLUDE_DIRS_SEP?}"
+        IFS='' read -ra INCLUDE_FILES <<< "''${INCLUDE_FILES_SEP?}"
         "$CC" -v -g -fPIC ${if stdenv.isDarwin then "-dynamiclib" else "-shared"} \
           -I"${sqlite.dev}/include" \
           ''${INCLUDE_DIRS[@]} \
+          ''${INCLUDE_FILES[@]} \
           ''${SOURCES[@]} \
           -o ${outFile}
       '';
