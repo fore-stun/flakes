@@ -11,6 +11,7 @@ let
     , src
     , sourceFiles # relative to $src
     , includeDirs ? [ ] # relative to $src
+    , includeFiles ? [ ] # relative to $src
     , outName ? name
     }:
 
@@ -31,7 +32,8 @@ let
 
       SOURCES_SEP = lib.concatStringsSep "" sourceFiles;
       inherit EXT_DIR;
-      INCLUDES_SEP = lib.concatMapStringsSep "" (d: "-I${d}") includeDirs;
+      INCLUDE_DIRS_SEP = lib.concatMapStringsSep "" (d: "-I${d}") includeDirs;
+      INCLUDE_FILES_SEP = lib.concatMapStringsSep "" (f: "-include${f}") includeFiles;
 
       passthru = {
         # Consumers need to know the actual output file
@@ -41,10 +43,12 @@ let
       buildPhase = ''
         shopt -s nullglob
         IFS='' read -ra SOURCES <<< "''${SOURCES_SEP?}"
-        IFS='' read -ra INCLUDES <<< "''${INCLUDES_SEP?}"
+        IFS='' read -ra INCLUDE_DIRS <<< "''${INCLUDE_DIRS_SEP?}"
+        IFS='' read -ra INCLUDE_FILES <<< "''${INCLUDE_FILES_SEP?}"
         "$CC" -v -g -fPIC ${if stdenv.isDarwin then "-dynamiclib" else "-shared"} \
           -I"${sqlite.dev}/include" \
-          ''${INCLUDES[@]} \
+          ''${INCLUDE_DIRS[@]} \
+          ''${INCLUDE_FILES[@]} \
           ''${SOURCES[@]} \
           -o ${outFile}
       '';
@@ -96,14 +100,21 @@ let
         hash = "sha256-NNA0Ha67Jvy8vNi5n1xSU8UscNoiISyQXyQPdOzQWrA=";
       };
 
-      mkSqlean = name: mkSqliteExt {
+      mkSqlean = args@{ name, ... }: mkSqliteExt {
         inherit name version src;
-        sourceFiles = [ "src/sqlite3-${name}.c" "src/${name}/*.c" ];
-        includeDirs = [ "src" ];
+        sourceFiles = [
+          "src/sqlite3-${name}.c"
+          "src/${name}/*.c"
+        ] ++ args.sourceFiles or [ ];
+        includeDirs = [ "src" ] ++ args.includeDirs or [ ];
+        includeFiles = args.includeFiles or [ ];
       };
 
-      bundle = name:
-        { inherit name; value = callPackage (mkSqlean name) { }; };
+      bundle = x:
+        let
+          r = if builtins.typeOf x == "string" then { name = x; } else x;
+        in
+        { inherit (r) name; value = callPackage (mkSqlean r) { }; };
     in
     names: lib.listToAttrs (builtins.map bundle names)
   ;
@@ -170,7 +181,6 @@ bundled [
   "nextchar"
   "percentile"
   "prefixes"
-  "regexp"
   "rot13"
   "series"
   "sha1"
@@ -193,6 +203,11 @@ sqlean [
   "define"
   "ipaddr"
   "math"
+  {
+    name = "regexp";
+    includeFiles = [ "src/regexp/constants.h" ];
+    sourceFiles = [ "src/regexp/pcre2/*.c " ];
+  }
   "stats"
   "text"
   "unicode"
