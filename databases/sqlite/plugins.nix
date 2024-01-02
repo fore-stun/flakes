@@ -31,7 +31,7 @@ let
 
       SOURCES_SEP = lib.concatStringsSep "" sourceFiles;
       inherit EXT_DIR;
-      INCLUDES_SEP = lib.concatMapStringsSep "" (d: "-I${d}") includeDirs;
+      INCLUDE_DIRS_SEP = lib.concatMapStringsSep "" (d: "-I${d}") includeDirs;
 
       passthru = {
         # Consumers need to know the actual output file
@@ -41,10 +41,10 @@ let
       buildPhase = ''
         shopt -s nullglob
         IFS='' read -ra SOURCES <<< "''${SOURCES_SEP?}"
-        IFS='' read -ra INCLUDES <<< "''${INCLUDES_SEP?}"
+        IFS='' read -ra INCLUDE_DIRS <<< "''${INCLUDE_DIRS_SEP?}"
         "$CC" -v -g -fPIC ${if stdenv.isDarwin then "-dynamiclib" else "-shared"} \
           -I"${sqlite.dev}/include" \
-          ''${INCLUDES[@]} \
+          ''${INCLUDE_DIRS[@]} \
           ''${SOURCES[@]} \
           -o ${outFile}
       '';
