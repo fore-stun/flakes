@@ -100,14 +100,21 @@ let
         hash = "sha256-NNA0Ha67Jvy8vNi5n1xSU8UscNoiISyQXyQPdOzQWrA=";
       };
 
-      mkSqlean = name: mkSqliteExt {
+      mkSqlean = args@{ name, ... }: mkSqliteExt {
         inherit name version src;
-        sourceFiles = [ "src/sqlite3-${name}.c" "src/${name}/*.c" ];
-        includeDirs = [ "src" ];
+        sourceFiles = [
+          "src/sqlite3-${name}.c"
+          "src/${name}/*.c"
+        ] ++ args.sourceFiles or [ ];
+        includeDirs = [ "src" ] ++ args.includeDirs or [ ];
+        includeFiles = args.includeFiles or [ ];
       };
 
-      bundle = name:
-        { inherit name; value = callPackage (mkSqlean name) { }; };
+      bundle = x:
+        let
+          r = if builtins.typeOf x == "string" then { name = x; } else x;
+        in
+        { inherit (r) name; value = callPackage (mkSqlean r) { }; };
     in
     names: lib.listToAttrs (builtins.map bundle names)
   ;
