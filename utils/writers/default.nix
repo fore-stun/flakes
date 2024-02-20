@@ -11,7 +11,7 @@ in
   };
 } //
 lib.foldFor lib.platforms.all (system: {
-  packages.${system} = self.overlays.writers
-    self.packages.${system}
+  legacyPackages.${system} = self.overlays.writers
+    self.legacyPackages.${system}
     nixpkgs.legacyPackages.${system};
 })
