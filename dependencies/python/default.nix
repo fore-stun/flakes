@@ -44,7 +44,7 @@ in
 
 } //
 lib.foldFor lib.platforms.all (system: {
-  packages.${system} = self.overlays.python
-    self.packages.${system}
+  legacyPackages.${system} = self.overlays.python
+    self.legacyPackages.${system}
     nixpkgs.legacyPackages.${system};
 })
