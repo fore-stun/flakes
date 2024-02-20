@@ -1,57 +1,50 @@
 { lib
+, darwin
 , dockerTools
-, glibc
-, gmp
-, haskellPackages
 , hostPlatform
 , jq
-, keyutils
-, krb5
-, openssl
 , postgresql
 , postgrest
 , stdenvNoCC
 , system
+, writers
 , zlib
 }:
 
 let
 
-  inherit (haskellPackages.postgrest) pname meta;
-  version = "11.2.1";
-  repository = "postgrest";
+  inherit (postgrest) pname meta;
+  version = "12.0.2";
 
-  src = dockerTools.pullImage {
-    imageName = "postgrest/postgrest";
-    imageDigest = "sha256:6feebe08e6afa576c4d6ef47f25557145ca82ccc543b443da37a26fb13d83821";
-    sha256 = "1ha1iyiwf5asqpn0zk67fs2nbq0a3d3f0f0xj6nim84fq6xjdcnl";
+  src = (dockerTools.pullImage {
+    imageName = "ghcr.io/homebrew/core/postgrest";
+    imageDigest = "sha256:288cc99f15025e5057898a0f00f91e4a7dbe991cebf3ffa92bc4d1bb9155e179";
+    sha256 = "sha256-zqX1psQwKQH5Sy5b7PohGbMpLlw2pG4kj0reNVzv0mU=";
     finalImageName = "postgrest/postgrest";
-    finalImageTag = "v11.2.1-arm";
-  };
-
-  RPATH_INPUTS = [
-    zlib
-    gmp
-    postgresql.lib
-  ];
+    finalImageTag = version;
+    os = "darwin/macos";
+    arch = "arm64";
+  }).overrideAttrs (old: {
+    buildCommand = builtins.replaceStrings [ "--src-tls-verify" ] [ "--tls-verify" ] old.buildCommand;
+  });
 
   postgrestBin = stdenvNoCC.mkDerivation {
     inherit pname src version;
     meta = meta // {
       license = lib.licenses.mit;
     };
+    outputs = [ "out" "bin" ];
 
-    inherit RPATH_INPUTS;
+    SRC_BIN = "postgrest/${version}/bin/postgrest";
 
     nativeBuildInputs = [
       jq
     ];
 
-    buildInputs = RPATH_INPUTS ++ [
-      glibc
-      keyutils.lib
-      krb5
-      openssl.out
+    buildInputs = [
+      darwin.libiconv
+      postgresql.lib
+      zlib
     ];
 
     dontUnpack = true;
@@ -60,23 +53,23 @@ let
       tar --extract --wildcards --to-stdout -f "$src" 'manifest.json' \
         | jq -r '.[0] | .Layers | last' \
         | xargs -I {} tar --extract --to-stdout -f "$src" {} \
-        | tar -xv usr/bin/postgrest
+        | tar -xv "$SRC_BIN"
 
-      mkdir -p "$out/bin"
-      mv usr/bin/postgrest "$out/bin/postgrest"
+      mkdir -p "$bin"
+      mv "$SRC_BIN" "$bin/postgrest"
     '';
 
-    postFixup = ''
-      for i in ''${RPATH_INPUTS[@]}; do
-        echo "Patching for $i" >&2
-        patchelf --add-rpath "$i/lib" "$out/bin/postgrest"
-        patchelf --print-rpath "$out/bin/postgrest"
-      done
-      patchelf --set-interpreter "${glibc.bin}/bin/ld.so" "$out/bin/postgrest"
+    postFixup = lib.optionalString hostPlatform.isDarwin ''
+      /usr/bin/install_name_tool -change "/usr/lib/libz.1.dylib" "${zlib}/lib/libz.1.dylib" "$bin/postgrest"
+      /usr/bin/install_name_tool -change "@@HOMEBREW_PREFIX@@/opt/libpq/lib/libpq.5.dylib" "${postgresql.lib}/lib/libpq.5.dylib" "$bin/postgrest"
+      /usr/bin/install_name_tool -change "/usr/lib/libiconv.2.dylib" "${darwin.libiconv}/lib/libiconv.2.dylib" "$bin/postgrest"
+      /usr/bin/install_name_tool -change "/usr/lib/libcharset.1.dylib" "${darwin.libiconv}/lib/libcharset.1.dylib" "$bin/postgrest"
+
+      /usr/bin/codesign --force -s - "$bin/postgrest"
     '';
   };
 
 in
-if hostPlatform.isAarch64 && hostPlatform.isLinux
+if hostPlatform.isAarch64 && hostPlatform.isDarwin
 then postgrestBin
-else postgrest.packages."${system}".default
+else postgrest

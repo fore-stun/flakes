@@ -1,4 +1,4 @@
-{ self, lib, nixpkgs, postgrest, ... }:
+{ self, lib, nixpkgs, ... }:
 
 let
   pnames = [ "pgperms" "postgrest" "storage-api" ];
@@ -11,8 +11,7 @@ in
     let
       extras = {
         postgrest = {
-          inherit postgrest;
-          postgresql = final.postgresql_15;
+          postgresql = final.postgresql_16;
         };
       };
     in
