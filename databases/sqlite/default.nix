@@ -17,7 +17,10 @@ in
   });
 } //
 lib.foldFor lib.platforms.all (system: {
-  packages.${system} = self.overlays.sqlite
-    self.packages.${system}
+  legacyPackages.${system} = self.overlays.sqlite
+    self.legacyPackages.${system}
     nixpkgs.legacyPackages.${system};
+  packages.${system} = lib.filterAttrs (_: a: lib.isDerivation a) (self.overlays.sqlite
+    self.legacyPackages.${system}
+    nixpkgs.legacyPackages.${system});
 })

@@ -26,25 +26,29 @@ let
 
 in
 {
-  overlays.python = final: prev: {
-    python3 = prev.python3 // {
-      pkgs = prev.python3.pkgs.overrideScope (lib.composeManyExtensions [
+  overlays.python = final: prev:
+    let
+      pythonPkgsScope = prev.python3.pkgs.overrideScope (prev.lib.composeManyExtensions [
         (_: _: newPackages final prev)
       ]);
+    in
+    {
+      python3 = prev.python3 // {
+        pkgs = pythonPkgsScope;
 
-      packageOverrides = lib.warn ''
-        `python3.packageOverrides` does not compose;
-        instead, manually replace the `pkgs` attr of `python3` with `python3.pkgs.overrideScope` applied to the overrides.
-      ''
-        prev.python3.packageOverrides;
+        packageOverrides = lib.warn ''
+          `python3.packageOverrides` does not compose;
+          instead, manually replace the `pkgs` attr of `python3` with `python3.pkgs.overrideScope` applied to the overrides.
+        ''
+          prev.python3.packageOverrides;
+      };
+
+      python3Packages = pythonPkgsScope;
     };
-
-    python3Packages = final.python3.pkgs;
-  };
 
 } //
 lib.foldFor lib.platforms.all (system: {
-  packages.${system} = self.overlays.python
-    self.packages.${system}
+  legacyPackages.${system} = self.overlays.python
+    self.legacyPackages.${system}
     nixpkgs.legacyPackages.${system};
 })

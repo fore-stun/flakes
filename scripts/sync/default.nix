@@ -14,7 +14,7 @@ in
 lib.foldFor lib.platforms.all (system:
   {
     packages.${system} = self.overlays.sync
-      self.packages.${system}
+      self.legacyPackages.${system}
       nixpkgs.legacyPackages.${system};
   } //
   lib.foldFor pnames (pname: {
