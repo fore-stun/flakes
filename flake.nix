@@ -8,9 +8,6 @@
     rust.inputs.nixpkgs.follows = "nixpkgs";
     rust.inputs.flake-utils.follows = "flake-utils";
 
-    mtags.url = "github:dbaynard/mtags";
-    mtags.inputs.nixpkgs.follows = "nixpkgs";
-
     postgrest.url = "github:fore-stun/postgrest/flake";
 
     gomod2nix.url = "github:fore-stun/gomod2nix/fix-recursive-symlinker";
@@ -33,7 +30,6 @@
         lib.foldMap (file: import file (inputs // { inherit lib; }));
 
       flakeOverlays = [
-        inputs.mtags.overlays.default
         inputs.spanx.overlays.default
       ];
 
