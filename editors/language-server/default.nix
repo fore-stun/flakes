@@ -1,7 +1,7 @@
 { self, lib, nixpkgs, ... }:
 
 let
-  pnames = [ "csharp-ls" "tailwindcss-language-server" ];
+  pnames = [ "csharp-ls" ];
 in
 {
   overlays.language-server = final: prev: lib.foldFor pnames (pname: {

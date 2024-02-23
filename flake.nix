@@ -8,8 +8,6 @@
     rust.inputs.nixpkgs.follows = "nixpkgs";
     rust.inputs.flake-utils.follows = "flake-utils";
 
-    postgrest.url = "github:fore-stun/postgrest/flake";
-
     gomod2nix.url = "github:fore-stun/gomod2nix/fix-recursive-symlinker";
     gomod2nix.inputs.nixpkgs.follows = "nixpkgs";
     gomod2nix.inputs.flake-utils.follows = "flake-utils";
