@@ -14,7 +14,7 @@
 
 let
 
-  inherit (postgrestMeta) pname;
+  pname = "postgrest";
   version = "12.0.2";
 
   src = (dockerTools.pullImage {
@@ -73,4 +73,4 @@ let
 in
 if hostPlatform.isAarch64 && hostPlatform.isDarwin
 then postgrestBin
-else postgrest
+else null
