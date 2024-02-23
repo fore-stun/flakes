@@ -1,7 +1,7 @@
 { self, lib, nixpkgs, ... }:
 
 let
-  pnames = [ "pgperms" "postgrest" "storage-api" ];
+  pnames = [ "pgperms" "storage-api" ];
 
   pgs = [ "" "_16" "_15" "_14" ];
 
@@ -27,7 +27,9 @@ in
         ${pname} = prev.callPackage
           (./. + "/${pname}.nix")
           (extras."${pname}" or { });
-      });
+      }) // lib.optionalAttrs (prev.hostPlatform.isAarch64 && prev.hostPlatform.isDarwin) {
+      postgrest = prev.callPackage ./postgrest.nix { };
+    };
 } //
 lib.foldFor lib.platforms.all (system: {
   packages.${system} = self.overlays.postgres
