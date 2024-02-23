@@ -5,6 +5,7 @@
 , jq
 , postgresql
 , postgrest
+, postgrestMeta
 , stdenvNoCC
 , system
 , writers
@@ -13,7 +14,7 @@
 
 let
 
-  inherit (postgrest) pname meta;
+  inherit (postgrestMeta) pname;
   version = "12.0.2";
 
   src = (dockerTools.pullImage {
@@ -30,7 +31,7 @@ let
 
   postgrestBin = stdenvNoCC.mkDerivation {
     inherit pname src version;
-    meta = meta // {
+    meta = postgrestMeta // {
       license = lib.licenses.mit;
     };
     outputs = [ "out" "bin" ];
