@@ -11,7 +11,7 @@ in
     let
       extras = {
         postgrest = {
-          postgresql = final.postgresql_16;
+          # postgresql = final.postgresql_16;
         };
       };
     in
