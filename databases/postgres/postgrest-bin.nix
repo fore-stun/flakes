@@ -5,7 +5,6 @@
 , jq
 , postgresql
 , postgrest
-, postgrestMeta
 , stdenvNoCC
 , system
 , writers
@@ -14,7 +13,7 @@
 
 let
 
-  pname = "postgrest";
+  inherit (postgrest) pname meta;
   version = "12.0.2";
 
   src = (dockerTools.pullImage {
@@ -31,7 +30,7 @@ let
 
   postgrestBin = stdenvNoCC.mkDerivation {
     inherit pname src version;
-    meta = postgrestMeta // {
+    meta = meta // {
       license = lib.licenses.mit;
     };
     outputs = [ "out" "bin" ];
@@ -71,6 +70,6 @@ let
   };
 
 in
-if hostPlatform.isAarch64 && hostPlatform.isDarwin
-then postgrestBin
-else null
+assert hostPlatform.isAarch64 && hostPlatform.isDarwin;
+
+postgrestBin
