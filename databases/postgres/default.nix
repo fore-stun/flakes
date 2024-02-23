@@ -12,7 +12,7 @@ in
       extras = {
         postgrest = {
           postgrestMeta = prev.postgrest.meta;
-          postgresql = final.postgresql_16;
+          postgresql = prev.postgresql_16;
         };
       };
     in
