@@ -11,8 +11,8 @@ let
   version = "0.1.0";
 
   lua = writeText "${pname}-filter" ''
-    function debug(f)
-      if tonumber(PANDOC_WRITER_OPTIONS.variables["debug"]) > 0 then
+    function debug(enabled, f)
+      if tonumber(enabled) > 0 then
         f()
       end
     end
@@ -20,7 +20,7 @@ let
     function Pandoc(doc)
       return doc:walk {
         Table = function(tbl)
-          debug(function()
+          debug(doc.meta.debug, function()
             io.stderr:write(string.format("Found table\\n%s\\n", tbl.head))
           end)
           return tbl
@@ -60,7 +60,7 @@ let
     extractPandoc() {
       local -a PANDOC_ARGS=(
         -rmarkdown -whtml
-        -V debug="$(( #OPT_debug ))"
+        -M debug="$(( #OPT_debug ))"
         --wrap=none --lua-filter=${lua}
       )
 
