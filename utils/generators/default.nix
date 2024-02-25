@@ -1,15 +1,25 @@
 { self, lib, nixpkgs, ... }:
 
 let
-  pnames = [ "names" ];
+  pnames = [ "an" "names" ];
 in
 {
-  overlays.generators = final: prev: lib.foldFor pnames (pname: {
-    ${pname} = prev.callPackage (./. + "/${pname}.nix") { };
-  });
+  overlays.generators = final: prev:
+    let
+      extras = {
+        an = {
+          inherit (final) hunspellDicts;
+        };
+      };
+    in
+    lib.foldFor pnames (pname: {
+      ${pname} = prev.callPackage
+        (./. + "/${pname}.nix")
+        (extras."${pname}" or { });
+    });
 } //
 lib.foldFor lib.platforms.all (system: {
   packages.${system} = self.overlays.generators
-    self.packages.${system}
+    (nixpkgs.legacyPackages.${system} // self.packages.${system})
     nixpkgs.legacyPackages.${system};
 })
