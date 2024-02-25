@@ -1,12 +1,16 @@
 { self, lib, nixpkgs, ... }:
 
 let
-  pnames = [ "names" ];
+  pnames = [ "an" "names" ];
 in
 {
   overlays.generators = final: prev:
     let
-      extras = { };
+      extras = {
+        an = {
+          inherit (final) hunspellDicts;
+        };
+      };
     in
     lib.foldFor pnames (pname: {
       ${pname} = prev.callPackage
