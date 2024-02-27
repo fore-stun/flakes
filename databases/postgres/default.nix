@@ -1,7 +1,11 @@
 { self, lib, nixpkgs, ... }:
 
 let
-  pnames = [ "pgperms" "postgrest-bin" "storage-api" ];
+  pnames = [
+    "pgperms"
+    { pname = "postgrest-bin"; systems = [ "aarch64-darwin" ]; }
+    "storage-api"
+  ];
 
   pgs = [ "" "_16" "_15" "_14" ];
 
