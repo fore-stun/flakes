@@ -1,7 +1,7 @@
 { self, lib, nixpkgs, ... }:
 
 let
-  pnames = [ ];
+  pnames = [ "jkparse" ];
 in
 {
   overlays.shell = final: prev: lib.foldFor pnames (pname: {
