@@ -68,9 +68,10 @@ let
         "3.41.2" = "sha256-OKvBvk0vtgvOgds6MpiKFeKjezk2gp6lBKP6BdANGOc=";
         "3.42.0" = "sha256-IPNn0kN/dvIwJQRqD7B3aDkGYenic69QKa6NUDHZuu8=";
         "3.43.2" = "sha256-selyWeeq/D2ljq5X99TrF/ce+mcr7x2gV6W5gJEMcos=";
+        "3.45.1" = "sha256-FPI1HS9w3q1BEWUh1OGIBb7pRTflQdx7zwsCsuq+Lk4=";
       };
 
-      version = "3.43.2";
+      version = "3.45.1";
 
       src = fetchzip {
         name = "sqlite-${version}-source";
@@ -91,13 +92,13 @@ let
 
   sqlean =
     let
-      version = "0.21.8";
+      version = "0.21.10";
 
       src = fetchFromGitHub {
         owner = "nalgeon";
         repo = "sqlean";
-        rev = "a08c9c63d257c1ecd4b08d157c715fd6ec2117bd";
-        hash = "sha256-NNA0Ha67Jvy8vNi5n1xSU8UscNoiISyQXyQPdOzQWrA=";
+        rev = "84671a076cfcd1e8fcfa295338415b0dd1215922";
+        hash = "sha256-GpNvb6Wnra4dKj5FinEiDDGRYY/snaQC8CdWCOhX5XI=";
       };
 
       mkSqlean = args@{ name, ... }: mkSqliteExt {
@@ -121,13 +122,13 @@ let
 
   sqlean-incubator =
     let
-      version = "unstable-2023-11-14";
+      version = "unstable-2024-01-26";
 
       src = fetchFromGitHub {
         owner = "nalgeon";
         repo = "sqlean";
-        rev = "d609530b3f6e12d796aa322a850650ed87b5fd76";
-        hash = "sha256-jEMnGrLQWOInZAPOnOqyn9RZj8FOq5hvrong+RgZGhc=";
+        rev = "fe952df6ea42b2e4ac65d2287d3b86ab75f5a2e0";
+        hash = "sha256-LZrX/JgBnVnxes0+k4T6RFTmxYhHuxe6y0SjxdPrXTc=";
       };
 
       mkSqleanI = name: mkSqliteExt {
