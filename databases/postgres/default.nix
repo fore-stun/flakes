@@ -14,6 +14,12 @@ in
           postgresql = final.postgresql_16;
         };
       };
+
+      pkgFor = pname: {
+        ${pname} = prev.callPackage
+          (./. + "/${pname}.nix")
+          (extras."${pname}" or { });
+      };
     in
     lib.foldFor pgs
       (pg: {
@@ -23,11 +29,11 @@ in
           };
         });
       }) // lib.foldFor pnames
-      (pname: {
-        ${pname} = prev.callPackage
-          (./. + "/${pname}.nix")
-          (extras."${pname}" or { });
-      });
+      (pname:
+        if lib.isString pname then pkgFor pname else
+        lib.foldFor pname.systems
+          (system: if system == prev.system then pkgFor pname else { })
+      );
 } //
 lib.foldFor lib.platforms.all (system: {
   packages.${system} = self.overlays.postgres
