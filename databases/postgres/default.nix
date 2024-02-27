@@ -10,7 +10,7 @@ in
   overlays.postgres = final: prev:
     let
       extras = {
-        postgrest = {
+        postgrest-bin = {
           postgresql = final.postgresql_16;
         };
       };

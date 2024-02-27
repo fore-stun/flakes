@@ -12,7 +12,7 @@ let
 
 in
 symlinkJoin {
-  name = "sqlite";
+  inherit (sqlite) name version;
   buildInputs = [ makeWrapper ];
 
   passthru = {
