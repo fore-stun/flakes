@@ -16,11 +16,13 @@ in
     };
   });
 } //
-lib.foldFor lib.platforms.all (system: {
-  legacyPackages.${system} = self.overlays.sqlite
-    self.legacyPackages.${system}
-    nixpkgs.legacyPackages.${system};
-  packages.${system} = lib.filterAttrs (_: a: lib.isDerivation a) (self.overlays.sqlite
-    self.legacyPackages.${system}
-    nixpkgs.legacyPackages.${system});
-})
+lib.foldFor lib.platforms.all (system:
+  let
+    pkgs = self.overlays.sqlite
+      self.legacyPackages.${system}
+      nixpkgs.legacyPackages.${system};
+  in
+  {
+    legacyPackages.${system} = pkgs;
+    packages.${system} = lib.filterAttrs (_: a: lib.isDerivation a) pkgs;
+  })
