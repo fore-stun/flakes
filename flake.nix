@@ -60,6 +60,7 @@
       ./utils/email
       ./utils/exif
       ./utils/generators
+      ./utils/shell
       ./utils/writers
 
       ./scripts/nix
