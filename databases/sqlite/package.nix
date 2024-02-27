@@ -12,12 +12,13 @@ let
 
 in
 symlinkJoin {
-  name = "sqlite";
+  inherit (sqlite) name version;
   buildInputs = [ makeWrapper ];
 
   passthru = {
     # It can be useful for consumers to know which plugins are available.
     libPaths = lib.mapAttrs (_: d: d.libPath) plugins;
+    inherit plugins;
   };
 
   meta.mainProgram = "sqlite3";
