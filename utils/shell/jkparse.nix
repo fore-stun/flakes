@@ -1,6 +1,5 @@
 { lib
 , fetchFromGitHub
-, hostPlatform
 , json_c
 , stdenv
 , zsh
@@ -21,13 +20,13 @@ let
     homepage = "https://github.com/${owner}/${pname}";
     license = lib.licenses.gpl2;
     mainProgram = pname;
+    platforms = lib.platforms.linux;
   };
 in
 stdenv.mkDerivation {
   inherit pname version src meta;
   buildInputs = [ json_c ];
   makeFlags = [ "USE_SHELL_PRINTF=${lib.getExe zsh}" ];
-  buildFlags = lib.optionals hostPlatform.isDarwin [ "CC=clang" ];
   installPhase = ''
     runHook preInstall
 

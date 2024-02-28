@@ -6,8 +6,6 @@
 , postgresql
 , postgrest
 , stdenvNoCC
-, system
-, writers
 , zlib
 }:
 
@@ -32,6 +30,7 @@ let
     inherit pname src version;
     meta = meta // {
       license = lib.licenses.mit;
+      platforms = [ "aarch64-darwin" ];
     };
     outputs = [ "out" "bin" ];
 
@@ -70,6 +69,4 @@ let
   };
 
 in
-assert hostPlatform.isAarch64 && hostPlatform.isDarwin;
-
 postgrestBin
