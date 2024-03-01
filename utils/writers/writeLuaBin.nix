@@ -1,8 +1,18 @@
 { lib
+, writeText
 , writers
 }:
 
 let
+  luacheckConfig = writeText "luacheckrc" ''
+    stds.luacheckrc = { globals = {
+      std = {},
+    } }
+    stds.pandoc = { read_globals = {
+      pandoc = { other_fields = true },
+    } }
+  '';
+
   # Vendored from pkgs/build-support/writers/default.nix
   # I’ve added the `doCheck` flag
 
@@ -12,7 +22,7 @@ let
   makeLuaWriter =
     lua: name:
     { libraries ? [ ]
-    , doCheck ? false
+    , doCheck ? null
     }:
     writers.makeScriptWriter
       {
@@ -21,8 +31,8 @@ let
           then lua.interpreter
           else (lua.withPackages (_: libraries)).interpreter
         ;
-        ${if doCheck then "check" else null} = writers.writeDash "luacheck.sh" ''
-          exec ${lib.getExe lua.pkgs.luacheck} "$1"
+        ${if lib.isString doCheck then "check" else null} = writers.writeDash "luacheck.sh" ''
+          exec ${lib.getExe lua.pkgs.luacheck} --config "${luacheckConfig}" --std "${doCheck}" "$1"
         '';
       }
       name;
