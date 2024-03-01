@@ -2,6 +2,7 @@
 
 let
   pnames = [
+    "LuaNLP"
   ];
 
   newPackages = lua: final: prev: lib.foldFor pnames (pname: {
