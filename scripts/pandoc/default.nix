@@ -7,12 +7,20 @@ let
   ];
 in
 {
-  overlays.pandoc = final: prev: lib.foldFor pnames (pname: {
-    ${pname} = prev.callPackage (./. + "/${pname}.nix") {
-      inherit (final) writers;
-      inherit lib;
-    };
-  });
+  overlays.pandoc = final: prev:
+    let
+      extras = {
+        simple-markdown = {
+          lua = final.lua5_4;
+        };
+      };
+    in
+    lib.foldFor pnames (pname: {
+      ${pname} = prev.callPackage (./. + "/${pname}.nix") ({
+        inherit (final) writers;
+        inherit lib;
+      } // extras."${pname}" or { });
+    });
 } //
 lib.foldFor lib.platforms.all (system:
   {

@@ -1,7 +1,7 @@
 { self, lib, nixpkgs, ... }:
 
 let
-  pnames = [ "writePythonBin" "writeZshBin" ];
+  pnames = [ "writeLuaBin" "writePythonBin" "writeZshBin" ];
 in
 {
   overlays.writers = final: prev: {

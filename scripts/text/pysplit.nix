@@ -19,6 +19,9 @@ writers.writePythonBin "pysplit"
       text = sys.stdin.read().splitlines()
       seg = pysbd.Segmenter(language="en", clean=False)
       for chunk in ("\n".join(l) for _, l in groupby(text, lambda x: x != "")):
+          if chunk.startswith("#"):
+              print(chunk)
+              continue
           for t in seg.segment(chunk) or [""]:
               print(t.rstrip())
 
