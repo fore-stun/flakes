@@ -10,6 +10,9 @@ in
   overlays.pandoc = final: prev:
     let
       extras = {
+        simple-markdown = {
+          lua = final.lua5_4;
+        };
       };
     in
     lib.foldFor pnames (pname: {

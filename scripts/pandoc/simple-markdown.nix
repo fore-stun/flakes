@@ -1,13 +1,27 @@
 { lib
 , pandoc
+, lua
 , writeText
+, writeTextDir
 , writers
 }:
 let
   pname = "simple-markdown";
   version = "0.1.0";
 
-  lua = writeText "${pname}-filter" ''
+  libraries = builtins.attrValues {
+  };
+
+  initLua =
+    let
+      luaEnv = if libraries == [ ] then lua else (lua.withPackages (_: libraries));
+    in
+    writeTextDir "init.lua" ''
+      package.path = package.path .. ";${luaEnv.luaPath}"
+      package.cpath = package.cpath .. ";${luaEnv.luaCpath}"
+    '';
+
+  strip = writeText "${pname}-filter" ''
     function unwrap(el)
       return el.content
     end
@@ -45,7 +59,8 @@ let
 
       local -a PANDOC_ARGS=(
         -r''${FROM} -wmarkdown-smart-simple_tables-multiline_tables''${GRID_TABLES}
-        --wrap=none --lua-filter=${lua}
+        --data-dir=${initLua}
+        --wrap=none --lua-filter=${strip}
       )
 
       local PANDOC_EXTRA_SIGIL=(--pandoc-extra-arg -P)
@@ -59,5 +74,5 @@ let
 in
 lib.standalone {
   inherit version script;
-  passthru = { inherit lua; };
+  passthru = { inherit initLua strip; };
 }
