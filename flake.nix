@@ -47,6 +47,7 @@
     in
     buildFlakeFrom [
       ./dependencies/python
+      ./dependencies/lua
 
       ./deploy/aztfexport
       ./deploy/org-formation
