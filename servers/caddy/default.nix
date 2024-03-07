@@ -1,4 +1,4 @@
-{ self, lib, nixpkgs, spanx, ... }:
+{ self, lib, nixpkgs, ... }:
 
 let
   pnames = [ "tailscale-nginx-auth" ];
@@ -17,6 +17,9 @@ in
   overlays.caddy = final: prev:
     let
       fetchXCaddy = prev.callPackage ./fetchXCaddy.nix { };
+      caddyWith = prev.callPackage ./caddyWith.nix {
+        inherit fetchXCaddy;
+      };
       extras = { };
     in
     lib.foldFor pnames (pname: {
@@ -25,7 +28,8 @@ in
     });
 } //
 lib.foldFor lib.platforms.all (system:
-  let pkgs = nixpkgs.legacyPackages.${system};
+  let
+    pkgs = nixpkgs.legacyPackages.${system};
   in
   {
     packages.${system} =
@@ -35,8 +39,5 @@ lib.foldFor lib.platforms.all (system:
       };
     legacyPackages.${system} = self.overlays.caddy
       self.legacyPackages.${system}
-      pkgs // {
-      caddy-extended = let spanxPkgs = spanx.packages.${system}; in
-        spanxPkgs.${system} or spanxPkgs.default;
-    };
+      pkgs;
   })

@@ -27,9 +27,7 @@
       mergeFlakeOutputs =
         lib.foldMap (file: import file (inputs // { inherit lib; }));
 
-      flakeOverlays = [
-        inputs.spanx.overlays.default
-      ];
+      flakeOverlays = [ ];
 
       buildFlakeFrom = files: lib.recursiveUpdate
         (mergeFlakeOutputs files)
