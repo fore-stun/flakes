@@ -11,11 +11,6 @@
     gomod2nix.url = "github:fore-stun/gomod2nix/fix-recursive-symlinker";
     gomod2nix.inputs.nixpkgs.follows = "nixpkgs";
     gomod2nix.inputs.flake-utils.follows = "flake-utils";
-
-    spanx.url = "github:fore-stun/spanx";
-    spanx.inputs.nixpkgs.follows = "nixpkgs";
-    spanx.inputs.gomod2nix.follows = "gomod2nix";
-    spanx.inputs.flake-utils.follows = "flake-utils";
   };
 
   outputs = { self, nixpkgs, ... }@inputs:
