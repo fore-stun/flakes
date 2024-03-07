@@ -1,7 +1,7 @@
-{ self, lib, nixpkgs, spanx, ... }:
+{ self, lib, nixpkgs, ... }:
 
 let
-  pnames = [ "tailscale-nginx-auth" ];
+  pnames = [ "caddy-extended" "tailscale-nginx-auth" ];
 
   forAarch64Linux = pkgs: drv: (drv.override {
     inherit (pkgs.pkgsCross.aarch64-multiplatform-musl) hostPlatform;
@@ -14,20 +14,30 @@ let
 
 in
 {
-  overlays.caddy = final: prev: lib.foldFor pnames (pname: {
-    ${pname} = prev.callPackage (./. + "/${pname}.nix") { };
-  });
+  overlays.caddy = final: prev:
+    let
+      fetchXCaddy = prev.callPackage ./fetchXCaddy.nix { };
+      caddyWith = prev.callPackage ./caddyWith.nix {
+        inherit fetchXCaddy;
+      };
+      extras = { caddy-extended = { inherit caddyWith; }; };
+    in
+    lib.foldFor pnames (pname: {
+      ${pname} =
+        prev.callPackage (./. + "/${pname}.nix") (extras.${pname} or { });
+    });
 } //
 lib.foldFor lib.platforms.all (system:
-  let pkgs = nixpkgs.legacyPackages.${system};
+  let
+    pkgs = nixpkgs.legacyPackages.${system};
   in
   {
-    packages.${system} = self.overlays.caddy
-      self.packages.${system}
-      pkgs // {
-      caddy-extended = let spanxPkgs = spanx.packages.${system}; in
-        spanxPkgs.${system} or spanxPkgs.default;
-      tailscale-nginx-auth-aarch64-linux =
-        forAarch64Linux pkgs self.packages.${system}.tailscale-nginx-auth;
-    };
+    packages.${system} =
+      lib.filterAttrs (_: lib.isDerivation) self.legacyPackages.${system} // {
+        tailscale-nginx-auth-aarch64-linux =
+          forAarch64Linux pkgs self.packages.${system}.tailscale-nginx-auth;
+      };
+    legacyPackages.${system} = self.overlays.caddy
+      self.legacyPackages.${system}
+      pkgs;
   })
