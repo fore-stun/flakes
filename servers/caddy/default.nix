@@ -22,12 +22,15 @@ lib.foldFor lib.platforms.all (system:
   let pkgs = nixpkgs.legacyPackages.${system};
   in
   {
-    packages.${system} = self.overlays.caddy
-      self.packages.${system}
+    packages.${system} =
+      lib.filterAttrs (_: lib.isDerivation) self.legacyPackages.${system} // {
+        tailscale-nginx-auth-aarch64-linux =
+          forAarch64Linux pkgs self.packages.${system}.tailscale-nginx-auth;
+      };
+    legacyPackages.${system} = self.overlays.caddy
+      self.legacyPackages.${system}
       pkgs // {
       caddy-extended = let spanxPkgs = spanx.packages.${system}; in
         spanxPkgs.${system} or spanxPkgs.default;
-      tailscale-nginx-auth-aarch64-linux =
-        forAarch64Linux pkgs self.packages.${system}.tailscale-nginx-auth;
     };
   })
