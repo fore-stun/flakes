@@ -14,9 +14,14 @@ let
 
 in
 {
-  overlays.caddy = final: prev: lib.foldFor pnames (pname: {
-    ${pname} = prev.callPackage (./. + "/${pname}.nix") { };
-  });
+  overlays.caddy = final: prev:
+    let
+      extras = { };
+    in
+    lib.foldFor pnames (pname: {
+      ${pname} =
+        prev.callPackage (./. + "/${pname}.nix") (extras.${pname} or { });
+    });
 } //
 lib.foldFor lib.platforms.all (system:
   let pkgs = nixpkgs.legacyPackages.${system};
