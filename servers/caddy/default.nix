@@ -16,6 +16,7 @@ in
 {
   overlays.caddy = final: prev:
     let
+      fetchXCaddy = prev.callPackage ./fetchXCaddy.nix { };
       extras = { };
     in
     lib.foldFor pnames (pname: {
