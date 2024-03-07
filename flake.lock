@@ -61,8 +61,7 @@
         "flake-utils": "flake-utils",
         "gomod2nix": "gomod2nix",
         "nixpkgs": "nixpkgs",
-        "rust": "rust",
-        "spanx": "spanx"
+        "rust": "rust"
       }
     },
     "rust": {
@@ -85,32 +84,6 @@
       "original": {
         "owner": "oxalica",
         "repo": "rust-overlay",
-        "type": "github"
-      }
-    },
-    "spanx": {
-      "inputs": {
-        "flake-utils": [
-          "flake-utils"
-        ],
-        "gomod2nix": [
-          "gomod2nix"
-        ],
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1700528264,
-        "narHash": "sha256-MLoOiItnbEco4GwxBXcwjn9u5FYh/6HQVX6fCh69c4c=",
-        "owner": "fore-stun",
-        "repo": "spanx",
-        "rev": "9e9109e6b964cd36fb9cb1be8328b0f32b3d60c3",
-        "type": "github"
-      },
-      "original": {
-        "owner": "fore-stun",
-        "repo": "spanx",
         "type": "github"
       }
     },
