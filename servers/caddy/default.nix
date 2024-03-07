@@ -1,7 +1,7 @@
 { self, lib, nixpkgs, ... }:
 
 let
-  pnames = [ "tailscale-nginx-auth" ];
+  pnames = [ "caddy-extended" "tailscale-nginx-auth" ];
 
   forAarch64Linux = pkgs: drv: (drv.override {
     inherit (pkgs.pkgsCross.aarch64-multiplatform-musl) hostPlatform;
@@ -20,7 +20,7 @@ in
       caddyWith = prev.callPackage ./caddyWith.nix {
         inherit fetchXCaddy;
       };
-      extras = { };
+      extras = { caddy-extended = { inherit fetchXCaddy caddyWith; }; };
     in
     lib.foldFor pnames (pname: {
       ${pname} =
