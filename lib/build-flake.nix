@@ -4,7 +4,7 @@
 caller:
 # Flake inputs
 { self, ... }@inputs:
-overlays:
+preOverlays:
 files:
 
 let
@@ -19,7 +19,7 @@ let
     overlays.default = lib.pipe self.overlays [
       (lib.filterAttrs (n: _: n != "default"))
       builtins.attrValues
-      (o: o ++ overlays)
+      (o: preOverlays ++ o)
       lib.composeManyExtensions
     ];
   };
