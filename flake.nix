@@ -19,26 +19,10 @@
         lib = import ./flake-lib.nix { inherit nixpkgs; };
       };
 
-      mergeFlakeOutputs =
-        lib.foldMap (file: import file (inputs // { inherit lib; }));
-
       flakeOverlays = [ ];
 
-      buildFlakeFrom = files: lib.recursiveUpdate
-        (mergeFlakeOutputs files)
-        {
-          inherit lib;
-
-          overlays.default = lib.pipe self.overlays [
-            (lib.filterAttrs (n: _: n != "default"))
-            builtins.attrValues
-            (o: o ++ flakeOverlays)
-            lib.composeManyExtensions
-          ];
-        };
-
     in
-    buildFlakeFrom [
+    lib.buildFlakeFrom ./. inputs flakeOverlays [
       ./dependencies/python
       ./dependencies/lua
 

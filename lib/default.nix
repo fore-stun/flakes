@@ -5,6 +5,7 @@ let
     platforms = { inherit anyNix; };
     licenses = { inherit dual; };
     inherit
+      buildFlakeFrom
       standalone
       ;
   };
@@ -30,6 +31,8 @@ let
       } // meta;
       passthru = old.passthru or { } // passthru;
     });
+
+  buildFlakeFrom = import ./build-flake.nix { inherit lib; };
 
 in
 lib
