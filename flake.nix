@@ -28,6 +28,8 @@
       ./dependencies/python
       ./dependencies/lua
 
+      ./utils/writers
+
       ./deploy/aztfexport
       ./deploy/org-formation
 
@@ -41,7 +43,6 @@
       ./utils/exif
       ./utils/generators
       ./utils/shell
-      ./utils/writers
 
       ./scripts/nix
       ./scripts/pandoc
