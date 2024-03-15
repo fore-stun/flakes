@@ -7,6 +7,7 @@ let
     inherit
       buildFlakeFrom
       standalone
+      subFlake
       ;
   };
 
@@ -34,5 +35,8 @@ let
 
   buildFlakeFrom = import ./build-flake.nix { inherit lib; };
 
+  subFlake = import ./sub-flake.nix {
+    inherit lib;
+  };
 in
 lib
