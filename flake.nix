@@ -19,7 +19,9 @@
         lib = import ./flake-lib.nix { inherit nixpkgs; };
       };
 
-      flakeOverlays = [ ];
+      flakeOverlays = [
+        (final: prev: { inherit lib; })
+      ];
 
     in
     lib.buildFlakeFrom ./. inputs flakeOverlays [
