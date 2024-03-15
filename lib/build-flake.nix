@@ -6,12 +6,17 @@ caller:
 { self, nixpkgs, ... }@inputs:
 preOverlays:
 files:
-
 let
 
-  merged = lib.foldFor files (file:
-    import file (inputs // { inherit lib; })
-  );
+  merged = lib.foldFor files (directory:
+    let file = import directory (inputs // { inherit lib; });
+    in {
+      overlays = file.overlays or (lib.subFlake {
+        inherit caller directory;
+        pnames = file;
+      }).overlays;
+    });
+
 
   extension = {
     inherit lib;
