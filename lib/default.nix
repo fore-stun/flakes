@@ -1,6 +1,14 @@
-{ lib, ... }:
+{ ... }@inputs:
 
 let
+  lib = inputs.lib.recursiveUpdate inputs.lib {
+    platforms = { inherit anyNix; };
+    licenses = { inherit dual; };
+    inherit
+      standalone
+      ;
+  };
+
   anyNix = lib.platforms.darwin ++ lib.platforms.linux;
 
   dual = builtins.attrValues
@@ -24,10 +32,4 @@ let
     });
 
 in
-lib.recursiveUpdate lib {
-  platforms = { inherit anyNix; };
-  licenses = { inherit dual; };
-  inherit
-    standalone
-    ;
-}
+lib
