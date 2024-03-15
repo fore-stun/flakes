@@ -1,9 +1,11 @@
-{ writers
+{ lib
 , python3Packages
+, writers
 }:
 
 let
   pname = "pysplit";
+  version = "0.0.1";
 
   script = writers.writePythonBin "${pname}"
     {
@@ -34,4 +36,4 @@ let
   '';
 
 in
-script
+lib.standalone { inherit version script; }

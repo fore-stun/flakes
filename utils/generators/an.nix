@@ -22,6 +22,7 @@ let
     homepage = "http://fatphil.org/words/an.html";
     license = lib.licenses.gpl2Plus;
     mainProgram = pname;
+    platforms = lib.platforms.darwin;
   };
 in
 stdenv.mkDerivation {

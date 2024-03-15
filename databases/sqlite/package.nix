@@ -20,7 +20,10 @@ symlinkJoin {
     libPaths = lib.mapAttrs (_: d: d.libPath) plugins;
   };
 
-  meta.mainProgram = "sqlite3";
+  meta = {
+    mainProgram = "sqlite3";
+    inherit (sqlite.meta) platforms;
+  };
 
   postBuild = ''
     wrapProgram "$out/bin/sqlite3" \
