@@ -9,21 +9,28 @@ files:
 let
 
   merged = lib.foldFor files (directory:
-    let file = import directory (inputs // { inherit lib; });
-    in {
-      overlays = file.overlays or (lib.subFlake {
+    let
+      file = import directory (inputs // { inherit lib; });
+    in
+    if file ? "overlays" then { inherit (file) overlays; }
+    else
+      lib.subFlake {
         inherit caller directory;
-        pnames = file;
-      }).overlays;
-    });
-
+        pnames = file.pnames or file;
+        depends = file.depends or [ ];
+      }
+  );
 
   extension = {
     inherit lib;
 
-    overlays.default = lib.pipe self.overlays [
-      (lib.filterAttrs (n: _: n != "default"))
-      builtins.attrValues
+    overlays.default = lib.pipe self.__depends [
+      lib.attrsToList
+      (lib.toposort (a: b: builtins.elem a.name b.value or [ ]))
+      (x: x.result)
+      (builtins.map (x: x.name))
+      (ds: ds ++ lib.subtractLists (ds ++ [ "default" ]) (builtins.attrNames self.overlays))
+      (builtins.map (d: self.overlays.${d}))
       (o: preOverlays ++ o)
       lib.composeManyExtensions
     ];

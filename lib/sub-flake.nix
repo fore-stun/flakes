@@ -13,6 +13,8 @@
     (lib.path.removePrefix caller)
     (lib.removePrefix "./")
   ]
+, # names of dependencies
+  depends ? [ ]
 }:
 
 {
@@ -24,4 +26,6 @@
         // (extras.final or (_: { })) final
       )
     );
+
+  __depends.${name} = depends;
 }
