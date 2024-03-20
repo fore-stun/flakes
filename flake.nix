@@ -8,6 +8,9 @@
     rust.inputs.nixpkgs.follows = "nixpkgs";
     rust.inputs.flake-utils.follows = "flake-utils";
 
+    crane.url = "github:ipetkov/crane";
+    crane.inputs.nixpkgs.follows = "nixpkgs";
+
     gomod2nix.url = "github:fore-stun/gomod2nix/fix-recursive-symlinker";
     gomod2nix.inputs.nixpkgs.follows = "nixpkgs";
     gomod2nix.inputs.flake-utils.follows = "flake-utils";
