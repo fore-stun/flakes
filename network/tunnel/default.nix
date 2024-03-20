@@ -1,4 +1,4 @@
-{ self, lib, nixpkgs, ... }:
+{ self, lib, nixpkgs, crane, ... }:
 
 let
   pnames = [
@@ -9,7 +9,9 @@ in
 {
   overlays.tunnel = final: prev:
     let
-      extras = { };
+      extras = {
+        wstunnel = { inherit crane; };
+      };
     in
     lib.foldFor pnames (pname: {
       ${pname} = lib.callPackageWith prev (./. + "/${pname}.nix") (
