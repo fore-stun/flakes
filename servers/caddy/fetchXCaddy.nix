@@ -6,9 +6,17 @@
 , xcaddy
 }:
 
-{ plugins ? [ ]
+{ plugins ? { }
 , hash ? null
 }:
+
+let
+  caddyPlugins = lib.concatMapStringsSep
+    " \\\n  "
+    ({ name, value }: "--with ${name}@${value}")
+    (lib.attrsToList plugins);
+
+in
 
 stdenv.mkDerivation {
   pname = "caddy-using-xcaddy-${xcaddy.version}";
@@ -30,7 +38,7 @@ stdenv.mkDerivation {
 
   buildPhase = ''
     ${lib.getExe xcaddy} build "${caddy.src.rev}" \
-      ${lib.concatMapStringsSep " \\\n  " (plugin: "--with ${plugin}") plugins}
+      ${caddyPlugins}
     cd buildenv*
     go mod vendor
   '';
