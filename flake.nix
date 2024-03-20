@@ -54,6 +54,8 @@
       ./editors/language-server
       ./editors/formatter
 
+      ./network/tunnel
+
       ./utils/email
       ./utils/exif
       ./utils/generators
