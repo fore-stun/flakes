@@ -2,6 +2,7 @@
 
 let
   pnames = [
+    "wstunnel"
   ];
 
 in
