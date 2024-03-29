@@ -92,13 +92,14 @@ let
 
   sqlean =
     let
-      version = "0.21.10";
+      version = "0.22.0";
 
       src = fetchFromGitHub {
+        name = "sqlean-src-${version}";
         owner = "nalgeon";
         repo = "sqlean";
-        rev = "84671a076cfcd1e8fcfa295338415b0dd1215922";
-        hash = "sha256-GpNvb6Wnra4dKj5FinEiDDGRYY/snaQC8CdWCOhX5XI=";
+        rev = "d8f0d6b007c2798f0cbdc863699eb2c6ba19e597";
+        hash = "sha256-T6r7dfQWKz9UwtVQ2L1noh32YWnVOu8YXl15NuMM3t0=";
       };
 
       mkSqlean = args@{ name, ... }: mkSqliteExt {
