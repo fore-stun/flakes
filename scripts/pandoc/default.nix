@@ -4,6 +4,7 @@ let
   pnames = [
     "csvs-from-markdown-tables"
     "simple-markdown"
+    "word-count"
   ];
 in
 {
