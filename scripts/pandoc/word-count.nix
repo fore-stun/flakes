@@ -89,26 +89,31 @@ let
 
   script = writers.writeZshBin "${pname}" ''
     zparseopts -D -E -F -- \
-      -from:=ARG_from f:=ARG_from \
+      -format-from:=ARG_format_from f:=ARG_format_from \
+      -files-from:=ARG_files_from F:=ARG_files_from \
       -debug=OPT_debug d=OPT_debug
 
     local -a infiles=("$@")
 
-    if ! (( #infiles )); then
+    if (( $#ARG_files_from )); then
+      infiles+=("''${ARG_files_from[2]}")
+    fi
+
+    if ! (( $#infiles )); then
       [[ -t 0 ]] && return 3
       infiles=(-)
     fi
 
     wordCount() {
-      local FROM="''${ARG_from[2]:-markdown}"
+      local FROM="''${ARG_format_from[2]:-markdown}"
 
-      local -a PANDOC_ARGS=(
+      local -a pandoc_args=(
         -r''${FROM} -wnative
         -M debug="$(( $#OPT_debug ))"
         --lua-filter=${lib.getExe wordCount}
       )
 
-      ${pandoc}/bin/pandoc "''${(@)PANDOC_ARGS}" "$@"
+      ${pandoc}/bin/pandoc "''${(@)pandoc_args}" "$@"
     }
 
     wordCount "''${(@)infiles}"
