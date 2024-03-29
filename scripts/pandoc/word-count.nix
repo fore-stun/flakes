@@ -1,6 +1,9 @@
 { lib
-, pandoc
+, gawk
 , lua
+, moreutils
+, pandoc
+, perl
 , writers
 }:
 let
@@ -9,7 +12,7 @@ let
 
   wordCount = writers.writeLuaBin lua "${pname}-filter.lua"
     {
-      doCheck = "lua54+pandoc";
+      doCheck = "lua54+pandocWriter";
     } ''
     local function debug(enabled, f)
       if tonumber(enabled) > 0 then
@@ -20,8 +23,6 @@ let
     local function ignore(_)
       return {}
     end
-
-    local total = 0
 
     local words = 0
 
@@ -53,38 +54,39 @@ let
       return doc
     end
 
-    return {
-      {
-        Pandoc = function(doc)
-          local function walk(el, filename)
-            local start = os.clock()
-            words = 0
-            el.blocks:walk(wordcount)
-            print(words, filename)
-            total = total + words
-            debug(doc.meta.debug, function()
-              io.stderr:write(string.format("%.2f ms\n", 1000 * (os.clock() - start)))
-            end)
-          end
+    Writer = pandoc.scaffolding.Writer
 
-          return doc:walk({
-            Para = function(el)
-              local onlyFiles = function(e)
-                return e.tag == "Str"
+    Writer.Pandoc = function(doc)
+      local function direct(el, filename)
+        local start = os.clock()
+        words = 0
+        el.blocks:walk(wordcount)
+        print(words, filename)
+        debug(doc.meta.debug, function()
+          io.stderr:write(string.format("%.2f ms\n", 1000 * (os.clock() - start)))
+        end)
+      end
+
+      if tonumber(doc.meta.direct) > 0 then
+        direct(doc, "stdin")
+      else
+        doc:walk({
+          Para = function(el)
+            local onlyFiles = function(e)
+              return e.tag == "Str"
+            end
+            for _, file in pairs(el.content:filter(onlyFiles)) do
+              local rdoc = read(file.text)
+              if rdoc ~= nil then
+                direct(rdoc, file.text)
               end
-              for _, file in pairs(el.content:filter(onlyFiles)) do
-                local rdoc = read(file.text)
-                if rdoc ~= nil then
-                  walk(rdoc, file.text)
-                end
-              end
-              print(total, "total")
-              os.exit(0)
-            end,
-          })
-        end,
-      },
-    }
+            end
+          end,
+        })
+      end
+
+      return {}
+    end
   '';
 
   script = writers.writeZshBin "${pname}" ''
@@ -95,25 +97,38 @@ let
 
     local -a infiles=("$@")
 
+    local DIRECT=0
     if (( $#ARG_files_from )); then
-      infiles+=("''${ARG_files_from[2]}")
+      local FILES_FROM
+      if [[ "''${ARG_files_from[2]}" = "-" ]]; then
+        read -r -d"" FILES_FROM || {}
+      else
+        read -r -d"" FILES_FROM < "''${ARG_files_from[2]}" || {}
+      fi
+      infiles+=("''${(f)FILES_FROM}")
     fi
 
     if ! (( $#infiles )); then
       [[ -t 0 ]] && return 3
       infiles=(-)
+      DIRECT=1
     fi
+
+    print -l -- "''${(@)infiles}" >&2
 
     wordCount() {
       local FROM="''${ARG_format_from[2]:-markdown}"
 
       local -a pandoc_args=(
-        -r''${FROM} -wnative
+        -r''${FROM} -w${lib.getExe wordCount}
         -M debug="$(( $#OPT_debug ))"
-        --lua-filter=${lib.getExe wordCount}
+        -M direct="''${DIRECT}"
       )
 
-      ${pandoc}/bin/pandoc "''${(@)pandoc_args}" "$@"
+      ${lib.getExe pandoc} "''${(@)pandoc_args}" =(print -l -- "$@")
+      #   | ${lib.getExe perl} -pe 'chomp if eof' \
+      #   | ${moreutils}/bin/ifne ${lib.getExe gawk} -v OFS="\t" \
+      #     '{a+=$1; print $0} END {print a, "total"}'
     }
 
     wordCount "''${(@)infiles}"
