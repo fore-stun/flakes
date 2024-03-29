@@ -8,9 +8,22 @@ let
     stds.luacheckrc = { globals = {
       std = {},
     } }
-    stds.pandoc = { read_globals = {
-      pandoc = { other_fields = true },
-    } }
+
+    local pandoc_shared = {
+      read_globals = {
+        pandoc = { other_fields = true },
+        PANDOC_STATE = { other_fields = true },
+      },
+    }
+
+    stds.pandoc = pandoc_shared
+
+    stds.pandocWriter = {
+      read_globals = pandoc_shared.read_globals,
+      globals = {
+        Writer = { other_fields = true },
+      },
+    }
   '';
 
   # Vendored from pkgs/build-support/writers/default.nix
