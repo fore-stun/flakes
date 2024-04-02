@@ -20,3 +20,9 @@ any issues [here](/bug).
 So I tried regenerating the lock files using `npm install --package-lock-only` but it attempts and fails to build the entire project when I do that? Wtf?
 
 Sway/flat/erect back — Don’t check this until hip width is correct. (Don’t pin back pattern to bra or you won’t be able to tell if you need a sway/flat/erect back alteration.) For sway/flat/ erect back make a tuck at the center back as deep as needed to make the back hem parallel to the floor, tapering to nothing at the side seam.
+
+Test. This isn’t
+right. It’s really not
+right.
+Yikes! I’m truly a bit
+perplexed. This is *very* annoying.
