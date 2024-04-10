@@ -54,17 +54,19 @@ let
         | xargs -I {} tar --extract --to-stdout -f "$src" {} \
         | tar -xv "$SRC_BIN"
 
-      mkdir -p "$bin"
-      mv "$SRC_BIN" "$bin/postgrest"
+      mkdir -p "$bin/bin"
+      mv "$SRC_BIN" "$bin/bin/postgrest"
     '';
 
     postFixup = lib.optionalString hostPlatform.isDarwin ''
-      /usr/bin/install_name_tool -change "/usr/lib/libz.1.dylib" "${zlib}/lib/libz.1.dylib" "$bin/postgrest"
-      /usr/bin/install_name_tool -change "@@HOMEBREW_PREFIX@@/opt/libpq/lib/libpq.5.dylib" "${postgresql.lib}/lib/libpq.5.dylib" "$bin/postgrest"
-      /usr/bin/install_name_tool -change "/usr/lib/libiconv.2.dylib" "${darwin.libiconv}/lib/libiconv.2.dylib" "$bin/postgrest"
-      /usr/bin/install_name_tool -change "/usr/lib/libcharset.1.dylib" "${darwin.libiconv}/lib/libcharset.1.dylib" "$bin/postgrest"
+      POSTGREST="$bin/bin/postgrest"
 
-      /usr/bin/codesign --force -s - "$bin/postgrest"
+      /usr/bin/install_name_tool -change "/usr/lib/libz.1.dylib" "${zlib}/lib/libz.1.dylib" "$POSTGREST"
+      /usr/bin/install_name_tool -change "@@HOMEBREW_PREFIX@@/opt/libpq/lib/libpq.5.dylib" "${postgresql.lib}/lib/libpq.5.dylib" "$POSTGREST"
+      /usr/bin/install_name_tool -change "/usr/lib/libiconv.2.dylib" "${darwin.libiconv}/lib/libiconv.2.dylib" "$POSTGREST"
+      /usr/bin/install_name_tool -change "/usr/lib/libcharset.1.dylib" "${darwin.libiconv}/lib/libcharset.1.dylib" "$POSTGREST"
+
+      /usr/bin/codesign --force -s - "$POSTGREST"
     '';
   };
 
