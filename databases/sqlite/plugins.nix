@@ -69,9 +69,10 @@ let
         "3.42.0" = "sha256-IPNn0kN/dvIwJQRqD7B3aDkGYenic69QKa6NUDHZuu8=";
         "3.43.2" = "sha256-selyWeeq/D2ljq5X99TrF/ce+mcr7x2gV6W5gJEMcos=";
         "3.45.1" = "sha256-FPI1HS9w3q1BEWUh1OGIBb7pRTflQdx7zwsCsuq+Lk4=";
+        "3.45.2" = "sha256-D5cbyHhLwD5oHD4SF1qM/430lrFbBjm2G0iRcblUI0w=";
       };
 
-      version = "3.45.1";
+      version = "3.45.2";
 
       src = fetchzip {
         name = "sqlite-${version}-source";
