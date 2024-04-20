@@ -3,6 +3,7 @@
 let
   pnames = [
     "nix-load-systemd-unit"
+    "home-manager-specialisation"
   ];
 in
 {
