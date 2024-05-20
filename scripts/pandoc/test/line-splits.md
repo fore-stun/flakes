@@ -26,3 +26,5 @@ right. It’s really not
 right.
 Yikes! I’m truly a bit
 perplexed. This is *very* annoying.
+
+Stephen interrupted. “Doctor, I hope you don’t mind if I tell a story.”
