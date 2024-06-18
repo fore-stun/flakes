@@ -28,3 +28,6 @@ Yikes! I’m truly a bit
 perplexed. This is *very* annoying.
 
 Stephen interrupted. “Doctor, I hope you don’t mind if I tell a story.”
+
+Certainly! You can create a zsh script that uses `mpv` to play video slices based on the specified start and end
+timestamps. Here’s a short script that accomplishes this:
