@@ -73,7 +73,7 @@ let
         "3.45.3" = "sha256-i7oCI984w4hhxDUCuy1EsEDSwWprc+T23DiB3jDYUFc=";
       };
 
-      version = "3.45.2";
+      version = "3.45.3";
 
       src = fetchzip {
         name = "sqlite-${version}-source";
