@@ -70,6 +70,7 @@ let
         "3.43.2" = "sha256-selyWeeq/D2ljq5X99TrF/ce+mcr7x2gV6W5gJEMcos=";
         "3.45.1" = "sha256-FPI1HS9w3q1BEWUh1OGIBb7pRTflQdx7zwsCsuq+Lk4=";
         "3.45.2" = "sha256-D5cbyHhLwD5oHD4SF1qM/430lrFbBjm2G0iRcblUI0w=";
+        "3.45.3" = "sha256-i7oCI984w4hhxDUCuy1EsEDSwWprc+T23DiB3jDYUFc=";
       };
 
       version = "3.45.2";
