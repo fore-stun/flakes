@@ -7,5 +7,5 @@ caddyWith {
     "github.com/greenpau/caddy-security" = "bdd7abe375e7b0c13e6233a2f9b5433ba69c6af9";
     "github.com/lindenlab/caddy-s3-proxy" = "850db193cb7f48546439d236f2a6de7bd7436e2e";
   };
-  vendorHash = "sha256-qZjHioeL5xhX4xYt6hlSi7oG0DO8/pzSZ0WZSJRjSRo=";
+  vendorHash = "sha256-g7qzgwZcEokIi6hHJxmgVMK8vhguMd/NPQsNTmKtA0Q=";
 }
