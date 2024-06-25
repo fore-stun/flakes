@@ -3,6 +3,7 @@
 let
   pnames = [
     "LuaNLP"
+    "lsqlite3"
   ];
 
   newPackages = lua: final: prev: lib.foldFor pnames (pname: {
@@ -13,7 +14,7 @@ let
 
 in
 {
-  overlays.lua = final: prev: lib.foldFor [ "luajit" "lua5" "lua5_4" ] (lua:
+  overlays.lua = final: prev: lib.foldFor [ "luajit" "lua5" "lua5_4" "lua5_2" ] (lua:
     let
       luaPkgsScope = prev.${lua}.pkgs.overrideScope (prev.lib.composeManyExtensions [
         (_: _: newPackages lua final prev)
