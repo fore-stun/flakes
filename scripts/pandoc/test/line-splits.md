@@ -31,3 +31,8 @@ Stephen interrupted. “Doctor, I hope you don’t mind if I tell a story.”
 
 Certainly! You can create a zsh script that uses `mpv` to play video slices based on the specified start and end
 timestamps. Here’s a short script that accomplishes this:
+
+To mask the very slow writes to QLC flash, the Crucial P3 Plus operates in SLC mode.
+When the drive receives data, it writes each flash cell with a 0 or
+1.
+This write can finish quickly, then, while idle, the Crucial P3 Plus consolidates the data, reading from SLC and writing in QLC mode.
