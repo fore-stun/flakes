@@ -2,6 +2,7 @@
 
 let
   pnames = [
+    "plistview"
   ];
 in
 {
