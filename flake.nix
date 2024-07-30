@@ -62,6 +62,7 @@
       ./utils/shell
       ./utils/writers
 
+      ./scripts/darwin
       ./scripts/nix
       ./scripts/pandoc
       ./scripts/sync
