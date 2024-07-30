@@ -2,6 +2,7 @@
 
 let
   pnames = [
+    "groups-full"
     "plistview"
   ];
 in
