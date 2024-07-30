@@ -4,11 +4,11 @@
 , fetchXCaddy
 }:
 
+lib.fix (caddyWith:
 { plugins
 , vendorHash
 }:
-
-lib.fix (caddyWith: (
+(
   caddy.override {
     buildGoModule = args: buildGoModule (args // {
       src = fetchXCaddy {
