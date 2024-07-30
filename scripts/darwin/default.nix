@@ -4,6 +4,7 @@ let
   pnames = [
     "groups-full"
     "plistview"
+    "users-full"
   ];
 in
 {
