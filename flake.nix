@@ -66,6 +66,7 @@
       ./scripts/nix
       ./scripts/pandoc
       ./scripts/sync
+      ./scripts/system
       ./scripts/text
 
       ./servers/caddy
