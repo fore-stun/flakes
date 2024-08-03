@@ -1,7 +1,7 @@
 { self, lib, nixpkgs, ... }:
 
 let
-  pnames = [ ];
+  pnames = [ "mount-interactive" ];
 in
 {
   overlays.system-script = final: prev: lib.foldFor pnames
