@@ -1,7 +1,7 @@
 { self, lib, nixpkgs, ... }:
 
 let
-  pnames = [ ];
+  pnames = [ "huggingface-model-downloader" ];
 in
 {
   overlays.fetchers = final: prev:
