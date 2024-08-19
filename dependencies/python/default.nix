@@ -35,6 +35,7 @@ in
     {
       python3 = prev.python3 // {
         pkgs = pythonPkgsScope;
+        withPackages = f: prev.python3.buildEnv.override { extraLibs = f pythonPkgsScope; };
 
         packageOverrides = lib.warn ''
           `python3.packageOverrides` does not compose;
