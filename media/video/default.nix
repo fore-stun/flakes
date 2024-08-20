@@ -1,12 +1,16 @@
 { self, lib, nixpkgs, ... }:
 
 let
-  pnames = [ "handbrake-cli-bin" "handbrake-gui-bin" ];
+  pnames = [ "handbrake-bin" "handbrake-cli-bin" "handbrake-gui-bin" ];
 in
 {
   overlays.video = final: prev:
     let
-      extras = { };
+      extras = {
+        "handbrake-bin" = {
+          inherit (final) handbrake-cli-bin handbrake-gui-bin;
+        };
+      };
     in
     lib.foldFor pnames
       (pname: {
