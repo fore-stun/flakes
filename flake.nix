@@ -54,6 +54,8 @@
       ./editors/language-server
       ./editors/formatter
 
+      ./media/video
+
       ./network/tunnel
 
       ./utils/email
