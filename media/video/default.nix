@@ -1,7 +1,7 @@
 { self, lib, nixpkgs, ... }:
 
 let
-  pnames = [ "handbrake-gui-bin" ];
+  pnames = [ "handbrake-cli-bin" "handbrake-gui-bin" ];
 in
 {
   overlays.video = final: prev:
