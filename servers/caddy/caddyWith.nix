@@ -6,7 +6,7 @@
 
 lib.fix (caddyWith:
 { plugins
-, vendorHash
+, vendorHash ? lib.fakeHash
 }:
 (
   caddy.override {
