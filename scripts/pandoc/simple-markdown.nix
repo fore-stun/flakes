@@ -142,7 +142,7 @@ let
       local PANDOC_EXTRA_SIGIL=(--pandoc-extra-arg -P)
       PANDOC_ARGS+=("''${(@)pandoc_extra:|PANDOC_EXTRA_SIGIL}")
 
-      ${pandoc}/bin/pandoc "''${(@)PANDOC_ARGS}" </dev/stdin
+      ${pandoc}/bin/pandoc "''${(@)PANDOC_ARGS}" <&0
     }
 
     convertPandoc "$@"
