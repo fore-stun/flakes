@@ -36,3 +36,9 @@ To mask the very slow writes to QLC flash, the Crucial P3 Plus operates in SLC m
 When the drive receives data, it writes each flash cell with a 0 or
 1.
 This write can finish quickly, then, while idle, the Crucial P3 Plus consolidates the data, reading from SLC and writing in QLC mode.
+
+“So the intended answer to this problem was choice B,
+3.
+However, the motion of the small circle is not in a straight line, but rather around the large circle.
+This revolving action around the large circle contributes an extra revolution as circle A rolls around circle B. Thus, the answer to this question should have been 4, not
+3.”
