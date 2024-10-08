@@ -3,7 +3,7 @@
 let
   pnames = [ "pgperms" "postgrest-bin" "storage-api" ];
 
-  pgs = [ "" "_16" "_15" "_14" ];
+  pgs = [ "" "_17" "_16" "_15" "_14" ];
 
 in
 {
