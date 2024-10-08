@@ -1,9 +1,9 @@
 { self, lib, nixpkgs, ... }:
 
 let
-  pnames = [ "pgperms" "postgrest-bin" "storage-api" ];
+  pnames = [ "pgperms" "postgrest-bin" "sqldiff" "storage-api" ];
 
-  pgs = [ "" "_16" "_15" "_14" ];
+  pgs = [ "" "_17" "_16" "_15" "_14" ];
 
 in
 {
@@ -12,6 +12,10 @@ in
       extras = {
         postgrest-bin = {
           postgresql = final.postgresql_16;
+        };
+        sqldiff = {
+          inherit (final) writers;
+          inherit lib;
         };
       };
     in
@@ -31,6 +35,6 @@ in
 } //
 lib.foldFor lib.platforms.all (system: {
   packages.${system} = self.overlays.postgres
-    self.packages.${system}
+    self.legacyPackages.${system}
     nixpkgs.legacyPackages.${system};
 })
