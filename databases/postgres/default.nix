@@ -31,6 +31,6 @@ in
 } //
 lib.foldFor lib.platforms.all (system: {
   packages.${system} = self.overlays.postgres
-    self.packages.${system}
+    self.legacyPackages.${system}
     nixpkgs.legacyPackages.${system};
 })
