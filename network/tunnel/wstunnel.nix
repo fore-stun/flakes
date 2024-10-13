@@ -2,9 +2,9 @@
 , crane
 , darwin
 , fetchFromGitHub
-, hostPlatform
 , libiconv
-, system
+, pkgs
+, stdenv
 }:
 
 let
@@ -13,7 +13,7 @@ let
   owner = "erebe";
   repo = pname;
 
-  clib = crane.lib.${system};
+  clib = crane.mkLib pkgs;
 
   src = fetchFromGitHub {
     inherit owner repo;
@@ -26,7 +26,7 @@ clib.buildPackage {
 
   nativeBuildInputs = [
     libiconv
-  ] ++ lib.optionals hostPlatform.isDarwin [
+  ] ++ lib.optionals stdenv.hostPlatform.isDarwin [
     darwin.apple_sdk.frameworks.CoreServices
     darwin.apple_sdk.frameworks.Security
   ];
