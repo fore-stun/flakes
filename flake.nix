@@ -56,6 +56,7 @@
 
       ./media/video
 
+      ./network/storage
       ./network/tunnel
 
       ./utils/bluetooth
