@@ -1,7 +1,7 @@
 { self, lib, nixpkgs, ... }:
 
 let
-  pnames = [ ];
+  pnames = [ "blendr" ];
 in
 {
   overlays.bluetooth = final: prev:
