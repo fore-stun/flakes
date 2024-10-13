@@ -58,6 +58,7 @@
 
       ./network/tunnel
 
+      ./utils/bluetooth
       ./utils/email
       ./utils/exif
       ./utils/generators
