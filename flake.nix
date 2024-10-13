@@ -2,6 +2,8 @@
   description = "Miscellaneous custom packages";
 
   inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+
     flake-utils.url = "github:numtide/flake-utils";
 
     rust.url = "github:oxalica/rust-overlay";
