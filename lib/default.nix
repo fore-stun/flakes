@@ -1,6 +1,8 @@
 { lib, ... }:
 
 let
+  lang = l: x: x;
+
   anyNix = lib.platforms.darwin ++ lib.platforms.linux;
 
   dual = builtins.attrValues
@@ -47,6 +49,7 @@ lib.recursiveUpdate lib {
   platforms = { inherit anyNix; };
   licenses = { inherit dual; };
   inherit
+    lang
     standalone
     pythonScopeWith
     ;
