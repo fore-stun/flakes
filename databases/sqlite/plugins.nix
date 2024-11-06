@@ -79,7 +79,7 @@ let
       src = fetchzip {
         name = "sqlite-${version}-source";
         url = "https://www.sqlite.org/src/tarball/sqlite.tar.gz?r=version-${version}";
-        hash = hashes.${version};
+        hash = hashes.${version} or lib.fakeHash;
       };
 
       mkBundle = name: mkSqliteExt {
