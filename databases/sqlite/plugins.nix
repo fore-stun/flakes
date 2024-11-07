@@ -72,14 +72,15 @@ let
         "3.45.2" = "sha256-D5cbyHhLwD5oHD4SF1qM/430lrFbBjm2G0iRcblUI0w=";
         "3.45.3" = "sha256-i7oCI984w4hhxDUCuy1EsEDSwWprc+T23DiB3jDYUFc=";
         "3.46.0" = "sha256-CxXtTts8ICFkv9PNakTEBwgHmiISgNNwrNWDQT6Smp0=";
+        "3.46.1" = "sha256-lqFg18SIteUQqkNIV93Gu61f9Cz/SWesUdU4G8lpmbM=";
       };
 
-      version = "3.46.0";
+      version = "3.46.1";
 
       src = fetchzip {
         name = "sqlite-${version}-source";
         url = "https://www.sqlite.org/src/tarball/sqlite.tar.gz?r=version-${version}";
-        hash = hashes.${version};
+        hash = hashes.${version} or lib.fakeHash;
       };
 
       mkBundle = name: mkSqliteExt {
