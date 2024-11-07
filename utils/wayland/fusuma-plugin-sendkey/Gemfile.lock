@@ -1,0 +1,19 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    fusuma (3.6.2)
+    fusuma-plugin-sendkey (0.13.2)
+      fusuma (>= 3.1)
+      revdev
+    revdev (0.2.1)
+
+PLATFORMS
+  aarch64-linux
+  ruby
+  x86_64-linux
+
+DEPENDENCIES
+  fusuma-plugin-sendkey (= 0.13.2)
+
+BUNDLED WITH
+   2.5.16
