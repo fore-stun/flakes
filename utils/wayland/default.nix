@@ -1,7 +1,7 @@
 { self, lib, nixpkgs, ... }:
 
 let
-  pnames = [ ];
+  pnames = [ "fusuma-plugin-sendkey" ];
 in
 {
   overlays.storage = final: prev:
