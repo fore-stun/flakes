@@ -65,6 +65,7 @@
       ./utils/generators
       ./utils/shell
       ./utils/writers
+      ./utils/wayland
 
       ./scripts/darwin
       ./scripts/nix
