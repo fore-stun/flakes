@@ -6,14 +6,14 @@
 
 let
   pname = "ts_query_ls";
-  version = "v1.0.0";
+  version = "v1.2.2";
   owner = "ribru17";
   repo = pname;
 
   src = fetchFromGitHub {
     inherit owner repo;
-    rev = "02397890609124143eb7fcd2d9d9df7759c4771d";
-    hash = "sha256-rmP1jCT1cs+kq9axgVNM0nHPYMQ0ihJuh9izd2tBbzc=";
+    rev = "f3fe133bfe0f9e17e7404ec7357738be023b798a";
+    hash = "sha256-TJRG33V5nfbJgTaXwP3YDN5pSQKMrFZeLSsrIYy5I1A=";
   };
 in
 rustPlatform.buildRustPackage {
