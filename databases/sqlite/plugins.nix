@@ -97,13 +97,13 @@ let
 
   sqlean =
     let
-      version = "0.21.10";
+      version = "0.27.1";
 
       src = fetchFromGitHub {
         owner = "nalgeon";
         repo = "sqlean";
-        rev = "84671a076cfcd1e8fcfa295338415b0dd1215922";
-        hash = "sha256-GpNvb6Wnra4dKj5FinEiDDGRYY/snaQC8CdWCOhX5XI=";
+        rev = "94d8934683ee079a3e8639a7d8445f8b1ea52e36";
+        hash = "sha256-So4yUr9U1WCP1d6wJiJU1XkaCxmEaLMos6tlxQHmcxE=";
       };
 
       mkSqlean = args@{ name, ... }: mkSqliteExt {
@@ -215,7 +215,10 @@ sqlean [
     sourceFiles = [ "src/regexp/pcre2/*.c " ];
   }
   "stats"
-  "text"
+  {
+    name = "text";
+    sourceFiles = [ "src/text/utf8/*.c " ];
+  }
   "unicode"
   "vsv"
 ] //
