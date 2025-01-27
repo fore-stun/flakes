@@ -1,7 +1,7 @@
 { self, lib, nixpkgs, ... }:
 
 let
-  pnames = [ "ts-query-ls" ];
+  pnames = [ ];
 in
 {
   overlays.language-server = final: prev: lib.foldFor pnames (pname: {
