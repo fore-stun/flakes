@@ -73,9 +73,10 @@ let
         "3.45.3" = "sha256-i7oCI984w4hhxDUCuy1EsEDSwWprc+T23DiB3jDYUFc=";
         "3.46.0" = "sha256-CxXtTts8ICFkv9PNakTEBwgHmiISgNNwrNWDQT6Smp0=";
         "3.46.1" = "sha256-lqFg18SIteUQqkNIV93Gu61f9Cz/SWesUdU4G8lpmbM=";
+        "3.47.2" = "sha256-MtzBbk7TR1aTVrDwDXqRHVHipum2cC8Zs+h4uuat6SM=";
       };
 
-      version = "3.46.1";
+      version = "3.47.2";
 
       src = fetchzip {
         name = "sqlite-${version}-source";
@@ -96,13 +97,13 @@ let
 
   sqlean =
     let
-      version = "0.21.10";
+      version = "0.27.1";
 
       src = fetchFromGitHub {
         owner = "nalgeon";
         repo = "sqlean";
-        rev = "84671a076cfcd1e8fcfa295338415b0dd1215922";
-        hash = "sha256-GpNvb6Wnra4dKj5FinEiDDGRYY/snaQC8CdWCOhX5XI=";
+        rev = "94d8934683ee079a3e8639a7d8445f8b1ea52e36";
+        hash = "sha256-So4yUr9U1WCP1d6wJiJU1XkaCxmEaLMos6tlxQHmcxE=";
       };
 
       mkSqlean = args@{ name, ... }: mkSqliteExt {
@@ -214,7 +215,10 @@ sqlean [
     sourceFiles = [ "src/regexp/pcre2/*.c " ];
   }
   "stats"
-  "text"
+  {
+    name = "text";
+    sourceFiles = [ "src/text/utf8/*.c " ];
+  }
   "unicode"
   "vsv"
 ] //

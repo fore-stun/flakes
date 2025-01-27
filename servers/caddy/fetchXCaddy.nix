@@ -37,7 +37,7 @@ stdenv.mkDerivation {
   '';
 
   buildPhase = ''
-    ${lib.getExe xcaddy} build "${caddy.src.rev}" \
+    ${lib.getExe xcaddy} build "${caddy.src.tag}" \
       ${caddyPlugins}
     cd buildenv*
     go mod vendor
