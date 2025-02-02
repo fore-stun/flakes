@@ -121,6 +121,7 @@ let
       zparseopts -D -E -F -- \
         -pandoc-extra-arg+:=pandoc_extra P+:=pandoc_extra \
         -grid-tables=opt_grid_tables G=opt_grid_tables \
+        -reference-links=opt_reference_links R=opt_reference_links \
         -no-split=opt_no_split S=opt_no_split \
         -markdown=opt_markdown m=opt_markdown
 
@@ -137,6 +138,10 @@ let
 
       if ! (( #opt_no_split )); then
         PANDOC_ARGS+=(--lua-filter=${lib.getExe split})
+      fi
+
+      if (( #opt_reference_links )); then
+        PANDOC_ARGS+=(--reference-links=true)
       fi
 
       local PANDOC_EXTRA_SIGIL=(--pandoc-extra-arg -P)
