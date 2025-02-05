@@ -1,7 +1,7 @@
 { self, lib, nixpkgs, ... }:
 
 let
-  pnames = [ ];
+  pnames = [ "json-diff" ];
 in
 {
   overlays.json = final: prev:
