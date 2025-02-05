@@ -63,6 +63,7 @@
       ./utils/bluetooth
       ./utils/email
       ./utils/exif
+      ./utils/json
       ./utils/generators
       ./utils/shell
       ./utils/writers
