@@ -2,6 +2,7 @@
 
 let
   pnames = [
+    "jj-scripts"
   ];
 in
 {
