@@ -1,11 +1,133 @@
 { lib
+, coreutils
+, findutils
+, fzf
+, gawk
+, jujutsu
+, moreutils
 , writers
 }:
 let
   pname = "jj-scripts";
   version = "0.1.0";
+  prefixStringLines = prefix: str:
+    lib.concatMapStringsSep "\n" (line: prefix + line) (lib.splitString "\n" str);
 
-  functions = { };
+  indent = prefixStringLines "  ";
+
+  functions = {
+    track-bookmarks = indent ''
+      ${lib.getExe jujutsu} bookmark list --ignore-working-copy -a \
+        | ${lib.getExe gawk} '$1 ~ /^[^ ]+@origin:$/ { $1 = substr($1,0,length($1) - 1); print $1 }' \
+        | ${lib.getExe fzf} --reverse --ansi --multi --preview="${lib.getExe jujutsu} log -r ::{} --ignore-working-copy --color=always" \
+        | ${moreutils}/bin/ifne ${findutils}/bin/xargs -I {} ${lib.getExe jujutsu} bookmark track {}
+    '';
+
+    delete-bookmarks = indent ''
+      ${lib.getExe jujutsu} bookmark list --ignore-working-copy 2>/dev/null  \
+        | ${lib.getExe gawk} '$0 ~ /^[^ ]/ && $1 ~ /:$/ { $1 = substr($1,0,length($1) - 1); print $1 }' \
+        | ${lib.getExe fzf} --reverse --ansi --multi --preview="${lib.getExe jujutsu} log -r ::{} --ignore-working-copy --color=always" \
+        | ${moreutils}/bin/ifne ${findutils}/bin/xargs -I {} ${lib.getExe jujutsu} bookmark delete {}
+    '';
+
+    op-restore = ''
+        local OP_RESTORE_TEMPLATE
+        read -r -d "" OP_RESTORE_TEMPLATE <<-'JJT' || :
+      self.id().short() ++ "\n"
+      JJT
+        ${lib.getExe jujutsu} op log -T "''${OP_RESTORE_TEMPLATE}" --no-graph --ignore-working-copy 2>/dev/null \
+          | ${lib.getExe fzf} --reverse --ansi --multi --preview-window="up" \
+            --preview="${lib.getExe jujutsu} op show {} --ignore-working-copy --color=always" \
+          | ${moreutils}/bin/ifne ${findutils}/bin/xargs -I {} ${lib.getExe jujutsu} op restore {}
+    '';
+
+    evolog-check = ''
+        local REVSET="''${1?Revset}"
+        local EVOLOG_TAB
+        read -r -d "" EVOLOG_TAB <<-'JJT' || :
+      separate("\t"
+        , self.change_id().short()
+        , self.commit_id().short()
+        , if(self.conflict(), "conflict", "")
+        ) ++ "\n"
+      JJT
+
+        ${lib.getExe jujutsu} evolog -T "''${EVOLOG_TAB}" -r "''${REVSET}" --no-graph --ignore-working-copy 2>/dev/null \
+          | ${lib.getExe fzf} --reverse --ansi --multi --preview-window="up" \
+            --preview="${lib.getExe jujutsu} show -r {2} --color=always --ignore-working-copy" \
+          | ${moreutils}/bin/ifne ${coreutils}/bin/cut -f2 \
+          | ${moreutils}/bin/ifne ${findutils}/bin/xargs  -I {} ${lib.getExe jujutsu} show -r {} --ignore-working-copy
+    '';
+
+    noblame = ''
+        zparseopts -D -E -F -- \
+          i=OPT_interactive
+
+        local HEADLINE="''${1?Commit headline}"
+
+        if [[ "$#HEADLINE" -ge 41 ]]; then
+          print -- "Commit headline too long" >&2
+          return 41
+        fi
+
+        local IGNORE_BLAME_TEMPLATE
+        local BP_NOBLAME
+        local BP_IGNOREHEAD
+
+        read -r -d "" IGNORE_BLAME_TEMPLATE <<-'JJT' || :
+      concat( "# " , description.first_line() , "\n"
+        , "# " , change_id , "\n"
+        , commit_id , "\n"
+        )
+      JJT
+
+        read -r -d "" BP_NOBLAME <<- 'NOBLAME' || :
+      If this commit appears in your `git blame`, you need to run the
+      following to configure the `.git-blame-ignore-revs` file.
+
+      ```
+      git config blame.ignoreRevsFile .git-blame-ignore-revs
+      ```
+
+      If you have done that, then please replace the erroneous commit in that
+      file with the hash of this commit.
+      NOBLAME
+
+        read -r -d "" BP_IGNOREHEAD <<- 'IGNOREHEAD' || :
+      Run the following to ignore the HEAD commit
+
+      ```
+      git show --no-patch --format="%n# %s%n%H" >> .git-blame-ignore-revs
+      ```
+      IGNOREHEAD
+
+        ${lib.getExe jujutsu} desc --stdin <<- NOBLAME
+      ''${HEADLINE}
+
+      ''${BP_NOBLAME}
+      NOBLAME
+
+        if (( #OPT_interactive )); then
+          ${lib.getExe jujutsu} split
+          ${lib.getExe jujutsu} new -r @-
+        else
+          ${lib.getExe jujutsu} new
+        fi
+
+        print -l -- "" >> .git-blame-ignore-revs
+        ${lib.getExe jujutsu} log --no-graph --no-pager \
+          --template "''${IGNORE_BLAME_TEMPLATE}" \
+          -r @- >> .git-blame-ignore-revs
+
+        ${lib.getExe jujutsu} desc --stdin <<- IGNOREHEAD
+      Ignore ‘''${HEADLINE}’
+
+      ''${BP_IGNOREHEAD}
+      IGNOREHEAD
+
+        ${lib.getExe jujutsu} new
+    '';
+  };
 
   wrapFunctions =
     let
