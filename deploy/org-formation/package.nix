@@ -5,14 +5,14 @@
 
 let
   pname = "org-formation";
-  version = "v1.0.14";
+  version = "v1.0.16";
 
   src = fetchFromGitHub {
     name = "${pname}-${version}-src";
     owner = "fore-stun";
     repo = "${pname}-cli";
-    rev = "42b7339db1e8bae567591b936b4d1a67dfd8bb54";
-    hash = "sha256-4KZBSqjUt6s46bWBS1qh5Tc/4iHEPeBf4eBDS4WzIDA=";
+    rev = "960072bf920d935de90156b2d0f5c31b377039bb";
+    hash = "sha256-cQ5DUPCdOiXkL9Uumc7BgxuqanQLk9AuqBSUoSFV+4s=";
   };
 
 in
@@ -20,7 +20,7 @@ in
 buildNpmPackage {
   inherit pname version src;
 
-  npmDepsHash = "sha256-ABk6AgfTQidrc3cpuKKscTD23TWs2WaaiO7Ftla02bo=";
+  npmDepsHash = "sha256-Kd3JjNqF9fAKEllXm07xOHiq9B7EXVkYsoHTbK0/bhs=";
 
   meta = {
     homepage = "https://github.com/org-formation/org-formation-cli";
