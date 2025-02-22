@@ -68,6 +68,7 @@
       ./utils/wayland
 
       ./scripts/darwin
+      ./scripts/jujutsu
       ./scripts/nix
       ./scripts/pandoc
       ./scripts/sync
