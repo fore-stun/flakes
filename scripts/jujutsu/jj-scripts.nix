@@ -129,7 +129,7 @@ let
         ${lib.getExe jujutsu} new
     '';
 
-    gh-merge = indent ''
+    gh-pr-merge = indent ''
       local TIP
       ${lib.getExe jujutsu} bookmark list -r "heads(::@- & bookmarks())" -T "name" \
         | { read -r TIP || : }
@@ -140,6 +140,38 @@ let
         && ${lib.getExe jujutsu} rebase -r "at_operation(@-,trunk()):: ~ ::trunk()" -d "trunk()"  \
         && ${lib.getExe jujutsu} git push --tracked \
         && ${lib.getExe jujutsu} new "trunk()"
+    '';
+
+    gh-pr-create = indent ''
+      local CURRENT_BOOKMARK
+      ${lib.getExe jujutsu} bookmark list -r "@-" -T "name" \
+        | { read -r CURRENT_BOOKMARK || : }
+
+      if (( #CURRENT_BOOKMARK )); then
+        ${lib.getExe jujutsu} git push -b "''${CURRENT_BOOKMARK}"
+      else
+        ${lib.getExe jujutsu} git push -c "@-"
+        ${lib.getExe jujutsu} bookmark list -r "@-" -T "name" \
+          | { read -r CURRENT_BOOKMARK || : }
+      fi
+
+      ${lib.getExe gh} pr create -H "''${CURRENT_BOOKMARK}" "$@"
+    '';
+
+    gh-pr-view = indent ''
+      local TIP
+      ${lib.getExe jujutsu} bookmark list -r "heads(::@- & bookmarks())" -T "name" \
+        | { read -r TIP || : }
+
+      ${lib.getExe gh} pr view --web "''${TIP}"
+    '';
+
+    merge-trunk = indent ''
+      local BRANCH="''${1?Branch name}"
+      ${lib.getExe jujutsu} bookmark delete "@-" 2>/dev/null || :
+      ${lib.getExe jujutsu} new "trunk()" "@-" -m "Merge branch ''\'''${BRANCH}'" \
+        && ${lib.getExe jujutsu} new \
+        && ${lib.getExe jujutsu} bookmark move --from "heads(::@- & bookmarks())" --to "@-"
     '';
   };
 
