@@ -142,6 +142,22 @@ let
         && ${lib.getExe jujutsu} new "trunk()"
     '';
 
+    gh-pr-create = indent ''
+      local CURRENT_BOOKMARK
+      ${lib.getExe jujutsu} bookmark list -r "@-" -T "name" \
+        | { read -r CURRENT_BOOKMARK || : }
+
+      if (( #CURRENT_BOOKMARK )); then
+        ${lib.getExe jujutsu} git push -b "''${CURRENT_BOOKMARK}"
+      else
+        ${lib.getExe jujutsu} git push -c "@-"
+        ${lib.getExe jujutsu} bookmark list -r "@-" -T "name" \
+          | { read -r CURRENT_BOOKMARK || : }
+      fi
+
+      ${lib.getExe gh} pr create -H "''${CURRENT_BOOKMARK}" "$@"
+    '';
+
     merge-trunk = indent ''
       local BRANCH="''${1?Branch name}"
       ${lib.getExe jujutsu} bookmark delete "@-" 2>/dev/null || :
