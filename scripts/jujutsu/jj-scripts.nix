@@ -167,7 +167,15 @@ let
     fi
   '';
 
+
+in
+lib.fix (this:
+let
+  mkAlias = n: _: [ "util" "exec" "--" "${lib.getExe this}" "${n}" ];
 in
 lib.standalone {
   inherit version script;
-}
+  passthru = {
+    aliases = lib.mapAttrs mkAlias functions;
+  };
+})
