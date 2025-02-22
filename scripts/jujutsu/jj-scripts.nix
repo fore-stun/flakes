@@ -129,7 +129,7 @@ let
         ${lib.getExe jujutsu} new
     '';
 
-    gh-merge = indent ''
+    gh-pr-merge = indent ''
       local TIP
       ${lib.getExe jujutsu} bookmark list -r "heads(::@- & bookmarks())" -T "name" \
         | { read -r TIP || : }
