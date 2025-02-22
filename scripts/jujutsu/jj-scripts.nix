@@ -158,6 +158,14 @@ let
       ${lib.getExe gh} pr create -H "''${CURRENT_BOOKMARK}" "$@"
     '';
 
+    gh-pr-view = indent ''
+      local TIP
+      ${lib.getExe jujutsu} bookmark list -r "heads(::@- & bookmarks())" -T "name" \
+        | { read -r TIP || : }
+
+      ${lib.getExe gh} pr view --web "''${TIP}"
+    '';
+
     merge-trunk = indent ''
       local BRANCH="''${1?Branch name}"
       ${lib.getExe jujutsu} bookmark delete "@-" 2>/dev/null || :
