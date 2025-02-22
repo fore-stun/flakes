@@ -3,6 +3,7 @@
 , findutils
 , fzf
 , gawk
+, gh
 , jujutsu
 , moreutils
 , writers
@@ -126,6 +127,19 @@ let
       IGNOREHEAD
 
         ${lib.getExe jujutsu} new
+    '';
+
+    gh-merge = indent ''
+      local TIP
+      ${lib.getExe jujutsu} bookmark list -r "heads(::@- & bookmarks())" -T "name" \
+        | { read -r TIP || : }
+
+      ${lib.getExe gh} pr merge -m "''${TIP}" \
+        && ${lib.getExe jujutsu} bookmark delete "''${TIP}" \
+        && ${lib.getExe jujutsu} git fetch \
+        && ${lib.getExe jujutsu} rebase -r "at_operation(@-,trunk()):: ~ ::trunk()" -d "trunk()"  \
+        && ${lib.getExe jujutsu} git push --tracked \
+        && ${lib.getExe jujutsu} new "trunk()"
     '';
   };
 
