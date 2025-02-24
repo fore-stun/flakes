@@ -6,6 +6,7 @@
 , gh
 , jujutsu
 , moreutils
+, ripgrep
 , writers
 }:
 let
@@ -29,6 +30,50 @@ let
         | ${lib.getExe gawk} '$0 ~ /^[^ ]/ && $1 ~ /:$/ { $1 = substr($1,0,length($1) - 1); print $1 }' \
         | ${lib.getExe fzf} --reverse --ansi --multi --preview="${lib.getExe jujutsu} log -r ::{} --ignore-working-copy --color=always" \
         | ${moreutils}/bin/ifne ${findutils}/bin/xargs -I {} ${lib.getExe jujutsu} bookmark delete {}
+    '';
+
+    backout-show = ''
+        zparseopts -D -E -- \
+          d:=ARG_destination
+
+        local DESTINATION="''${ARG_destination[2]:-@-}"
+
+        local OP_LOG_ID_TEMPLATE
+        local COMMIT_LINE_TEMPLATE
+
+        read -r -d "" OP_LOG_ID_TEMPLATE <<-'JJT' || :
+      self.id().short() ++ "\n"
+      JJT
+
+        read -r -d "" COMMIT_LINE_TEMPLATE <<-'JJT' || :
+      concat(
+        separate(" ",
+          "Backing out onto:",
+          format_short_change_id_with_hidden_and_divergent_info(self),
+          self.commit_id().shortest(8),
+          author.timestamp().ago(),
+          bookmarks,
+          tags,
+          working_copies,
+          if(empty, label("empty", "∅")),
+          if(conflict, label("conflict", "❌")),
+          if(description,
+            description.first_line(),
+            label(if(empty, "empty"), description_placeholder),
+          ),
+        ),
+        "\n",
+      )
+      JJT
+
+        ${lib.getExe jujutsu} backout -d "''${DESTINATION}" "$@" \
+          && {
+            ${lib.getExe jujutsu} log -r "''${DESTINATION}" --no-pager --no-graph --ignore-working-copy -T "''${COMMIT_LINE_TEMPLATE}"
+            ${lib.getExe jujutsu} op log -n1 --no-pager --no-graph --ignore-working-copy -T "''${OP_LOG_ID_TEMPLATE}" \
+              | ${findutils}/bin/xargs ${lib.getExe jujutsu} op show --no-graph --ignore-working-copy --color=always \
+              | ${lib.getExe ripgrep} --color=never 'Back out' \
+              | ${moreutils}/bin/ifne ${coreutils}/bin/tac
+          }
     '';
 
     op-restore = ''
