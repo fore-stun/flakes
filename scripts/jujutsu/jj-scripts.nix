@@ -6,6 +6,7 @@
 , gh
 , jujutsu
 , moreutils
+, ripgrep
 , writers
 }:
 let
@@ -29,6 +30,20 @@ let
         | ${lib.getExe gawk} '$0 ~ /^[^ ]/ && $1 ~ /:$/ { $1 = substr($1,0,length($1) - 1); print $1 }' \
         | ${lib.getExe fzf} --reverse --ansi --multi --preview="${lib.getExe jujutsu} log -r ::{} --ignore-working-copy --color=always" \
         | ${moreutils}/bin/ifne ${findutils}/bin/xargs -I {} ${lib.getExe jujutsu} bookmark delete {}
+    '';
+
+    backout-show = ''
+        local OP_LOG_ID_TEMPLATE
+        read -r -d "" OP_LOG_ID_TEMPLATE <<-'JJT' || :
+      self.id().short() ++ "\n"
+      JJT
+
+        ${lib.getExe jujutsu} backout "$@" \
+          && {
+            ${lib.getExe jujutsu} op log -n1 --no-pager --no-graph --ignore-working-copy -T "''${OP_LOG_ID_TEMPLATE}" \
+              | ${findutils}/bin/xargs ${lib.getExe jujutsu} op show --no-graph --ignore-working-copy --color=always \
+              | ${lib.getExe ripgrep} --color=never 'Back out'
+          }
     '';
 
     op-restore = ''
