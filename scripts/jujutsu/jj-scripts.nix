@@ -187,25 +187,31 @@ let
         && ${lib.getExe jujutsu} new "trunk()"
     '';
 
-    gh-pr-create = indent ''
-      local CURRENT_BOOKMARK
-      ${lib.getExe jujutsu} bookmark list -r "@-" -T "name" \
-        | { read -r CURRENT_BOOKMARK || : }
+    gh-pr-create = ''
+        local BOOKMARK_TEMPLATE
+        local CURRENT_BOOKMARK
 
-      if (( #CURRENT_BOOKMARK )); then
-        ${lib.getExe jujutsu} git push -b "''${CURRENT_BOOKMARK}"
-      else
-        ${lib.getExe jujutsu} git push -c "@-"
-        ${lib.getExe jujutsu} bookmark list -r "@-" -T "name" \
+        read -r BOOKMARK_TEMPLATE <<-'JJT' || :
+      if(remote, "", name)
+      JJT
+
+        ${lib.getExe jujutsu} bookmark list -r "@-" -T "''${BOOKMARK_TEMPLATE}" --no-pager \
           | { read -r CURRENT_BOOKMARK || : }
-      fi
 
-      ${lib.getExe gh} pr create -H "''${CURRENT_BOOKMARK}" "$@"
+        if (( #CURRENT_BOOKMARK )); then
+          ${lib.getExe jujutsu} git push -b "''${CURRENT_BOOKMARK}"
+        else
+          ${lib.getExe jujutsu} git push -c "@-"
+          ${lib.getExe jujutsu} bookmark list -r "@-" -T "''${BOOKMARK_TEMPLATE}" --no-pager \
+            | { read -r CURRENT_BOOKMARK || : }
+        fi
+
+        ${lib.getExe gh} pr create -H "''${CURRENT_BOOKMARK}" "$@"
     '';
 
     gh-pr-view = indent ''
       local TIP
-      ${lib.getExe jujutsu} bookmark list -r "heads(::@- & bookmarks())" -T "name" \
+      ${lib.getExe jujutsu} bookmark list -r "heads(::@- & bookmarks())" -T "name" --no-pager \
         | { read -r TIP || : }
 
       ${lib.getExe gh} pr view --web "''${TIP}"
