@@ -188,9 +188,14 @@ let
     '';
 
     gh-pr-create = ''
+        local BOOKMARK_TEMPLATE
         local CURRENT_BOOKMARK
 
-        ${lib.getExe jujutsu} bookmark list -r "@-" -T "name" \
+        read -r BOOKMARK_TEMPLATE <<-'JJT' || :
+      name
+      JJT
+
+        ${lib.getExe jujutsu} bookmark list -r "@-" -T "''${BOOKMARK_TEMPLATE}" --no-pager \
           | { read -r CURRENT_BOOKMARK || : }
 
         if (( #CURRENT_BOOKMARK )); then
@@ -206,7 +211,8 @@ let
 
     gh-pr-view = indent ''
       local TIP
-      ${lib.getExe jujutsu} bookmark list -r "heads(::@- & bookmarks())" -T "name" \
+      ${lib.getExe jujutsu} bookmark list -r "heads(::@- & bookmarks())" \
+          -T "''${BOOKMARK_TEMPLATE}" --no-pager \
         | { read -r TIP || : }
 
       ${lib.getExe gh} pr view --web "''${TIP}"
