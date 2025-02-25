@@ -192,7 +192,7 @@ let
         local CURRENT_BOOKMARK
 
         read -r BOOKMARK_TEMPLATE <<-'JJT' || :
-      name
+      if(remote, "", name)
       JJT
 
         ${lib.getExe jujutsu} bookmark list -r "@-" -T "''${BOOKMARK_TEMPLATE}" --no-pager \
