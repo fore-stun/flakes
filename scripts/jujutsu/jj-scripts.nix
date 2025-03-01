@@ -218,9 +218,14 @@ let
     '';
 
     merge-trunk = indent ''
+      zparseopts -D -E -F -- \
+        d:=ARG_destination
+
+      local DESTINATION="''${ARG_destination[2]:-trunk()}"
+
       local BRANCH="''${1?Branch name}"
       ${lib.getExe jujutsu} bookmark delete "@-" 2>/dev/null || :
-      ${lib.getExe jujutsu} new "trunk()" "@-" -m "Merge branch ''\'''${BRANCH}'" \
+      ${lib.getExe jujutsu} new "''${DESTINATION}" "@-" -m "Merge branch ''\'''${BRANCH}'" \
         && ${lib.getExe jujutsu} new \
         && ${lib.getExe jujutsu} bookmark move --from "heads(::@- & bookmarks())" --to "@-"
     '';
