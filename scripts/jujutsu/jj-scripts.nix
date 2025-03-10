@@ -20,7 +20,7 @@ let
   functions = {
     track-bookmarks = indent ''
       ${lib.getExe jujutsu} bookmark list --ignore-working-copy -a \
-        | ${lib.getExe gawk} '$1 ~ /^[^ ]+@origin:$/ { $1 = substr($1,0,length($1) - 1); print $1 }' \
+        | ${lib.getExe gawk} -v REMOTE="origin" '$1 ~ ("^[^ ]+@" REMOTE ":$") { $1 = substr($1,0,length($1) - 1); print $1 }' \
         | ${lib.getExe fzf} --reverse --ansi --multi --preview="${lib.getExe jujutsu} log -r ::{} --ignore-working-copy --color=always" \
         | ${moreutils}/bin/ifne ${findutils}/bin/xargs -I {} ${lib.getExe jujutsu} bookmark track {}
     '';
