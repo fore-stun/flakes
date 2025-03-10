@@ -19,8 +19,17 @@ let
 
   functions = {
     track-bookmarks = indent ''
+      zparseopts -D -E -F -- \
+        u=OPT_upstream -upstream:=OPT_upstream \
+        -remote:=ARG_remote
+
+      typeset REMOTE="''${ARG_remote[2]:-origin}"
+      if (( #OPT_upstream )); then
+        REMOTE="upstream"
+      fi
+
       ${lib.getExe jujutsu} bookmark list --ignore-working-copy -a \
-        | ${lib.getExe gawk} -v REMOTE="origin" '$1 ~ ("^[^ ]+@" REMOTE ":$") { $1 = substr($1,0,length($1) - 1); print $1 }' \
+        | ${lib.getExe gawk} -v REMOTE="''${REMOTE?}" '$1 ~ ("^[^ ]+@" REMOTE ":$") { $1 = substr($1,0,length($1) - 1); print $1 }' \
         | ${lib.getExe fzf} --reverse --ansi --multi --preview="${lib.getExe jujutsu} log -r ::{} --ignore-working-copy --color=always" \
         | ${moreutils}/bin/ifne ${findutils}/bin/xargs -I {} ${lib.getExe jujutsu} bookmark track {}
     '';
