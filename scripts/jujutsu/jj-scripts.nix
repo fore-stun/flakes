@@ -30,14 +30,14 @@ let
 
       ${lib.getExe jujutsu} bookmark list --ignore-working-copy -a \
         | ${lib.getExe gawk} -v REMOTE="''${REMOTE?}" '$1 ~ ("^[^ ]+@" REMOTE ":$") { $1 = substr($1,0,length($1) - 1); print $1 }' \
-        | ${lib.getExe fzf} --reverse --ansi --multi --preview="${lib.getExe jujutsu} log -r ::{} --ignore-working-copy --color=always" \
+        | ${moreutils}/bin/ifne ${lib.getExe fzf} --reverse --ansi --multi --preview="${lib.getExe jujutsu} log -r ::{} --ignore-working-copy --color=always" \
         | ${moreutils}/bin/ifne ${findutils}/bin/xargs -I {} ${lib.getExe jujutsu} bookmark track {}
     '';
 
     delete-bookmarks = indent ''
       ${lib.getExe jujutsu} bookmark list --ignore-working-copy 2>/dev/null  \
         | ${lib.getExe gawk} '$0 ~ /^[^ ]/ && $1 ~ /:$/ { $1 = substr($1,0,length($1) - 1); print $1 }' \
-        | ${lib.getExe fzf} --reverse --ansi --multi --preview="${lib.getExe jujutsu} log -r ::{} --ignore-working-copy --color=always" \
+        | ${moreutils}/bin/ifne ${lib.getExe fzf} --reverse --ansi --multi --preview="${lib.getExe jujutsu} log -r ::{} --ignore-working-copy --color=always" \
         | ${moreutils}/bin/ifne ${findutils}/bin/xargs -I {} ${lib.getExe jujutsu} bookmark delete {}
     '';
 
