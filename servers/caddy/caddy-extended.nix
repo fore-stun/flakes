@@ -14,5 +14,6 @@ caddyWith {
     "github.com/abiosoft/caddy-inspect" = "96cdb1dfb122f79913d60ecb34030d302a4f4ec1";
     "github.com/ggicci/caddy-jwt" = "baeab7ec43c49fe77caa18b8bb16739b3276e356";
   };
-  vendorHash = "sha256-oIG4rpZ+dVnTWCK1X2/vWEL9/YLyfhCxFqr0Tyg5TW4=";
+  vendorHash = "sha256-pjh0WYBnohu3k3FWjuC+4AP4dQendxWWpOqos0Pg5v0=";
+
 }
