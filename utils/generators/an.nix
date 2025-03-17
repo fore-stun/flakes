@@ -1,4 +1,5 @@
 { lib
+, aspellWithDicts
 , fetchgit
 , hostPlatform
 , hunspellDicts
@@ -27,14 +28,20 @@ in
 stdenv.mkDerivation {
   inherit pname version src meta;
   nativeBuildInputs = [ icu ];
-  buildInputs = [ makeWrapper ];
+  buildInputs = [
+    (aspellWithDicts (d: builtins.attrValues { inherit (d) en; }))
+    makeWrapper
+  ];
   preInstall = ''
     mkdir -p "$out/bin"
+    mkdir -p "$out/share"
     mkdir -p "$out/usr/share/man/man6"
   '';
   postInstall = ''
+    aspell --lang=en < "${hunspellDicts.en_GB-large}/share/hunspell/en_GB.dic" expand \
+      | tr " " "\n" > $out/share/en_GB.txt
     wrapProgram "$out/bin/${pname}" \
-      --add-flags "--dict=${hunspellDicts.en_GB-large}/share/hunspell/en_GB.dic"
+      --add-flags "--dict=$out/share/en_GB.txt"
   '';
   buildFlags = lib.optionals hostPlatform.isDarwin [ "CC=clang" ];
   installFlags = [ "DESTDIR=$(out)" "INSTALLDIR=$(out)/bin" ];
