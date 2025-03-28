@@ -24,7 +24,7 @@ in
     in
     lib.foldFor pnames (pname: {
       ${pname} =
-        prev.callPackage (./. + "/${pname}.nix") (extras.${pname} or { });
+        lib.callPackageWith prev (./. + "/${pname}.nix") (extras.${pname} or { });
     });
 } //
 lib.foldFor lib.platforms.all (system:
