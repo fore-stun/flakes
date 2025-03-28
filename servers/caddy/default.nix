@@ -4,7 +4,7 @@ let
   pnames = [ "caddy-extended" "tailscale-nginx-auth" ];
 
   forAarch64Linux = pkgs: drv: (drv.override {
-    inherit (pkgs.pkgsCross.aarch64-multiplatform-musl) hostPlatform;
+    inherit (pkgs.pkgsCross.aarch64-multiplatform-musl) stdenv;
     aarch64-linux = true;
   }).overrideAttrs (old: {
     GOOS = "linux";
