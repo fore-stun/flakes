@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>org.nixos.tailscale.nginx-auth</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>@out@/bin/tailscale.nginx-auth</string>
+  </array>
+  <key>KeepAlive</key>
+  <true/>
+  <key>RunAtLoad</key>
+  <true/>
+  <key>LaunchOnlyOnce</key>
+  <true/>
+  <key>Sockets</key>
+  <dict>
+    <key>ListenStream</key>
+    <dict>
+      <key>SockNodeName</key>
+      <string>/var/run/tailscale.nginx-auth.sock</string>
+    </dict>
+  </dict>
+  <key>ServiceIPC</key>
+  <true/>
+</dict>
+</plist>
