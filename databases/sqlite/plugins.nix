@@ -2,6 +2,7 @@
 , callPackage
 , fetchFromGitHub
 , fetchzip
+, xlite
 }:
 
 let
@@ -172,6 +173,7 @@ in
 {
   inherit
     pivot_vtab
+    xlite
     ;
 } //
 bundled [
