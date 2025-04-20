@@ -18,7 +18,7 @@ in
 rustPlatform.buildRustPackage {
   inherit pname version src;
 
-  cargoHash = "sha256-KX490W2JU8jKSMu+FtfPHsH0h9n9GXa3y8VcDVlMwBo=";
+  cargoHash = "sha256-sIibBhVjbvPcE0HT4wOvafATTkjkbJ1sAjRGG98S/xk=";
   doCheck = false;
 
   meta = {
