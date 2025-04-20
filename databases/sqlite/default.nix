@@ -1,7 +1,7 @@
 { self, lib, nixpkgs, ... }:
 
 let
-  pnames = [ "markdown-to-sqlite" "sqlitebiter" ];
+  pnames = [ "markdown-to-sqlite" "sqlitebiter" "xlite" ];
 in
 {
   overlays.sqlite = final: prev:
@@ -16,7 +16,9 @@ in
         inherit (final) sqlitePlugins;
       };
       sqlitePlugins = prev.sqlitePlugins or { }
-      // prev.callPackage ./plugins.nix { };
+      // prev.callPackage ./plugins.nix {
+        inherit (final) xlite;
+      };
     } // lib.foldFor pnames (pname: {
       ${pname} = prev.callPackage
         (./. + "/${pname}.nix")
