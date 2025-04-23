@@ -1,7 +1,7 @@
 { self, lib, nixpkgs, ... }:
 
 let
-  pnames = [ "an" "names" ];
+  pnames = [ "an" "names" "uuid" ];
 in
 {
   overlays.generators = final: prev:
