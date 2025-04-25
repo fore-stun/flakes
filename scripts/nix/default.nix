@@ -2,6 +2,7 @@
 
 let
   pnames = [
+    "nix-toplevel"
     "nix-load-systemd-unit"
     "home-manager-specialisation"
   ];
