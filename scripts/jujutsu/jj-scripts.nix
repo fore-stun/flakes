@@ -192,7 +192,7 @@ let
         && ${lib.getExe jujutsu} bookmark delete "''${TIP}" \
         && ${lib.getExe jujutsu} git fetch \
         && ${lib.getExe jujutsu} rebase -r "at_operation(@-,trunk()):: ~ ::trunk()" -d "trunk()"  \
-        && ${lib.getExe jujutsu} git push --tracked \
+        && ${lib.getExe jujutsu} git push --tracked --deleted \
         && ${lib.getExe jujutsu} new "trunk()"
     '';
 
