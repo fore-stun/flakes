@@ -56,6 +56,7 @@
 
       ./media/video
 
+      ./network/openapi
       ./network/storage
       ./network/tunnel
 
