@@ -1,7 +1,7 @@
 { self, lib, nixpkgs, ... }:
 
 let
-  pnames = [ ];
+  pnames = [ "cargo-progenitor" ];
 in
 {
   overlays.openapi = final: prev:
