@@ -1,7 +1,7 @@
 { self, lib, nixpkgs, ... }:
 
 let
-  pnames = [ ];
+  pnames = [ "cynic-cli" ];
 in
 {
   overlays.graphql = final: prev:
