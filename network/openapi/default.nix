@@ -6,11 +6,7 @@ in
 {
   overlays.openapi = final: prev:
     let
-      extras = {
-        an = {
-          inherit (final) hunspellDicts;
-        };
-      };
+      extras = { };
     in
     lib.foldFor pnames (pname: {
       ${pname} = prev.callPackage
