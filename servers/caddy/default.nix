@@ -16,11 +16,7 @@ in
 {
   overlays.caddy = final: prev:
     let
-      fetchXCaddy = prev.callPackage ./fetchXCaddy.nix { };
-      caddyWith = prev.callPackage ./caddyWith.nix {
-        inherit fetchXCaddy;
-      };
-      extras = { caddy-extended = { inherit caddyWith; }; };
+      extras = { };
     in
     lib.foldFor pnames (pname: {
       ${pname} =

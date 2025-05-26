@@ -12,7 +12,7 @@ let
 
   src = fetchurl {
     name = "${name}-src";
-    url = "http://lua.sqlite.org/index.cgi/zip/lsqlite3_v096.zip?uuid=v0.9.6";
+    url = "https://lua.sqlite.org/home/zip/lsqlite3_v096.zip?uuid=v0.9.6";
     hash = "sha256-Ccgm2oT0cNl7NQqFMI8bb4Ujsl/MyPmBEMC5+8ohGgk=";
   };
 
