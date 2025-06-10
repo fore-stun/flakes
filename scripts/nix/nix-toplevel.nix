@@ -8,6 +8,7 @@ let
   script = writers.writeZshBin "${pname}" ''
     zparseopts -D -E -F -- \
       d=OPT_dry_run -dry-run=OPT_dry_run \
+      l=OPT_no_link -no-link=OPT_no_link \
       O=OPT_offline -offline=OPT_offline \
       f+:=ARG_flags -nix-flags+:=ARG_flags \
       F:=ARG_flake -flake:=ARG_flake
@@ -26,6 +27,10 @@ let
 
     if (( $#OPT_offline )); then
       build_args+=(--offline)
+    fi
+
+    if (( $#OPT_no_link )); then
+      build_args+=(--no-link --print-out-paths)
     fi
 
     if (( $#ARG_flags )); then
