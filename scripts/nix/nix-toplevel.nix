@@ -7,6 +7,7 @@ let
 
   script = writers.writeZshBin "${pname}" ''
     zparseopts -D -E -F -- \
+      d=OPT_dry_run -dry-run=OPT_dry_run \
       O=OPT_offline -offline=OPT_offline \
       F:=ARG_flake -flake:=ARG_flake
 
@@ -31,6 +32,11 @@ let
         "''${FLAKE}#nixosConfigurations.''${(qqq)HOSTNAME}.config.system.build.toplevel"
       )
 
+      if (( $#OPT_dry_run )); then
+        print -l -- "''${(@)build_args}" >&2
+        return 0
+      fi
+
       systemd-inhibit -- "''${(@)build_args}"
     }
 
@@ -38,6 +44,11 @@ let
       build_args+=(
         "''${FLAKE}#darwinConfigurations.''${(qqq)HOSTNAME}.system"
       )
+
+      if (( $#OPT_dry_run )); then
+        print -l -- "''${(@)build_args}" >&2
+        return 0
+      fi
 
       caffeinate -i -- "''${(@)build_args}"
     }
