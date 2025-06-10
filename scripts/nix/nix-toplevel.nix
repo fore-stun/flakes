@@ -9,6 +9,7 @@ let
     zparseopts -D -E -F -- \
       d=OPT_dry_run -dry-run=OPT_dry_run \
       O=OPT_offline -offline=OPT_offline \
+      f+:=ARG_flags -nix-flags+:=ARG_flags \
       F:=ARG_flake -flake:=ARG_flake
 
     typeset HOSTNAME="$(hostname -s)"
@@ -25,6 +26,12 @@ let
 
     if (( $#OPT_offline )); then
       build_args+=(--offline)
+    fi
+
+    if (( $#ARG_flags )); then
+      for _ flag in "''${(@)ARG_flags}"; do
+        build_args+=("''${flag}")
+      done
     fi
 
     function nixos() {
