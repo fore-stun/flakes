@@ -9,10 +9,10 @@ let
     zparseopts -D -E -F -- \
       F:=ARG_flake -flake:=ARG_flake
 
-    local HOSTNAME="$(hostname -s)"
-    local PLATFORM="''$([[ "''$(uname)" = "Darwin" ]] && print "darwin" || print "nixos")"
+    typeset HOSTNAME="$(hostname -s)"
+    typeset PLATFORM="''$([[ "''$(uname)" = "Darwin" ]] && print "darwin" || print "nixos")"
 
-    local FLAKE="''${ARG_flake[2]:-.}"
+    typeset FLAKE="''${ARG_flake[2]:-.}"
 
     function nixos() {
       local -a build_args=(
