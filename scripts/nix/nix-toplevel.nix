@@ -14,12 +14,15 @@ let
 
     typeset FLAKE="''${ARG_flake[2]:-.}"
 
+    typeset -a build_args=(
+      nix build
+      --print-build-logs
+      --keep-going
+      --no-eval-cache
+    )
+
     function nixos() {
-      local -a build_args=(
-        nix build
-        --print-build-logs
-        --keep-going
-        --no-eval-cache
+      build_args+=(
         "''${FLAKE}#nixosConfigurations.''${(qqq)HOSTNAME}.config.system.build.toplevel"
       )
 
@@ -27,11 +30,7 @@ let
     }
 
     function darwin() {
-      local -a build_args=(
-        nix build
-        --print-build-logs
-        --keep-going
-        --no-eval-cache
+      build_args+=(
         "''${FLAKE}#darwinConfigurations.''${(qqq)HOSTNAME}.system"
       )
 
