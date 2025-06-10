@@ -7,6 +7,7 @@ let
 
   script = writers.writeZshBin "${pname}" ''
     zparseopts -D -E -F -- \
+      O=OPT_offline -offline=OPT_offline \
       F:=ARG_flake -flake:=ARG_flake
 
     typeset HOSTNAME="$(hostname -s)"
@@ -20,6 +21,10 @@ let
       --keep-going
       --no-eval-cache
     )
+
+    if (( $#OPT_offline )); then
+      build_args+=(--offline)
+    fi
 
     function nixos() {
       build_args+=(
