@@ -72,6 +72,7 @@
       ./scripts/jujutsu
       ./scripts/nix
       ./scripts/pandoc
+      ./scripts/pdf
       ./scripts/sync
       ./scripts/system
       ./scripts/text
