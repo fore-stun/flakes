@@ -1,7 +1,9 @@
 { self, lib, nixpkgs, ... }:
 
 let
-  pnames = [ ];
+  pnames = [
+    "pdf-print-reorder"
+  ];
 in
 {
   overlays.pdf = final: prev:
