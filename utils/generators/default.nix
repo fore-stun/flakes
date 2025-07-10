@@ -1,7 +1,7 @@
 { self, lib, nixpkgs, ... }:
 
 let
-  pnames = [ "an" "names" "uuid" ];
+  pnames = [ "an" "jwk-keygen" "names" "uuid" ];
 in
 {
   overlays.generators = final: prev:
