@@ -22,6 +22,13 @@ python3Packages.buildPythonPackage {
 
   doCheck = false;
 
+  pyproject = true;
+  build-system = builtins.attrValues {
+    inherit (python3Packages)
+      setuptools
+      ;
+  };
+
   meta = {
     description = "A modified version of xlrd to work for the latest Python versions";
     license = lib.licenses.mit;

@@ -20,13 +20,19 @@ in
 python3Packages.buildPythonPackage {
   inherit pname version src;
 
+  pyproject = true;
+  build-system = builtins.attrValues {
+    inherit (python3Packages)
+      setuptools
+      ;
+  };
+
   checkInputs = builtins.attrValues {
     inherit (python3Packages)
       pytest
       pytest-runner
       ;
   };
-
 
   propagatedBuildInputs = builtins.attrValues {
     inherit (python3Packages)
