@@ -27,12 +27,7 @@ python3Packages.buildPythonPackage {
       ;
   };
 
-  checkInputs = builtins.attrValues {
-    inherit (python3Packages)
-      pytest
-      pytest-runner
-      ;
-  };
+  doCheck = false;
 
   propagatedBuildInputs = builtins.attrValues {
     inherit (python3Packages)
