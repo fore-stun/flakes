@@ -27,6 +27,6 @@ lib.foldFor lib.platforms.all (system:
     packages.${system} =
       lib.filterAttrs (_: lib.isDerivation) self.legacyPackages.${system};
     legacyPackages.${system} = self.overlays.video
-      (pkgs // self.packages.${system})
+      (pkgs // self.legacyPackages.${system})
       pkgs;
   })
