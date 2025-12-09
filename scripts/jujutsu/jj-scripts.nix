@@ -104,6 +104,7 @@ let
         , self.change_id().short()
         , self.commit_id().short()
         , if(self.conflict(), "conflict", "")
+        , self.bookmarks().join("\t")
         ) ++ "\n"
       JJT
 
