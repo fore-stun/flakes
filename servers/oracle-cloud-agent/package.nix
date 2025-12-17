@@ -1,14 +1,14 @@
 { lib
-, stdenvNoCC
-, system
-
 , fetchurl
 , makeBinaryWrapper
 , squashfsTools
+, stdenv
 }:
 
 let
   pname = "oracle-cloud-agent";
+
+  inherit (stdenv.hostPlatform) system;
 
   input = lib.findFirst
     (x: x.system == system)
@@ -112,7 +112,7 @@ let
   '';
 
 in
-stdenvNoCC.mkDerivation {
+stdenv.mkDerivation {
   inherit pname meta src;
   inherit (input) version patches;
 
