@@ -1,9 +1,8 @@
 { lib
 , darwin
 , fetchurl
-, hostPlatform
 , handbrake
-, stdenvNoCC
+, stdenv
 , undmg
 }:
 
@@ -22,7 +21,7 @@ let
         hash = "sha256-pZ3Ba2qmzlBBZyYgs+6+LlG7MgXkvQpWI1nL8TI7LYQ=";
       };
 
-  handbrakeBin = stdenvNoCC.mkDerivation {
+  handbrakeBin = stdenv.mkDerivation {
     pname = "${pname}-gui";
     inherit src version;
     sourceRoot = ".";

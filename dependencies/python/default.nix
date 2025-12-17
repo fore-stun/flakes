@@ -2,8 +2,6 @@
 
 let
   pnames = [
-    "DataProperty"
-    "SimpleSQLite"
     "appconfigpy"
     "envinfopy"
     "excelrd"
@@ -11,10 +9,7 @@ let
     "msgfy"
     "pytablereader"
     "retryrequests"
-    "sqliteschema"
-    "tabledata"
     "tcolorpy"
-    "typepy"
     "yamldown"
   ];
 

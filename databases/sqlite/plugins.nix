@@ -64,25 +64,17 @@ let
   bundled =
     let
       hashes = {
-        "3.39.3" = "sha256-DkF8tP5Tbg40ZLsFqY7xYndhyFeF4H8N3WMb/HVaptk=";
-        "3.40.1" = "sha256-Oye/JeXKVflfWxUq3OU3JG+wR0DDZw6GdvyJS3OGjFI=";
-        "3.41.2" = "sha256-OKvBvk0vtgvOgds6MpiKFeKjezk2gp6lBKP6BdANGOc=";
-        "3.42.0" = "sha256-IPNn0kN/dvIwJQRqD7B3aDkGYenic69QKa6NUDHZuu8=";
-        "3.43.2" = "sha256-selyWeeq/D2ljq5X99TrF/ce+mcr7x2gV6W5gJEMcos=";
-        "3.45.1" = "sha256-FPI1HS9w3q1BEWUh1OGIBb7pRTflQdx7zwsCsuq+Lk4=";
-        "3.45.2" = "sha256-D5cbyHhLwD5oHD4SF1qM/430lrFbBjm2G0iRcblUI0w=";
-        "3.45.3" = "sha256-i7oCI984w4hhxDUCuy1EsEDSwWprc+T23DiB3jDYUFc=";
-        "3.46.0" = "sha256-CxXtTts8ICFkv9PNakTEBwgHmiISgNNwrNWDQT6Smp0=";
-        "3.46.1" = "sha256-lqFg18SIteUQqkNIV93Gu61f9Cz/SWesUdU4G8lpmbM=";
-        "3.47.2" = "sha256-MtzBbk7TR1aTVrDwDXqRHVHipum2cC8Zs+h4uuat6SM=";
-        "3.48.0" = "sha256-RFy4EKU0ucONOvAAGWmHhSJqV4/DlyoU7Z+IF+Njwf4=";
+        "3.50.2" = "sha256-lL7025+mVujqgckSHHtOzL+y1KaytmvjXGlCaEb6XVM=";
+        "3.50.4" = "sha256-YXzEu1/BC41mv08wm67kziRkQsSEmd/N00pY7IwF3rc=";
       };
 
-      version = "3.48.0";
+      version = "3.50.4";
 
-      src = fetchzip {
+      src = fetchFromGitHub {
         name = "sqlite-${version}-source";
-        url = "https://www.sqlite.org/src/tarball/sqlite.tar.gz?r=version-${version}";
+        owner = "sqlite";
+        repo = "sqlite";
+        tag = "version-${version}";
         hash = hashes.${version} or lib.fakeHash;
       };
 

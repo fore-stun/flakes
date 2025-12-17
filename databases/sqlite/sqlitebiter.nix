@@ -5,26 +5,38 @@
 let
 
   pname = "sqlitebiter";
-  version = "0.36.1";
+  version = "0.36.3";
   name = "${pname}-${version}";
 
   src = fetchFromGitHub {
     name = "${name}-src";
     owner = "thombashi";
     repo = pname;
-    rev = "d0b5fa2d8a422b4834a37dd710724f6e4b19aedd";
-    hash = "sha256-PqwYLAN9KznlQiTYSTvZHuncSx/kUQzdC6IqOTE5XnU=";
+    rev = "d86ce6c2bad4aea8379b5ef5ed08b2621b4ce122";
+    hash = "sha256-u/CDQP66r10c2fwIhaam9aBrz1BC7g+g9IjlZ70qsrE=";
   };
 
 in
 python3Packages.buildPythonPackage {
   inherit pname version src;
 
+  pyproject = true;
+  build-system = builtins.attrValues {
+    inherit (python3Packages)
+      setuptools
+      ;
+  };
+
   doCheck = false;
+
+  prePatch = ''
+    substituteInPlace requirements/requirements.txt --replace \
+      "path>=13,<17" \
+      "path>=13,<18"
+  '';
 
   propagatedBuildInputs = builtins.attrValues {
     inherit (python3Packages)
-      SimpleSQLite
       appconfigpy
       click
       envinfopy
@@ -34,6 +46,7 @@ python3Packages.buildPythonPackage {
       path
       pytablereader
       retryrequests
+      simplesqlite
       tcolorpy
       typepy
       ;

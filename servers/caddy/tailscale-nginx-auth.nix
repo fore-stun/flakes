@@ -42,7 +42,11 @@ let
       done
     '';
 
+    env = old.env // lib.optionalAttrs aarch64-linux {
+      GOOS = "linux";
+      GOARCH = "arm64";
+      CGO_ENABLED = false;
+    };
   };
-
 in
 tailscale-nginx-auth.overrideAttrs overriding

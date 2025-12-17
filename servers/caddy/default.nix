@@ -6,10 +6,6 @@ let
   forAarch64Linux = pkgs: drv: (drv.override {
     inherit (pkgs.pkgsCross.aarch64-multiplatform-musl) stdenv;
     aarch64-linux = true;
-  }).overrideAttrs (old: {
-    GOOS = "linux";
-    GOARCH = "arm64";
-    CGO_ENABLED = false;
   });
 
 in

@@ -1,7 +1,6 @@
 { lib
 , aspellWithDicts
 , fetchgit
-, hostPlatform
 , hunspellDicts
 , icu
 , makeWrapper
@@ -43,6 +42,6 @@ stdenv.mkDerivation {
     wrapProgram "$out/bin/${pname}" \
       --add-flags "--dict=$out/share/en_GB.txt"
   '';
-  buildFlags = lib.optionals hostPlatform.isDarwin [ "CC=clang" ];
+  buildFlags = lib.optionals stdenv.hostPlatform.isDarwin [ "CC=clang" ];
   installFlags = [ "DESTDIR=$(out)" "INSTALLDIR=$(out)/bin" ];
 }

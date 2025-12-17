@@ -5,15 +5,15 @@
 let
 
   pname = "pytablereader";
-  version = "0.31.3";
+  version = "0.31.4";
   name = "${pname}-${version}";
 
   src = fetchFromGitHub {
     name = "${name}-src";
     owner = "thombashi";
     repo = pname;
-    rev = "b59859da6fdcc94035933dd253e6e380b04a233b";
-    hash = "sha256-iuAvdWw+0XVmBHs/90zEVw5FhHQjr1O3efDNK1LQzig=";
+    rev = "b2a6a3db3ef52f5db942340ae75a6905df64a960";
+    hash = "sha256-SxYP6JT7r9udUFh6ZADvKmMMnvFcStFx8qelK8pmsZ0=";
   };
 
 in
@@ -22,10 +22,23 @@ python3Packages.buildPythonPackage {
 
   doCheck = false;
 
+  pyproject = true;
+  build-system = builtins.attrValues {
+    inherit (python3Packages)
+      setuptools
+      ;
+  };
+
+  prePatch = ''
+    substituteInPlace requirements/requirements.txt --replace \
+      "path>=13,<17" \
+      "path>=13,<18"
+  '';
+
   propagatedBuildInputs = builtins.attrValues {
     inherit (python3Packages)
-      DataProperty
       beautifulsoup4
+      dataproperty
       pathvalidate
       path
       tabledata
@@ -36,7 +49,7 @@ python3Packages.buildPythonPackage {
       # excel optional dependencies
       excelrd
       # sqlite optional dependencies
-      SimpleSQLite
+      simplesqlite
       # url optional dependencies
       retryrequests
       ;

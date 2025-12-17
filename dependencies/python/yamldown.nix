@@ -20,6 +20,13 @@ in
 python3Packages.buildPythonPackage {
   inherit pname version src;
 
+  pyproject = true;
+  build-system = builtins.attrValues {
+    inherit (python3Packages)
+      setuptools
+      ;
+  };
+
   propagatedBuildInputs = builtins.attrValues {
     inherit (python3Packages)
       pyyaml

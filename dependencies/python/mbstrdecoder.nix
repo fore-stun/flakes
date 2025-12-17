@@ -22,6 +22,13 @@ python3Packages.buildPythonPackage {
 
   doCheck = false;
 
+  pyproject = true;
+  build-system = builtins.attrValues {
+    inherit (python3Packages)
+      setuptools
+      ;
+  };
+
   propagatedBuildInputs = builtins.attrValues {
     inherit (python3Packages)
       chardet

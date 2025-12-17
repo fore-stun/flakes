@@ -22,6 +22,13 @@ python3Packages.buildPythonPackage {
 
   doCheck = false;
 
+  pyproject = true;
+  build-system = builtins.attrValues {
+    inherit (python3Packages)
+      setuptools
+      ;
+  };
+
   meta = {
     description = "A Python library to apply true color for terminal text";
     license = lib.licenses.mit;

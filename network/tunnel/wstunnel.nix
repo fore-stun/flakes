@@ -1,10 +1,8 @@
 { lib
 , crane
-, darwin
 , fetchFromGitHub
 , libiconv
 , pkgs
-, stdenv
 }:
 
 let
@@ -26,9 +24,6 @@ clib.buildPackage {
 
   nativeBuildInputs = [
     libiconv
-  ] ++ lib.optionals stdenv.hostPlatform.isDarwin [
-    darwin.apple_sdk.frameworks.CoreServices
-    darwin.apple_sdk.frameworks.Security
   ];
 
   doCheck = false;

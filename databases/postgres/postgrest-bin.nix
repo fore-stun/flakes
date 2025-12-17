@@ -1,11 +1,10 @@
 { lib
 , darwin
 , dockerTools
-, hostPlatform
 , jq
 , postgresql
 , postgrest
-, stdenvNoCC
+, stdenv
 , zlib
 }:
 
@@ -26,7 +25,7 @@ let
     buildCommand = builtins.replaceStrings [ "--src-tls-verify" ] [ "--tls-verify" ] old.buildCommand;
   });
 
-  postgrestBin = stdenvNoCC.mkDerivation {
+  postgrestBin = stdenv.mkDerivation {
     inherit pname src version;
     meta = meta // {
       license = lib.licenses.mit;
@@ -58,7 +57,7 @@ let
       mv "$SRC_BIN" "$bin/bin/postgrest"
     '';
 
-    postFixup = lib.optionalString hostPlatform.isDarwin ''
+    postFixup = lib.optionalString stdenv.hostPlatform.isDarwin ''
       POSTGREST="$bin/bin/postgrest"
 
       /usr/bin/install_name_tool -change "/usr/lib/libz.1.dylib" "${zlib}/lib/libz.1.dylib" "$POSTGREST"

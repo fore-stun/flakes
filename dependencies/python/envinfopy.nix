@@ -22,6 +22,13 @@ python3Packages.buildPythonPackage {
 
   doCheck = false;
 
+  pyproject = true;
+  build-system = builtins.attrValues {
+    inherit (python3Packages)
+      setuptools
+      ;
+  };
+
   meta = {
     description = "A Python Library to get execution environment information";
     license = lib.licenses.mit;

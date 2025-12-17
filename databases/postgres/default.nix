@@ -11,7 +11,7 @@ in
     let
       extras = {
         postgrest-bin = {
-          postgresql = final.postgresql_16;
+          postgresql = final.postgresql_17;
         };
         sqldiff = {
           inherit (final) writers;
@@ -33,8 +33,14 @@ in
           (extras."${pname}" or { });
       });
 } //
-lib.foldFor lib.platforms.all (system: {
-  packages.${system} = self.overlays.postgres
-    self.legacyPackages.${system}
-    nixpkgs.legacyPackages.${system};
-})
+lib.foldFor lib.platforms.all (system:
+  let
+    pkgs = nixpkgs.legacyPackages.${system};
+  in
+  {
+    packages.${system} =
+      lib.filterAttrs (_: lib.isDerivation) self.legacyPackages.${system};
+    legacyPackages.${system} = self.overlays.postgres
+      (pkgs // self.legacyPackages.${system})
+      pkgs;
+  })
