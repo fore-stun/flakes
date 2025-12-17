@@ -43,7 +43,7 @@ python3Packages.buildPythonPackage {
       # excel optional dependencies
       excelrd
       # sqlite optional dependencies
-      SimpleSQLite
+      simplesqlite
       # url optional dependencies
       retryrequests
       ;

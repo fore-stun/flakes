@@ -31,7 +31,6 @@ python3Packages.buildPythonPackage {
 
   propagatedBuildInputs = builtins.attrValues {
     inherit (python3Packages)
-      SimpleSQLite
       appconfigpy
       click
       envinfopy
@@ -41,6 +40,7 @@ python3Packages.buildPythonPackage {
       path
       pytablereader
       retryrequests
+      simplesqlite
       tcolorpy
       typepy
       ;

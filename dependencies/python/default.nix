@@ -3,7 +3,6 @@
 let
   pnames = [
     "DataProperty"
-    "SimpleSQLite"
     "appconfigpy"
     "envinfopy"
     "excelrd"
