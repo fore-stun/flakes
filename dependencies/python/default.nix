@@ -9,7 +9,6 @@ let
     "msgfy"
     "pytablereader"
     "retryrequests"
-    "sqliteschema"
     "tabledata"
     "tcolorpy"
     "yamldown"
