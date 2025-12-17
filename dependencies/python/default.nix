@@ -12,7 +12,6 @@ let
     "sqliteschema"
     "tabledata"
     "tcolorpy"
-    "typepy"
     "yamldown"
   ];
 
