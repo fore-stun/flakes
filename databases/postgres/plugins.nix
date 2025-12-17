@@ -1,12 +1,12 @@
 { lib
 , callPackage
-, hostPlatform
 , fetchFromGitHub
 , postgresql
+, stdenv
 }:
 
 let
-  usePlatformExtension = (hostPlatform.isDarwin && postgresql.psqlSchema >= "16");
+  usePlatformExtension = (stdenv.hostPlatform.isDarwin && postgresql.psqlSchema >= "16");
 
   setDLSUFFIX = old: {
     buildFlags = old.buildFlags or [ ] ++ [ ''DLSUFFIX=".so"'' ];
