@@ -31,8 +31,8 @@ python3Packages.buildPythonPackage {
 
   propagatedBuildInputs = builtins.attrValues {
     inherit (python3Packages)
-      DataProperty
       beautifulsoup4
+      dataproperty
       pathvalidate
       path
       tabledata

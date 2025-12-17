@@ -2,7 +2,6 @@
 
 let
   pnames = [
-    "DataProperty"
     "appconfigpy"
     "envinfopy"
     "excelrd"

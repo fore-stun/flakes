@@ -31,7 +31,7 @@ python3Packages.buildPythonPackage {
 
   propagatedBuildInputs = builtins.attrValues {
     inherit (python3Packages)
-      DataProperty
+      dataproperty
       typepy
       ;
   };
