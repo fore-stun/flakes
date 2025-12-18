@@ -78,7 +78,7 @@ let
         return 0
       fi
 
-      "$SPECIALISATION/activate"
+      "$SPECIALISATION/activate" --driver-version 1
     }
 
     switch_generation
