@@ -11,12 +11,30 @@ let
 
   script = writers.writeZshBin "${pname}" ''
     switch_generation() {
+      local -a generations
+
+      local LOCAL_GENERATION
+      readlink -f "''${HOME?Home directory}/.local/state/home-manager/gcroots/current-generation/" \
+        | { read -r -d "" LOCAL_GENERATION || : }
+
+      if [[ -d "''${LOCAL_GENERATION}" ]]; then
+        generations+=("''${LOCAL_GENERATION}")
+      fi
+
+      local LOCAL_ROOT
+      readlink -f "''${HOME?Home directory}/.local/state/home-manager/gcroots/current-home/" \
+        | { read -r -d "" LOCAL_ROOT || : }
+
+      if [[ -d "''${LOCAL_ROOT}" ]]; then
+        generations+=("''${LOCAL_ROOT}")
+      fi
+
       local GENERATIONS
       ${lib.getExe home-manager} generations \
         | ${lib.getExe gawk} -v FS='( : id | -> )' -v OFS="\t" '{$1=$1; print $3}' \
         | { read -r -d "" GENERATIONS || : }
 
-      local -a generations=("''${(f)GENERATIONS}")
+      generations+=("''${(f)GENERATIONS}")
 
       if ! (( $#generations )); then
         print -l -- "No generation found." >&2
