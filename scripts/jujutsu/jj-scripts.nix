@@ -57,10 +57,10 @@ let
         local EVOLOG_TAB
         read -r -d "" EVOLOG_TAB <<-'JJT' || :
       separate("\t"
-        , self.change_id().short()
-        , self.commit_id().short()
-        , if(self.conflict(), "conflict", "")
-        , self.bookmarks().join("\t")
+        , commit.change_id().short()
+        , commit.commit_id().short()
+        , if(commit.conflict(), "conflict", "")
+        , commit.bookmarks().join("\t")
         ) ++ "\n"
       JJT
 
