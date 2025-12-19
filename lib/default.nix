@@ -44,11 +44,20 @@ let
       "python${pythonVariant}Packages" = pkgs;
     };
 
+
+  allFlakeSources =
+    let
+      f = r: x: lib.pipe x [ builtins.attrValues (builtins.concatMap r) ];
+      collectFlakeInputs = input: [ input ] ++ f collectFlakeInputs (input.inputs or { });
+    in
+    f collectFlakeInputs;
+
 in
 lib.recursiveUpdate lib {
   platforms = { inherit anyNix; };
   licenses = { inherit dual; };
   inherit
+    allFlakeSources
     lang
     standalone
     pythonScopeWith
