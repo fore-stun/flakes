@@ -4,7 +4,7 @@
 caddy.withPlugins {
   plugins = [
     # Caddy dns
-    "github.com/caddy-dns/cloudflare@v0.2.1"
+    "github.com/caddy-dns/cloudflare@v0.2.2"
     "github.com/fore-stun/libdns-route53@v0.0.0-20250526213255-7a723d8255bf"
 
     "github.com/fore-stun/spanx@v0.0.0-20250507102219-58d4b8a0d7f3"
@@ -14,5 +14,5 @@ caddy.withPlugins {
     "github.com/abiosoft/caddy-inspect@v0.0.0-20250214103948-96cdb1dfb122"
     "github.com/ggicci/caddy-jwt@v0.12.0"
   ];
-  hash = "sha256-KymN0/i7n3C/qoao0wrH+DeJdAq7h3wF12cCj8znKPE=";
+  hash = "sha256-t4d/Tp/SY2MJ1JDk/q+tE3eqLBWVQIKV3ntpEJasmqA=";
 }
