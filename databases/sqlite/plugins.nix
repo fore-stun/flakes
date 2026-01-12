@@ -66,9 +66,10 @@ let
       hashes = {
         "3.50.2" = "sha256-lL7025+mVujqgckSHHtOzL+y1KaytmvjXGlCaEb6XVM=";
         "3.50.4" = "sha256-YXzEu1/BC41mv08wm67kziRkQsSEmd/N00pY7IwF3rc=";
+        "3.51.1" = "sha256-lU5ytYZsJeqgbqlh+Kf/IK/FPur4W1MAA92RRbku2jY=";
       };
 
-      version = "3.50.4";
+      version = "3.51.1";
 
       src = fetchFromGitHub {
         name = "sqlite-${version}-source";
