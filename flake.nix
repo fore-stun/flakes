@@ -64,6 +64,7 @@
       ./utils/email
       ./utils/exif
       ./utils/generators
+      ./utils/humblebundle
       ./utils/shell
       ./utils/writers
       ./utils/wayland
