@@ -2,7 +2,7 @@
 
 let
   subflake = "humblebundle";
-  pnames = [ ];
+  pnames = [ "humble-cli" ];
 in
 {
   overlays."${subflake}" = final: prev:
