@@ -67,6 +67,7 @@
       ./utils/fonts
       ./utils/generators
       ./utils/humblebundle
+      ./utils/llm
       ./utils/shell
       ./utils/writers
       ./utils/wayland
