@@ -2,7 +2,7 @@
 
 let
   subflake = "llm";
-  pnames = [ ];
+  pnames = [ "llmfit" ];
 in
 {
   overlays."${subflake}" = final: prev:
