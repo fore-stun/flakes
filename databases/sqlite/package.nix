@@ -4,11 +4,13 @@
 , sqlitePlugins
 , stdenvNoCC
 , symlinkJoin
+, version ? sqlite.version
 }:
 let
   pathType = if stdenvNoCC.isDarwin then "DYLD" else "LD";
 
-  plugins = lib.filterAttrs (_: a: lib.isDerivation a) sqlitePlugins;
+  plugins = lib.filterAttrs (_: a: lib.isDerivation a)
+    (sqlitePlugins.override { inherit version; });
 
 in
 symlinkJoin {
