@@ -69,6 +69,7 @@ let
         "3.50.2" = "sha256-lL7025+mVujqgckSHHtOzL+y1KaytmvjXGlCaEb6XVM=";
         "3.50.4" = "sha256-YXzEu1/BC41mv08wm67kziRkQsSEmd/N00pY7IwF3rc=";
         "3.51.1" = "sha256-lU5ytYZsJeqgbqlh+Kf/IK/FPur4W1MAA92RRbku2jY=";
+        "3.51.2" = "sha256-4fpNZ08bcy8y9RjT7WUHIF8ok93L1DYYjYv2sBcb9q0=";
       };
 
       src = fetchFromGitHub {
