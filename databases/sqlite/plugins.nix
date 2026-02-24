@@ -182,7 +182,6 @@ bundled [
   "fuzzer"
   "ieee754"
   "nextchar"
-  "percentile"
   "prefixes"
   "rot13"
   "series"
