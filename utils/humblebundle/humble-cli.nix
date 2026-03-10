@@ -5,15 +5,15 @@
 
 let
   pname = "humble-cli";
-  version = "0.21.3";
+  version = "0.22.0";
   owner = "smbl64";
   repo = pname;
 
   src = fetchFromGitHub {
     name = "${pname}-${version}-src";
     inherit owner repo;
-    rev = "7b628eb33520d73f97a20aba05ccff73b2bb5238";
-    hash = "sha256-d0jday50ChPRvs75l9sbsBDm/SP4FcztZw/toDcJAmM=";
+    rev = "1afe4c3e84907238627e40eec2edb34969758dd8";
+    hash = "sha256-PlLH14xg/6K9w2hoznOeYS5QmZRjKFJFSYBAUmbkLM8=";
   };
 
 in
