@@ -116,6 +116,21 @@ let
     }
   '';
 
+  tac = writers.writeLuaBin lua "${pname}-tac-filter.lua"
+    {
+      inherit libraries; doCheck = "lua54+pandoc";
+    } ''
+    function Pandoc(doc)
+      local blocks = doc.blocks
+      local n = #blocks
+      local reversed = {}
+      for i = n, 1, -1 do
+        reversed[#reversed + 1] = blocks[i]
+      end
+      return pandoc.Pandoc(reversed, doc.meta)
+    end
+  '';
+
   script = writers.writeZshBin "${pname}" ''
     convertPandoc() {
       zparseopts -D -E -F -- \
@@ -155,5 +170,5 @@ let
 in
 lib.standalone {
   inherit version script;
-  passthru = { inherit initLua strip split; };
+  passthru = { inherit initLua strip split tac; };
 }
