@@ -116,6 +116,21 @@ let
     }
   '';
 
+  tac = writers.writeLuaBin lua "${pname}-tac-filter.lua"
+    {
+      inherit libraries; doCheck = "lua54+pandoc";
+    } ''
+    function Pandoc(doc)
+      local blocks = doc.blocks
+      local n = #blocks
+      local reversed = {}
+      for i = n, 1, -1 do
+        reversed[#reversed + 1] = blocks[i]
+      end
+      return pandoc.Pandoc(reversed, doc.meta)
+    end
+  '';
+
   script = writers.writeZshBin "${pname}" ''
     convertPandoc() {
       zparseopts -D -E -F -- \
@@ -123,6 +138,7 @@ let
         -grid-tables=opt_grid_tables G=opt_grid_tables \
         -reference-links=opt_reference_links R=opt_reference_links \
         -no-split=opt_no_split S=opt_no_split \
+        -tac=opt_tac T=opt_tac \
         -markdown=opt_markdown m=opt_markdown
 
       local FROM="$( (( #opt_markdown )) && echo "markdown" || echo "html" )"
@@ -135,6 +151,10 @@ let
         --data-dir=${initLua}
         --wrap=none --lua-filter=${strip}
       )
+
+      if (( #opt_tac )); then
+        PANDOC_ARGS+=(--lua-filter=${lib.getExe tac})
+      fi
 
       if ! (( #opt_no_split )); then
         PANDOC_ARGS+=(--lua-filter=${lib.getExe split})
@@ -155,5 +175,5 @@ let
 in
 lib.standalone {
   inherit version script;
-  passthru = { inherit initLua strip split; };
+  passthru = { inherit initLua strip split tac; };
 }
