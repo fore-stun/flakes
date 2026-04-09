@@ -28,9 +28,14 @@ let
       fi
 
       ${lib.getExe jujutsu} bookmark list --ignore-working-copy -a \
-        | ${lib.getExe gawk} -v REMOTE="''${REMOTE?}" '$1 ~ ("^[^ ]+@" REMOTE ":$") { $1 = substr($1,0,length($1) - 1); print $1 }' \
-        | ${moreutils}/bin/ifne ${lib.getExe fzf} --reverse --ansi --multi --preview="${lib.getExe jujutsu} log -r ::{} --ignore-working-copy --color=always" \
-        | ${moreutils}/bin/ifne ${findutils}/bin/xargs -I {} ${lib.getExe jujutsu} bookmark track {}
+        | ${lib.getExe gawk} \
+          -v REMOTE="''${REMOTE?}" \
+          -v FS=': ' \
+          '$1 ~ ("^[^ ]+@" REMOTE ":$") { $1 = substr($1,0,length($1) - 1); print $1 }' \
+        | ${moreutils}/bin/ifne ${lib.getExe fzf} --reverse --ansi --multi --delimiter='@' \
+            --preview="${lib.getExe jujutsu} log -r '::{1}@{2}' --ignore-working-copy --color=always" \
+        | ${moreutils}/bin/ifne ${coreutils}/bin/cut -d '@' -f 1 \
+        | ${moreutils}/bin/ifne ${findutils}/bin/xargs ${lib.getExe jujutsu} bookmark track --remote="''${REMOTE?}"
     '';
 
     delete-bookmarks = indent ''
