@@ -6,7 +6,6 @@
 , gh
 , jujutsu
 , moreutils
-, ripgrep
 , writers
 }:
 let
