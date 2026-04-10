@@ -181,7 +181,8 @@ let
 
     gh-pr-view = indent ''
       local TIP
-      ${lib.getExe jujutsu} bookmark list -r "heads(::@- & bookmarks())" -T "name" --no-pager \
+      ${lib.getExe jujutsu} bookmark list -r "heads(::@- & bookmarks())" -T "name ++ ':'" --no-pager --ignore-working-copy \
+        | ${moreutils}/bin/ifne ${coreutils}/bin/cut -d ':' -f 1 \
         | { read -r TIP || : }
 
       ${lib.getExe gh} pr view --web "''${TIP}"
