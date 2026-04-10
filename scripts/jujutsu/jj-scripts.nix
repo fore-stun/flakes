@@ -31,7 +31,7 @@ let
         | ${lib.getExe gawk} \
           -v REMOTE="''${REMOTE?}" \
           -v FS=': ' \
-          '$1 ~ ("^[^ ]+@" REMOTE ":$") { $1 = substr($1,0,length($1) - 1); print $1 }' \
+          '$1 ~ ("^[^ ]+@" REMOTE "$") { print $1 }' \
         | ${moreutils}/bin/ifne ${lib.getExe fzf} --reverse --ansi --multi --delimiter='@' \
             --preview="${lib.getExe jujutsu} log -r '::{1}@{2}' --ignore-working-copy --color=always" \
         | ${moreutils}/bin/ifne ${coreutils}/bin/cut -d '@' -f 1 \
