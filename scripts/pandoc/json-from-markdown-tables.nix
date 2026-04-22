@@ -33,6 +33,13 @@ let
     def csv_from_uniform_arrays:
       .[] | [.[]] | @csv;
 
+    def cell_text:
+      if .tag == "code" then "`" + (.children // [] | map(.text // "") | join("")) + "`"
+      elif .children? then .children[] | cell_text
+      elif .text? then .text
+      else ""
+      end;
+
     def uniform_arrays_from_pup_table:
         .[]
       | .children
@@ -41,7 +48,7 @@ let
         | .[]
         | .children
         | arrays
-        | map(select(.tag == "td" or .tag == "th") | .text)
+        | map(select(.tag == "td" or .tag == "th") | cell_text)
         );
   '';
 
