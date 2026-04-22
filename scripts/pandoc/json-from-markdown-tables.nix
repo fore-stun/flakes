@@ -50,6 +50,19 @@ let
         | arrays
         | map(select(.tag == "td" or .tag == "th") | cell_text)
         );
+
+    def objects_from_uniform_arrays:
+        .[0] as $headers
+      | .[1:] as $rows
+      | reduce ($rows | .[]) as $row
+        ([]; . + [
+          reduce range(0; $headers | length) as $i
+            ({}; . + {($headers[$i]): ($row[$i])})
+        ]);
+
+    def from_pup_table:
+        uniform_arrays_from_pup_table
+      | objects_from_uniform_arrays;
   '';
 
   script = writers.writeZshBin "${pname}" ''
@@ -75,17 +88,33 @@ let
       local PANDOC_EXTRA_SIGIL=(--pandoc-extra-arg -P)
       PANDOC_ARGS+=("''${(@)pandoc_extra:|PANDOC_EXTRA_SIGIL}")
 
-      ${pandoc}/bin/pandoc "''${(@)PANDOC_ARGS}" "$@"
+      ${lib.getExe pandoc} "''${(@)PANDOC_ARGS}" "$@"
     }
 
-    csvFromHTML() {
-      ${pup}/bin/pup --plain --charset utf8 'table json{}' \
-        | ${jq}/bin/jq -rc -L${jqModule}/modules \
+    pupFromHTML() {
+      ${lib.getExe pup} --plain --charset utf8 'table json{}'
+    }
+
+    fromPup() {
+      local -a jq_args=(
+        ${lib.getExe jq} -L${jqModule}/modules
+      )
+
+      if (( $#OPT_csv_output )); then
+        jq_args+=(
+          -rc
           'include "base"; uniform_arrays_from_pup_table | csv_from_uniform_arrays'
+        )
+      else
+        jq_args+=(
+          'include "base"; from_pup_table'
+        )
+      fi
     }
 
     extractPandoc "''${(@)infiles}" \
-      | csvFromHTML
+      | pupFromHTML \
+      | fromPup
   '';
 in
 lib.standalone {
