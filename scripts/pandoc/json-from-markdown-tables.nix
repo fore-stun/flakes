@@ -1,4 +1,5 @@
 { lib
+, jo
 , jq
 , pandoc
 , pup
@@ -51,24 +52,31 @@ let
         | map(select(.tag == "td" or .tag == "th") | cell_text)
         );
 
-    def objects_from_uniform_arrays:
-        .[0] as $headers
+    def objects_from_uniform_arrays($rename):
+        .[0] as $h
       | .[1:] as $rows
       | reduce ($rows | .[]) as $row
         ([]; . + [
-          reduce range(0; $headers | length) as $i
-            ({}; . + {($headers[$i]): ($row[$i])})
+          reduce range(0; $h | length) as $i
+            ({}; . + {($rename[$h[$i]] // $h[$i]): ($row[$i])})
         ]);
 
-    def from_pup_table:
+    def objects_from_uniform_arrays:
+      objects_from_uniform_arrays({})
+
+    def from_pup_table($rename):
         uniform_arrays_from_pup_table
-      | objects_from_uniform_arrays;
+      | objects_from_uniform_arrays($rename);
+
+    def from_pup_table:
+      from_pup_table({})
   '';
 
   script = writers.writeZshBin "${pname}" ''
     zparseopts -D -E -F -- \
       -pandoc-extra-arg+:=pandoc_extra P+:=pandoc_extra \
       -csv=OPT_csv_output C=OPT_csv_output \
+      -headers+:=ARG_headers h+:=ARG_headers \
       -debug=OPT_debug d=OPT_debug
 
     local -a infiles=("$@")
@@ -76,6 +84,21 @@ let
     if ! (( #infiles )); then
       [[ -t 0 ]] && return 3
       infiles=(-)
+    fi
+
+    local RENAME_JSON="{}"
+
+    local -a rename_headers
+    if (( $#ARG_headers )); then
+      for _ h in "''${(@)ARG_headers}"; do
+        rename_headers+=("$h")
+      done
+    fi
+    ${lib.getExe jo} -e "''${(@)rename_headers}" \
+      | { read -r -d "" RENAME_JSON || : }
+
+    if (( $#OPT_debug )); then
+      print -l -- "Renaming:" "''${RENAME_JSON}" >&2
     fi
 
     extractPandoc() {
@@ -98,16 +121,17 @@ let
     fromPup() {
       local -a jq_args=(
         ${lib.getExe jq} -L${jqModule}/modules
+        --argjson rename "''${RENAME_JSON}"
       )
 
       if (( $#OPT_csv_output )); then
         jq_args+=(
           -rc
-          'include "base"; uniform_arrays_from_pup_table | csv_from_uniform_arrays'
+          'include "base"; uniform_arrays_from_pup_table($rename) | csv_from_uniform_arrays'
         )
       else
         jq_args+=(
-          'include "base"; from_pup_table'
+          'include "base"; from_pup_table($rename)'
         )
       fi
     }
