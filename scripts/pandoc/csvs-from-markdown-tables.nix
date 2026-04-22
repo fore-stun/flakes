@@ -7,7 +7,7 @@ let
   version = "0.1.0";
 
   script = writers.writeZshBin "${pname}" ''
-    ${lib.getExe json-from-markdown-tables} "$@"
+    ${lib.getExe json-from-markdown-tables} --csv "$@"
   '';
 in
 lib.standalone {

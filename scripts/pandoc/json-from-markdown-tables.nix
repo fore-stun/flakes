@@ -48,6 +48,7 @@ let
   script = writers.writeZshBin "${pname}" ''
     zparseopts -D -E -F -- \
       -pandoc-extra-arg+:=pandoc_extra P+:=pandoc_extra \
+      -csv=OPT_csv_output C=OPT_csv_output \
       -debug=OPT_debug d=OPT_debug
 
     local -a infiles=("$@")
