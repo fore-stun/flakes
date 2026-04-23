@@ -12,5 +12,5 @@ let
 in
 lib.standalone {
   inherit version script;
-  passthru = { inherit (json-from-markdown-tables.passthru) lua; };
+  passthru = { inherit (json-from-markdown-tables.passthru) json_writer; };
 }
