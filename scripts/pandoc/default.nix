@@ -3,6 +3,7 @@
 let
   pnames = [
     "csvs-from-markdown-tables"
+    "json-from-markdown-tables"
     "simple-markdown"
   ];
 in
@@ -12,6 +13,9 @@ in
       extras = {
         simple-markdown = {
           lua = final.lua5_4;
+        };
+        csvs-from-markdown-tables = {
+          inherit (final) json-from-markdown-tables;
         };
       };
     in
@@ -24,6 +28,9 @@ in
 } //
 lib.foldFor lib.platforms.all (system:
   {
+    legacyPackages.${system} = self.overlays.pandoc
+      self.legacyPackages.${system}
+      nixpkgs.legacyPackages.${system};
     packages.${system} = self.overlays.pandoc
       self.legacyPackages.${system}
       nixpkgs.legacyPackages.${system};

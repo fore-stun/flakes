@@ -1,86 +1,44 @@
 { lib
-, jq
-, pandoc
-, pup
-, writeText
-, writeTextDir
+, json-from-markdown-tables
+, visidata
 , writers
 }:
 let
   pname = "csvs-from-markdown-tables";
-  version = "0.1.0";
-
-  lua = writeText "${pname}-filter" ''
-    function debug(enabled, f)
-      if tonumber(enabled) > 0 then
-        f()
-      end
-    end
-
-    function Pandoc(doc)
-      return doc:walk {
-        Table = function(tbl)
-          debug(doc.meta.debug, function()
-            io.stderr:write(string.format("Found table\\n%s\\n", tbl.head))
-          end)
-          return tbl
-        end
-      }
-    end
-  '';
-
-  jqModule = writeTextDir "modules/base.jq" ''
-    def csv_from_uniform_arrays:
-      .[] | [.[]] | @csv;
-
-    def uniform_arrays_from_pup_table:
-        .[]
-      | .children
-      | map(
-          .children
-        | .[]
-        | .children
-        | arrays
-        | map(select(.tag == "td" or .tag == "th") | .text)
-        );
-  '';
+  version = "0.2.0";
 
   script = writers.writeZshBin "${pname}" ''
-    zparseopts -D -E -F -- \
-      -pandoc-extra-arg+:=pandoc_extra P+:=pandoc_extra \
-      -debug=OPT_debug d=OPT_debug
-
-    local -a infiles=("$@")
-
-    if ! (( #infiles )); then
-      [[ -t 0 ]] && return 3
-      infiles=(-)
-    fi
-
-    extractPandoc() {
-      local -a PANDOC_ARGS=(
-        -rmarkdown -whtml
-        -M debug="$(( #OPT_debug ))"
-        --wrap=none --lua-filter=${lua}
+    csvFromJson() {
+      local -a visidata_args=(
+        ${lib.getExe visidata}
+        -f json
+        -b
+        --save-filetype=csv
+        --null-value=""
+        -o -
       )
 
-      local PANDOC_EXTRA_SIGIL=(--pandoc-extra-arg -P)
-      PANDOC_ARGS+=("''${(@)pandoc_extra:|PANDOC_EXTRA_SIGIL}")
+      local fifo=$(mktemp -u)
+      mkfifo "$fifo"
+      trap "rm -f '$fifo'" EXIT
 
-      ${pandoc}/bin/pandoc "''${(@)PANDOC_ARGS}" "$@"
+      "''${(@)visidata_args}" 2>"$fifo" &
+      local VD_PID=$!
+
+      local STDERR
+      { read -r -d "" STDERR || : } < "$fifo"
+
+      wait "$VD_PID"
+      if (( ? )); then
+        print -r -l -- "$STDERR" >&2
+      fi
     }
 
-    csvFromHTML() {
-      ${pup}/bin/pup --plain --charset utf8 'table json{}' \
-        | ${jq}/bin/jq -rc -L${jqModule}/modules \
-          'include "base"; uniform_arrays_from_pup_table | csv_from_uniform_arrays'
-    }
-
-    extractPandoc "''${(@)infiles}" \
-      | csvFromHTML
+    ${lib.getExe json-from-markdown-tables} "$@" \
+      | csvFromJson
   '';
 in
 lib.standalone {
   inherit version script;
-  passthru = { inherit lua; };
+  passthru = { inherit (json-from-markdown-tables.passthru) json_writer; };
 }
