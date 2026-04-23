@@ -40,7 +40,19 @@ let
           for _, row in ipairs(tbl.bodies[1].body) do
             local obj = {}
             for i, cell in ipairs(row.cells) do
-              obj[headers[i]] = pandoc.utils.stringify(cell.contents)
+              local s
+              if tonumber(doc.meta.markdown or "0") > 0 then
+                s = pandoc
+                  .write(
+                    pandoc.Pandoc(cell.contents),
+                    "markdown-smart",
+                    { wrap_text = "wrap-none" }
+                  )
+                  :gsub("^([^\n]*)\n$", "%1")
+              else
+                s = pandoc.utils.stringify(cell.contents)
+              end
+              obj[headers[i]] = s
             end
             table.insert(results, obj)
           end
@@ -55,6 +67,7 @@ let
     zparseopts -D -E -F -- \
       -pandoc-extra-arg+:=pandoc_extra P+:=pandoc_extra \
       -csv=OPT_csv_output C=OPT_csv_output \
+      -markdown-in-json=OPT_markdown_json_output m=OPT_markdown_json_output \
       -headers+:=ARG_headers h+:=ARG_headers \
       -debug=OPT_debug d=OPT_debug
 
@@ -84,6 +97,7 @@ let
       local -a PANDOC_ARGS=(
         -rmarkdown -w"${json_writer}/${pname}-writer.lua"
         -M debug="$(( #OPT_debug ))"
+        -M markdown="$(( $#OPT_markdown_json_output ))"
         -M rename:"''${RENAME_JSON}"
         --wrap=none
       )
