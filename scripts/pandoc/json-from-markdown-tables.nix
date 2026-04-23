@@ -66,7 +66,6 @@ let
   script = writers.writeZshBin "${pname}" ''
     zparseopts -D -E -F -- \
       -pandoc-extra-arg+:=pandoc_extra P+:=pandoc_extra \
-      -csv=OPT_csv_output C=OPT_csv_output \
       -markdown-in-json=OPT_markdown_json_output m=OPT_markdown_json_output \
       -headers+:=ARG_headers h+:=ARG_headers \
       -debug=OPT_debug d=OPT_debug
