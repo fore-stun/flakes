@@ -30,6 +30,30 @@ let
     end
   '';
 
+  json_writer = writeTextDir "${pname}-writer.lua" ''
+    local json = require 'pandoc.json'
+
+    function Writer(doc)
+      local results = {}
+      for _, block in ipairs(doc.blocks) do
+        if block.t == 'Table' then
+          local headers = {}
+          for _, cell in ipairs(block.head.rows[1].cells) do
+            table.insert(headers, pandoc.utils.stringify(cell.contents))
+          end
+          for _, row in ipairs(block.bodies[1].body) do
+            local obj = {}
+            for i, cell in ipairs(row.cells) do
+              obj[headers[i]] = pandoc.utils.stringify(cell.contents)
+            end
+            table.insert(results, obj)
+          end
+        end
+      end
+      return json.encode(results)
+    end
+  '';
+
   jqModule = writeTextDir "modules/base.jq" ''
     def csv_from_uniform_arrays:
       .[] | [.[]] | @csv;
@@ -143,5 +167,5 @@ let
 in
 lib.standalone {
   inherit version script;
-  passthru = { inherit lua; };
+  passthru = { inherit json_writer lua; };
 }
