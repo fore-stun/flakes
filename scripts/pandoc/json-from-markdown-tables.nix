@@ -1,8 +1,6 @@
 { lib
 , jo
-, jq
 , pandoc
-, pup
 , writeText
 , writeTextDir
 , writers
@@ -54,48 +52,6 @@ let
     end
   '';
 
-  jqModule = writeTextDir "modules/base.jq" ''
-    def csv_from_uniform_arrays:
-      .[] | [.[]] | @csv;
-
-    def cell_text:
-      if .tag == "code" then "`" + (.children // [] | map(.text // "") | join("")) + "`"
-      elif .children? then .children[] | cell_text
-      elif .text? then .text
-      else ""
-      end;
-
-    def uniform_arrays_from_pup_table:
-        .[]
-      | .children
-      | map(
-          .children
-        | .[]
-        | .children
-        | arrays
-        | map(select(.tag == "td" or .tag == "th") | cell_text)
-        );
-
-    def objects_from_uniform_arrays($rename):
-        .[0] as $h
-      | .[1:] as $rows
-      | reduce ($rows | .[]) as $row
-        ([]; . + [
-          reduce range(0; $h | length) as $i
-            ({}; . + {($rename[$h[$i]] // $h[$i]): ($row[$i])})
-        ]);
-
-    def objects_from_uniform_arrays:
-      objects_from_uniform_arrays({})
-
-    def from_pup_table($rename):
-        uniform_arrays_from_pup_table
-      | objects_from_uniform_arrays($rename);
-
-    def from_pup_table:
-      from_pup_table({})
-  '';
-
   script = writers.writeZshBin "${pname}" ''
     zparseopts -D -E -F -- \
       -pandoc-extra-arg+:=pandoc_extra P+:=pandoc_extra \
@@ -125,10 +81,11 @@ let
       print -l -- "Renaming:" "''${RENAME_JSON}" >&2
     fi
 
-    extractPandoc() {
+    extractJson() {
       local -a PANDOC_ARGS=(
-        -rmarkdown -whtml
+        -rmarkdown -w"${json_writer}/${pname}-writer.lua"
         -M debug="$(( #OPT_debug ))"
+        -M rename:"''${RENAME_JSON}"
         --wrap=none --lua-filter=${lua}
       )
 
@@ -138,31 +95,7 @@ let
       ${lib.getExe pandoc} "''${(@)PANDOC_ARGS}" "$@"
     }
 
-    pupFromHTML() {
-      ${lib.getExe pup} --plain --charset utf8 'table json{}'
-    }
-
-    fromPup() {
-      local -a jq_args=(
-        ${lib.getExe jq} -L${jqModule}/modules
-        --argjson rename "''${RENAME_JSON}"
-      )
-
-      if (( $#OPT_csv_output )); then
-        jq_args+=(
-          -rc
-          'include "base"; uniform_arrays_from_pup_table($rename) | csv_from_uniform_arrays'
-        )
-      else
-        jq_args+=(
-          'include "base"; from_pup_table($rename)'
-        )
-      fi
-    }
-
-    extractPandoc "''${(@)infiles}" \
-      | pupFromHTML \
-      | fromPup
+    extractJson "''${(@)infiles}"
   '';
 in
 lib.standalone {
