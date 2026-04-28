@@ -7,6 +7,8 @@
 , jujutsu
 , moreutils
 , writers
+
+, NIX_FLAKE_TEMPLATE ? null
 }:
 let
   pname = "jj-scripts";
@@ -199,6 +201,65 @@ let
       ${lib.getExe jujutsu} new "''${DESTINATION}" "@-" -m "Merge branch ''\'''${BRANCH}'" \
         && ${lib.getExe jujutsu} new \
         && ${lib.getExe jujutsu} bookmark move --from "heads(::@- & bookmarks())" --to "@-"
+    '';
+
+    gh-init = indent ''
+      zparseopts -D -E -F \
+        -owner:=ARG_owner o:=ARG_owner \
+        -dry-run=OPT_dry_run n=OPT_dry_run
+
+      local CWD
+      pwd | { read -r -d "" CWD || : }
+      local DEFAULT_OWNER
+      if (( #DEFAULT_ORGANIZATION )); then
+        for i in "''${(s:/:)CWD}"; do
+          if [[ "$i" = "''${DEFAULT_ORGANIZATION?}" ]]; then
+            DEFAULT_OWNER="''${GITHUB_DEFAULT_ORGANIZATION?GITHUB_DEFAULT_ORGANIZATION}"
+          fi
+        done
+      fi
+
+      local DIRECTORY="''${1?directory}"
+      local REPO="''${2:-''${DIRECTORY}}"
+      local OWNER="''${ARG_owner[2]:-''${DEFAULT_OWNER?}}"
+
+      local NIX_FLAKE_TEMPLATE=${lib.escapeShellArg (if NIX_FLAKE_TEMPLATE == null then "" else NIX_FLAKE_TEMPLATE)}
+
+      if ! (( #OWNER )); then
+        print -- "Supply an owner (-o)" >&2
+        return 3
+      fi
+
+      if (( $#OPT_dry_run )); then
+        print -- "Creating ''${OWNER}/''${REPO}" >&2
+        return 0
+      fi
+
+      local REPLY
+      read -q "REPLY?Create ''${OWNER}/''${REPO}? (y/N)"
+
+      if [[ "$REPLY" != "y" ]]; then
+        return 0
+      fi
+
+      mkdir -p "''${DIRECTORY}"
+      cd "''${DIRECTORY}"
+      ${lib.getExe jujutsu} git init --colocate
+      ${lib.getExe jujutsu} cm "Start repo"
+      ${lib.getExe jujutsu} bookmark create main -r @-
+
+      { ${lib.getExe gh} repo create "''${OWNER}/''${REPO}" --push --private --source=. || : }
+      ${lib.getExe jujutsu} bookmark track --remote=origin main
+      ${lib.getExe jujutsu} put
+
+      if (( #NIX_FLAKE_TEMPLATE )); then
+        local -a msg=(
+          "Run the following:"
+          "nix flake init -t ''${(qq)NIX_FLAKE_TEMPLATE}"
+        )
+
+        print -l -- "''${(@)msg}" >&2
+      fi
     '';
   };
 
