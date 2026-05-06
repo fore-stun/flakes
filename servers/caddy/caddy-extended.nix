@@ -14,5 +14,5 @@ caddy.withPlugins {
     "github.com/abiosoft/caddy-inspect@v0.0.0-20250214103948-96cdb1dfb122"
     "github.com/ggicci/caddy-jwt@v0.12.0"
   ];
-  hash = "sha256-afTlnnjx9QLVHXOsUFen02Yg42bLx6B76kb3jRj9kgk=";
+  hash = "sha256-5atshd1aaTT7KovZLJa+qaDsP/GJFB3GiRNVPh2tVE8=";
 }
