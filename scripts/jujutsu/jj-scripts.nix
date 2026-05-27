@@ -13,13 +13,9 @@
 let
   pname = "jj-scripts";
   version = "0.1.0";
-  prefixStringLines = prefix: str:
-    lib.concatMapStringsSep "\n" (line: prefix + line) (lib.splitString "\n" str);
-
-  indent = prefixStringLines "  ";
 
   functions = {
-    track-bookmarks = indent ''
+    track-bookmarks = lib.indent ''
       zparseopts -D -E -F -- \
         u=OPT_upstream -upstream:=OPT_upstream \
         -remote:=ARG_remote
@@ -40,7 +36,7 @@ let
         | ${moreutils}/bin/ifne ${findutils}/bin/xargs ${lib.getExe jujutsu} bookmark track --remote="''${REMOTE?}"
     '';
 
-    delete-bookmarks = indent ''
+    delete-bookmarks = lib.indent ''
       ${lib.getExe jujutsu} bookmark list --ignore-working-copy 2>/dev/null  \
         | ${lib.getExe gawk} '$0 ~ /^[^ ]/ && $1 ~ /:$/ { $1 = substr($1,0,length($1) - 1); print $1 }' \
         | ${moreutils}/bin/ifne ${lib.getExe fzf} --reverse --ansi --multi --preview="${lib.getExe jujutsu} log -r ::{} --ignore-working-copy --color=always" \
@@ -146,7 +142,7 @@ let
         ${lib.getExe jujutsu} new
     '';
 
-    gh-pr-merge = indent ''
+    gh-pr-merge = lib.indent ''
       local TIP
       ${lib.getExe jujutsu} bookmark list -r "heads(::@- & bookmarks())" -T "name" \
         | { read -r TIP || : }
@@ -181,7 +177,7 @@ let
         ${lib.getExe gh} pr create -H "''${CURRENT_BOOKMARK}" "$@"
     '';
 
-    gh-pr-view = indent ''
+    gh-pr-view = lib.indent ''
       local TIP
       ${lib.getExe jujutsu} bookmark list -r "heads(::@- & bookmarks())" -T "name ++ ':'" --no-pager --ignore-working-copy \
         | ${moreutils}/bin/ifne ${coreutils}/bin/cut -d ':' -f 1 \
@@ -190,7 +186,7 @@ let
       ${lib.getExe gh} pr view --web "''${TIP}"
     '';
 
-    merge-trunk = indent ''
+    merge-trunk = lib.indent ''
       zparseopts -D -E -F -- \
         d:=ARG_destination
 
@@ -203,7 +199,7 @@ let
         && ${lib.getExe jujutsu} bookmark move --from "heads(::@- & bookmarks())" --to "@-"
     '';
 
-    gh-init = indent ''
+    gh-init = lib.indent ''
       zparseopts -D -E -F \
         -owner:=ARG_owner o:=ARG_owner \
         -dry-run=OPT_dry_run n=OPT_dry_run

@@ -52,14 +52,21 @@ let
     in
     f collectFlakeInputs;
 
+  prefixStringLines = prefix: str:
+    lib.concatMapStringsSep "\n" (line: prefix + line) (lib.splitString "\n" str);
+
+  indent = prefixStringLines "  ";
+
 in
 lib.recursiveUpdate lib {
   platforms = { inherit anyNix; };
   licenses = { inherit dual; };
   inherit
     allFlakeSources
+    indent
     lang
     standalone
+    prefixStringLines
     pythonScopeWith
     ;
 }
