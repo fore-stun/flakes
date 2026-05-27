@@ -57,6 +57,25 @@ let
 
   indent = prefixStringLines "  ";
 
+  shellHook = args: ''
+    interactive_shellhook() {
+      ${indent args.interactive or "return 0"}
+    }
+
+    non_interactive_shellhook() {
+      ${indent args.nonInteractive or "return 0"}
+    }
+
+    case "$-" in
+      *i*)
+        interactive_shellhook
+        ;;
+      *)
+        non_interactive_shellhook
+        ;;
+    esac
+  '';
+
 in
 lib.recursiveUpdate lib {
   platforms = { inherit anyNix; };
@@ -65,6 +84,7 @@ lib.recursiveUpdate lib {
     allFlakeSources
     indent
     lang
+    shellHook
     standalone
     prefixStringLines
     pythonScopeWith
