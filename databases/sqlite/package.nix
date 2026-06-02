@@ -20,6 +20,7 @@ let
       buildInputs = [ makeWrapper ];
 
       passthru = {
+        inherit sqlite;
         # It can be useful for consumers to know which plugins are available.
         libPaths = lib.mapAttrs (_: d: d.libPath) plugins;
         tests.pkg-config = testers.hasPkgConfigModules {
