@@ -4,6 +4,7 @@
 , sqlitePlugins
 , stdenvNoCC
 , symlinkJoin
+, testers
 
 , version ? sqlite.version
 }:
@@ -21,15 +22,21 @@ let
       passthru = {
         # It can be useful for consumers to know which plugins are available.
         libPaths = lib.mapAttrs (_: d: d.libPath) plugins;
+        tests.pkg-config = testers.hasPkgConfigModules {
+          package = drv;
+        };
       };
 
-      meta.mainProgram = "sqlite3";
+      meta = {
+        mainProgram = "sqlite3";
+        pkgConfigModules = [ "sqlite3" ];
+      };
 
       postBuild = ''
         wrapProgram "$out/bin/sqlite3" \
           --prefix ${pathType}_LIBRARY_PATH : "$out/lib/sqlite/ext"
       '';
-      paths = [ sqlite ] ++ builtins.attrValues plugins;
+      paths = [ sqlite sqlite.dev ] ++ builtins.attrValues plugins;
     };
 
 in
