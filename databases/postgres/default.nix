@@ -1,7 +1,7 @@
 { self, lib, nixpkgs, ... }:
 
 let
-  pnames = [ "pgperms" "postgrest-bin" "sqldiff" "storage-api" ];
+  pnames = [ "pgperms" "sqldiff" "storage-api" ];
 
   pgs = [ "" "_17" "_16" "_15" "_14" ];
 
@@ -10,9 +10,6 @@ in
   overlays.postgres = final: prev:
     let
       extras = {
-        postgrest-bin = {
-          postgresql = final.postgresql_17;
-        };
         sqldiff = {
           inherit (final) writers;
           inherit lib;
