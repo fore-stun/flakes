@@ -1,5 +1,6 @@
 { caddy
 , lib
+, pkg-config
 , vips
 }:
 
@@ -10,6 +11,7 @@ let
       "github.com/caddy-dns/cloudflare@v0.2.4"
       "github.com/fore-stun/libdns-route53@v0.0.0-20250526213255-7a723d8255bf"
 
+      "github.com/quix-labs/caddy-image-processor@v0.0.0-20241215121258-b4aa0b5bac30"
       "github.com/fore-stun/spanx@v0.0.0-20250507102219-58d4b8a0d7f3"
       "github.com/fore-stun/caddy-s3-proxy@v0.5.7-0.20250526214057-c90e95199238"
       "github.com/abiosoft/caddy-hmac@v0.0.0-20210522205451-976ca0a419ef"
@@ -21,6 +23,9 @@ let
   };
 
   withDeps = drv: drv.overrideAttrs (old: {
+    nativeBuildInputs = old.nativeBuildInputs  or [ ] ++ builtins.attrValues {
+      inherit pkg-config;
+    };
     buildInputs = old.buildInputs  or [ ] ++ builtins.attrValues {
       inherit vips;
     };
