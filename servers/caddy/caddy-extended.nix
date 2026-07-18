@@ -1,5 +1,6 @@
 { caddy
 , lib
+, vips
 }:
 
 let
@@ -19,7 +20,14 @@ let
     hash = "sha256-HJOljfduiwxjJQ+fRo8tKZkXNDVjQena36QLxV1yfHU=";
   };
 
+  withDeps = drv: drv.overrideAttrs (old: {
+    buildInputs = old.buildInputs  or [ ] ++ builtins.attrValues {
+      inherit vips;
+    };
+  });
+
 in
 lib.pipe caddy [
   withPlugins
+  withDeps
 ]
