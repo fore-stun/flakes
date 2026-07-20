@@ -11,6 +11,8 @@ let
       "github.com/caddy-dns/cloudflare@v0.2.4"
       "github.com/fore-stun/libdns-route53@v0.0.0-20250526213255-7a723d8255bf"
 
+      "github.com/darkweak/souin/plugins/caddy@v0.0.0-20250918155659-fd6fa5346ff7"
+      "github.com/darkweak/storages/simplefs/caddy@v0.0.0-20260314111132-4696add7353c"
       "github.com/quix-labs/caddy-image-processor@v0.0.0-20241215121258-b4aa0b5bac30"
       "github.com/fore-stun/spanx@v0.0.0-20250507102219-58d4b8a0d7f3"
       "github.com/fore-stun/caddy-s3-proxy@v0.5.7-0.20250526214057-c90e95199238"
@@ -19,7 +21,7 @@ let
       "github.com/abiosoft/caddy-inspect@v0.0.0-20250214103948-96cdb1dfb122"
       "github.com/ggicci/caddy-jwt@v0.12.0"
     ];
-    hash = "sha256-HJOljfduiwxjJQ+fRo8tKZkXNDVjQena36QLxV1yfHU=";
+    hash = "sha256-3yB9p2j7rw7aUWjh5rgMyVXrclwXFqPbs5HmQOPAhDU=";
   };
 
   withDeps = drv: drv.overrideAttrs (old: {
