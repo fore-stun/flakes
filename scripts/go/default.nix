@@ -1,7 +1,9 @@
 { self, lib, nixpkgs, ... }:
 
 let
-  pnames = [ ];
+  pnames = [
+    "go-resolve-module"
+  ];
 
 in
 {
