@@ -71,6 +71,7 @@
       ./utils/wayland
 
       ./scripts/darwin
+      ./scripts/go
       ./scripts/jujutsu
       ./scripts/nix
       ./scripts/pandoc
