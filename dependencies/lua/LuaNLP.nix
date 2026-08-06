@@ -24,7 +24,7 @@ lua.pkgs.buildLuaPackage {
 
   propagatedBuildInputs = builtins.attrValues {
     inherit (lua.pkgs)
-      lrexlib-pcre
+      lrexlib-pcre2
       ;
   };
 
