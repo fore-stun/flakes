@@ -54,6 +54,8 @@ let
     {
       inherit libraries; doCheck = "lua54+pandoc";
     } ''
+    package.loaded["rex_pcre"] = require("rex_pcre2")
+
     local tokenization = require("tokenizer.tokenization")
 
     local function patcher(toreplace)
