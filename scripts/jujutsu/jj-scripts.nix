@@ -14,6 +14,24 @@ let
   pname = "jj-scripts";
   version = "0.1.0";
 
+  mkDefine = name: s: ''
+    local ${name}
+    ${lib.trim s} \
+      | { read -r ${name} || : }
+
+    if ! (( $#${name} )); then
+      print -- "No ${name}" >&2
+      return 5
+    fi
+  '';
+
+  define = lib.mapAttrs mkDefine {
+    TIP = ''
+      ${lib.getExe jujutsu} bookmark list -r "heads(::@- & bookmarks())" -T "name ++ ':'" --no-pager --ignore-working-copy \
+        | ${moreutils}/bin/ifne ${coreutils}/bin/cut -d ':' -f 1
+    '';
+  };
+
   functions = {
     track-bookmarks = lib.indent ''
       zparseopts -D -E -F -- \
@@ -143,9 +161,7 @@ let
     '';
 
     gh-pr-merge = lib.indent ''
-      local TIP
-      ${lib.getExe jujutsu} bookmark list -r "heads(::@- & bookmarks())" -T "name" \
-        | { read -r TIP || : }
+      ${define.TIP}
 
       ${lib.getExe gh} pr merge -m "''${TIP}" \
         && ${lib.getExe jujutsu} bookmark delete "''${TIP}" \
@@ -178,10 +194,7 @@ let
     '';
 
     gh-pr-view = lib.indent ''
-      local TIP
-      ${lib.getExe jujutsu} bookmark list -r "heads(::@- & bookmarks())" -T "name ++ ':'" --no-pager --ignore-working-copy \
-        | ${moreutils}/bin/ifne ${coreutils}/bin/cut -d ':' -f 1 \
-        | { read -r TIP || : }
+      ${define.TIP}
 
       ${lib.getExe gh} pr view --web "''${TIP}"
     '';
