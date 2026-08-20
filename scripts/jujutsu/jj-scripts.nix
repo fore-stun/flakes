@@ -6,6 +6,7 @@
 , gh
 , jujutsu
 , moreutils
+, tuicr
 , writers
 
 , NIX_FLAKE_TEMPLATE ? null
@@ -13,6 +14,28 @@
 let
   pname = "jj-scripts";
   version = "0.1.0";
+
+  mkDefine = name: s: ''
+    local ${name}
+    ${lib.trim s} \
+      | { read -r ${name} || : }
+
+    if ! (( $#${name} )); then
+      print -- "No ${name}" >&2
+      return 5
+    fi
+  '';
+
+  define = lib.mapAttrs mkDefine {
+    TIP = ''
+      ${lib.getExe jujutsu} bookmark list -r "heads(::@- & bookmarks())" -T "name ++ ':'" --no-pager --ignore-working-copy \
+        | ${moreutils}/bin/ifne ${coreutils}/bin/cut -d ':' -f 1
+    '';
+
+    PR_NUMBER = ''
+      ${lib.getExe gh} pr list -H ''${TIP?} --json number -q '.[0].number'
+    '';
+  };
 
   functions = {
     track-bookmarks = lib.indent ''
@@ -143,9 +166,7 @@ let
     '';
 
     gh-pr-merge = lib.indent ''
-      local TIP
-      ${lib.getExe jujutsu} bookmark list -r "heads(::@- & bookmarks())" -T "name" \
-        | { read -r TIP || : }
+      ${define.TIP}
 
       ${lib.getExe gh} pr merge -m "''${TIP}" \
         && ${lib.getExe jujutsu} bookmark delete "''${TIP}" \
@@ -178,10 +199,7 @@ let
     '';
 
     gh-pr-view = lib.indent ''
-      local TIP
-      ${lib.getExe jujutsu} bookmark list -r "heads(::@- & bookmarks())" -T "name ++ ':'" --no-pager --ignore-working-copy \
-        | ${moreutils}/bin/ifne ${coreutils}/bin/cut -d ':' -f 1 \
-        | { read -r TIP || : }
+      ${define.TIP}
 
       ${lib.getExe gh} pr view --web "''${TIP}"
     '';
@@ -256,6 +274,15 @@ let
 
         print -l -- "''${(@)msg}" >&2
       fi
+    '';
+
+    tuicr = lib.indent ''
+      ${define.TIP}
+      ${define.PR_NUMBER}
+
+      print -- "Loading PR ''${PR_NUMBER?}…" >&2
+
+      ${lib.getExe tuicr} pr ''${PR_NUMBER?}
     '';
   };
 
