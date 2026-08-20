@@ -6,6 +6,7 @@
 , gh
 , jujutsu
 , moreutils
+, tuicr
 , writers
 
 , NIX_FLAKE_TEMPLATE ? null
@@ -29,6 +30,10 @@ let
     TIP = ''
       ${lib.getExe jujutsu} bookmark list -r "heads(::@- & bookmarks())" -T "name ++ ':'" --no-pager --ignore-working-copy \
         | ${moreutils}/bin/ifne ${coreutils}/bin/cut -d ':' -f 1
+    '';
+
+    PR_NUMBER = ''
+      ${lib.getExe gh} pr list -H ''${TIP?} --json number -q '.[0].number'
     '';
   };
 
@@ -269,6 +274,15 @@ let
 
         print -l -- "''${(@)msg}" >&2
       fi
+    '';
+
+    tuicr = lib.indent ''
+      ${define.TIP}
+      ${define.PR_NUMBER}
+
+      print -- "Loading PR ''${PR_NUMBER?}…" >&2
+
+      ${lib.getExe tuicr} pr ''${PR_NUMBER?}
     '';
   };
 
