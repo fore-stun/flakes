@@ -141,7 +141,8 @@ let
         -reference-links=OPT_reference_links R=OPT_reference_links \
         -no-split=OPT_no_split S=OPT_no_split \
         -tac=OPT_tac T=OPT_tac \
-        -markdown=OPT_markdown m=OPT_markdown
+        -markdown=OPT_markdown m=OPT_markdown \
+        -dry-run=OPT_dry_run n=OPT_dry_run
 
       local FROM="$( (( #OPT_markdown )) && echo "markdown" || echo "html" )"
       local GRID_TABLES="$( (( #OPT_grid_tables )) && echo "" || echo "-grid_tables" )"
@@ -175,6 +176,11 @@ let
 
       local PANDOC_EXTRA_SIGIL=(--pandoc-extra-arg -P)
       pandoc_args+=("''${(@)ARG_pandoc_extra:|PANDOC_EXTRA_SIGIL}")
+
+      if (( $#OPT_dry_run )); then
+        print -- ${lib.getExe pandoc} "''${(@)pandoc_args}" '<&0' >&2
+        return 0
+      fi
 
       ${lib.getExe pandoc} "''${(@)pandoc_args}" <&0
     }
