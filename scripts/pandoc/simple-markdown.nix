@@ -195,6 +195,7 @@ let
         -grid-tables=OPT_grid_tables G=OPT_grid_tables \
         -reference-links=OPT_reference_links R=OPT_reference_links \
         -no-split=OPT_no_split S=OPT_no_split \
+        -renumber=OPT_renumber r=OPT_renumber \
         -tac=OPT_tac T=OPT_tac \
         -markdown=OPT_markdown m=OPT_markdown \
         -dry-run=OPT_dry_run n=OPT_dry_run
@@ -205,6 +206,7 @@ let
       local no_split="$( (( #OPT_no_split )) && echo "" || echo "-no_split" )"
 
       local -a pandoc_markdown_extensions=(
+        +startnum
         -smart
         -simple_tables
         -multiline_tables
@@ -223,6 +225,10 @@ let
 
       if ! (( #OPT_no_split )); then
         pandoc_args+=(--lua-filter=${lib.getExe split})
+      fi
+
+      if (( #OPT_renumber )); then
+        pandoc_args+=(--lua-filter=${lib.getExe renumber})
       fi
 
       if (( #OPT_reference_links )); then
@@ -245,5 +251,5 @@ let
 in
 lib.standalone {
   inherit version script;
-  passthru = { inherit initLua strip split tac; };
+  passthru = { inherit initLua renumber strip split tac; };
 }
