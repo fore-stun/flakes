@@ -148,8 +148,15 @@ let
 
       local no_split="$( (( #OPT_no_split )) && echo "" || echo "-no_split" )"
 
+      local -a pandoc_markdown_extensions=(
+        -smart
+        -simple_tables
+        -multiline_tables
+        ''${GRID_TABLES}
+      )
+
       local -a pandoc_args=(
-        -r''${FROM} -wmarkdown-smart-simple_tables-multiline_tables''${GRID_TABLES}
+        -r''${FROM} -wmarkdown''${(j::)pandoc_markdown_extensions}
         --data-dir=${initLua}
         --wrap=none --lua-filter=${strip}
       )
