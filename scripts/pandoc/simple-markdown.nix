@@ -50,6 +50,61 @@ let
     }
   '';
 
+  renumber = writers.writeLuaBin lua "${pname}-renumber-filter.lua"
+    {
+      inherit libraries; doCheck = "lua54+pandoc";
+    } ''
+    -- renumber.lua
+    --
+    -- Renumbers top-level ordered lists so numbering continues sequentially
+    -- across the whole document/selection (list 2 picks up where list 1 left
+    -- off), instead of every OrderedList restarting at 1. Ordered lists
+    -- nested inside list items are left completely untouched.
+    --
+    -- Usage:
+    --   pandoc --lua-filter=renumber.lua -f markdown -t markdown -s input.md -o output.md
+    --
+    -- How it avoids mixing up nesting levels:
+    --   Pandoc's *default* filter traversal ("typewise") visits every Block
+    --   of a given type in one flat pass, with no reliable parent-before-child
+    --   ordering guarantee among Blocks of the same type. That means a naive
+    --   filter keyed only on list style/delimiter can't tell a top-level list
+    --   apart from one nested three levels deep.
+    --   The fix: use `traverse = 'topdown'` and, on matching a top-level
+    --   OrderedList, return `(new_list, false)`. Returning `false` as the
+    --   second value tells Pandoc to NOT descend into that element's
+    --   children -- so nested OrderedLists inside its items are never handed
+    --   to this same OrderedList function, and therefore can never be
+    --   mistaken for siblings at the top level. (Confirmed against Pandoc's
+    --   documented topdown short-circuit behaviour.)
+
+    local next_starts = {}
+
+    local function list_key(ol)
+      return tostring(ol.style) .. '|' .. tostring(ol.delimiter)
+    end
+
+    local filter = {
+      traverse = 'topdown',
+
+      OrderedList = function(ol)
+        local key = list_key(ol)
+        ol.start = next_starts[key] or 1
+        next_starts[key] = ol.start + #ol.content
+
+        -- `false` stops Pandoc descending into ol's items, so nested
+        -- ordered lists inside this list are left exactly as they were
+        -- and never seen by this function.
+        return ol, false
+      end,
+    }
+
+    function Pandoc(doc)
+      doc.blocks = doc.blocks:walk(filter)
+      return doc
+    end
+  '';
+
   split = writers.writeLuaBin lua "${pname}-split-filter.lua"
     {
       inherit libraries; doCheck = "lua54+pandoc";
@@ -136,40 +191,59 @@ let
   script = writers.writeZshBin "${pname}" ''
     convertPandoc() {
       zparseopts -D -E -F -- \
-        -pandoc-extra-arg+:=pandoc_extra P+:=pandoc_extra \
-        -grid-tables=opt_grid_tables G=opt_grid_tables \
-        -reference-links=opt_reference_links R=opt_reference_links \
-        -no-split=opt_no_split S=opt_no_split \
-        -tac=opt_tac T=opt_tac \
-        -markdown=opt_markdown m=opt_markdown
+        -pandoc-extra-arg+:=ARG_pandoc_extra P+:=ARG_pandoc_extra \
+        -grid-tables=OPT_grid_tables G=OPT_grid_tables \
+        -reference-links=OPT_reference_links R=OPT_reference_links \
+        -no-split=OPT_no_split S=OPT_no_split \
+        -renumber=OPT_renumber r=OPT_renumber \
+        -tac=OPT_tac T=OPT_tac \
+        -markdown=OPT_markdown m=OPT_markdown \
+        -dry-run=OPT_dry_run n=OPT_dry_run
 
-      local FROM="$( (( #opt_markdown )) && echo "markdown" || echo "html" )"
-      local GRID_TABLES="$( (( #opt_grid_tables )) && echo "" || echo "-grid_tables" )"
+      local FROM="$( (( #OPT_markdown )) && echo "markdown" || echo "html" )"
+      local GRID_TABLES="$( (( #OPT_grid_tables )) && echo "" || echo "-grid_tables" )"
 
-      local no_split="$( (( #opt_no_split )) && echo "" || echo "-no_split" )"
+      local no_split="$( (( #OPT_no_split )) && echo "" || echo "-no_split" )"
 
-      local -a PANDOC_ARGS=(
-        -r''${FROM} -wmarkdown-smart-simple_tables-multiline_tables''${GRID_TABLES}
+      local -a pandoc_markdown_extensions=(
+        +startnum
+        -smart
+        -simple_tables
+        -multiline_tables
+        ''${GRID_TABLES}
+      )
+
+      local -a pandoc_args=(
+        -r''${FROM} -wmarkdown''${(j::)pandoc_markdown_extensions}
         --data-dir=${initLua}
         --wrap=none --lua-filter=${strip}
       )
 
-      if (( #opt_tac )); then
-        PANDOC_ARGS+=(--lua-filter=${lib.getExe tac})
+      if (( #OPT_tac )); then
+        pandoc_args+=(--lua-filter=${lib.getExe tac})
       fi
 
-      if ! (( #opt_no_split )); then
-        PANDOC_ARGS+=(--lua-filter=${lib.getExe split})
+      if ! (( #OPT_no_split )); then
+        pandoc_args+=(--lua-filter=${lib.getExe split})
       fi
 
-      if (( #opt_reference_links )); then
-        PANDOC_ARGS+=(--reference-links=true)
+      if (( #OPT_renumber )); then
+        pandoc_args+=(--lua-filter=${lib.getExe renumber})
+      fi
+
+      if (( #OPT_reference_links )); then
+        pandoc_args+=(--reference-links=true)
       fi
 
       local PANDOC_EXTRA_SIGIL=(--pandoc-extra-arg -P)
-      PANDOC_ARGS+=("''${(@)pandoc_extra:|PANDOC_EXTRA_SIGIL}")
+      pandoc_args+=("''${(@)ARG_pandoc_extra:|PANDOC_EXTRA_SIGIL}")
 
-      ${pandoc}/bin/pandoc "''${(@)PANDOC_ARGS}" <&0
+      if (( $#OPT_dry_run )); then
+        print -- ${lib.getExe pandoc} "''${(@)pandoc_args}" '<&0' >&2
+        return 0
+      fi
+
+      ${lib.getExe pandoc} "''${(@)pandoc_args}" <&0
     }
 
     convertPandoc "$@"
@@ -177,5 +251,5 @@ let
 in
 lib.standalone {
   inherit version script;
-  passthru = { inherit initLua strip split tac; };
+  passthru = { inherit initLua renumber strip split tac; };
 }
