@@ -50,6 +50,61 @@ let
     }
   '';
 
+  renumber = writers.writeLuaBin lua "${pname}-renumber-filter.lua"
+    {
+      inherit libraries; doCheck = "lua54+pandoc";
+    } ''
+    -- renumber.lua
+    --
+    -- Renumbers top-level ordered lists so numbering continues sequentially
+    -- across the whole document/selection (list 2 picks up where list 1 left
+    -- off), instead of every OrderedList restarting at 1. Ordered lists
+    -- nested inside list items are left completely untouched.
+    --
+    -- Usage:
+    --   pandoc --lua-filter=renumber.lua -f markdown -t markdown -s input.md -o output.md
+    --
+    -- How it avoids mixing up nesting levels:
+    --   Pandoc's *default* filter traversal ("typewise") visits every Block
+    --   of a given type in one flat pass, with no reliable parent-before-child
+    --   ordering guarantee among Blocks of the same type. That means a naive
+    --   filter keyed only on list style/delimiter can't tell a top-level list
+    --   apart from one nested three levels deep.
+    --   The fix: use `traverse = 'topdown'` and, on matching a top-level
+    --   OrderedList, return `(new_list, false)`. Returning `false` as the
+    --   second value tells Pandoc to NOT descend into that element's
+    --   children -- so nested OrderedLists inside its items are never handed
+    --   to this same OrderedList function, and therefore can never be
+    --   mistaken for siblings at the top level. (Confirmed against Pandoc's
+    --   documented topdown short-circuit behaviour.)
+
+    local next_starts = {}
+
+    local function list_key(ol)
+      return tostring(ol.style) .. '|' .. tostring(ol.delimiter)
+    end
+
+    local filter = {
+      traverse = 'topdown',
+
+      OrderedList = function(ol)
+        local key = list_key(ol)
+        ol.start = next_starts[key] or 1
+        next_starts[key] = ol.start + #ol.content
+
+        -- `false` stops Pandoc descending into ol's items, so nested
+        -- ordered lists inside this list are left exactly as they were
+        -- and never seen by this function.
+        return ol, false
+      end,
+    }
+
+    function Pandoc(doc)
+      doc.blocks = doc.blocks:walk(filter)
+      return doc
+    end
+  '';
+
   split = writers.writeLuaBin lua "${pname}-split-filter.lua"
     {
       inherit libraries; doCheck = "lua54+pandoc";
