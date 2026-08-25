@@ -136,40 +136,40 @@ let
   script = writers.writeZshBin "${pname}" ''
     convertPandoc() {
       zparseopts -D -E -F -- \
-        -pandoc-extra-arg+:=pandoc_extra P+:=pandoc_extra \
-        -grid-tables=opt_grid_tables G=opt_grid_tables \
-        -reference-links=opt_reference_links R=opt_reference_links \
-        -no-split=opt_no_split S=opt_no_split \
-        -tac=opt_tac T=opt_tac \
-        -markdown=opt_markdown m=opt_markdown
+        -pandoc-extra-arg+:=ARG_pandoc_extra P+:=ARG_pandoc_extra \
+        -grid-tables=OPT_grid_tables G=OPT_grid_tables \
+        -reference-links=OPT_reference_links R=OPT_reference_links \
+        -no-split=OPT_no_split S=OPT_no_split \
+        -tac=OPT_tac T=OPT_tac \
+        -markdown=OPT_markdown m=OPT_markdown
 
-      local FROM="$( (( #opt_markdown )) && echo "markdown" || echo "html" )"
-      local GRID_TABLES="$( (( #opt_grid_tables )) && echo "" || echo "-grid_tables" )"
+      local FROM="$( (( #OPT_markdown )) && echo "markdown" || echo "html" )"
+      local GRID_TABLES="$( (( #OPT_grid_tables )) && echo "" || echo "-grid_tables" )"
 
-      local no_split="$( (( #opt_no_split )) && echo "" || echo "-no_split" )"
+      local no_split="$( (( #OPT_no_split )) && echo "" || echo "-no_split" )"
 
-      local -a PANDOC_ARGS=(
+      local -a pandoc_args=(
         -r''${FROM} -wmarkdown-smart-simple_tables-multiline_tables''${GRID_TABLES}
         --data-dir=${initLua}
         --wrap=none --lua-filter=${strip}
       )
 
-      if (( #opt_tac )); then
-        PANDOC_ARGS+=(--lua-filter=${lib.getExe tac})
+      if (( #OPT_tac )); then
+        pandoc_args+=(--lua-filter=${lib.getExe tac})
       fi
 
-      if ! (( #opt_no_split )); then
-        PANDOC_ARGS+=(--lua-filter=${lib.getExe split})
+      if ! (( #OPT_no_split )); then
+        pandoc_args+=(--lua-filter=${lib.getExe split})
       fi
 
-      if (( #opt_reference_links )); then
-        PANDOC_ARGS+=(--reference-links=true)
+      if (( #OPT_reference_links )); then
+        pandoc_args+=(--reference-links=true)
       fi
 
       local PANDOC_EXTRA_SIGIL=(--pandoc-extra-arg -P)
-      PANDOC_ARGS+=("''${(@)pandoc_extra:|PANDOC_EXTRA_SIGIL}")
+      pandoc_args+=("''${(@)ARG_pandoc_extra:|PANDOC_EXTRA_SIGIL}")
 
-      ${pandoc}/bin/pandoc "''${(@)PANDOC_ARGS}" <&0
+      ${lib.getExe pandoc} "''${(@)pandoc_args}" <&0
     }
 
     convertPandoc "$@"
