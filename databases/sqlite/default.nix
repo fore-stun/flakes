@@ -1,12 +1,18 @@
 { self, lib, nixpkgs, ... }:
 
 let
-  pnames = [ "markdown-to-sqlite" "sqlitebiter" "xlite" ];
+  pnames = [
+    "cf-kv-local"
+    "markdown-to-sqlite"
+    "sqlitebiter"
+    "xlite"
+  ];
 in
 {
   overlays.sqlite = final: prev:
     let
       extras = {
+        cf-kv-local = { inherit lib; inherit (final) writers; };
         markdown-to-sqlite = { inherit (final) python3Packages; };
         sqlitebiter = { inherit (final) python3Packages; };
       };
