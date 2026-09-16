@@ -1,7 +1,7 @@
 { self, lib, nixpkgs, ... }:
 
 let
-  pnames = [ ];
+  pnames = [ "glyphhanger" ];
 in
 {
   overlays.fonts = final: prev: lib.foldFor pnames (pname: {
