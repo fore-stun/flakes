@@ -64,6 +64,7 @@
       ./utils/bluetooth
       ./utils/email
       ./utils/exif
+      ./utils/fonts
       ./utils/generators
       ./utils/humblebundle
       ./utils/shell
