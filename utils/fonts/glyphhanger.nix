@@ -18,10 +18,17 @@ let
     rev = "3ef6eb43e72ba3cf3aa2452ab648275c4adb8ab1";
     hash = "sha256-g2Eh4zHmDgjKIdUwTIP04ku/8bpaKI4m1mNfzhA6wss=";
   };
+
+  # Runtime dependencies that glyphhanger calls out to in the background
+  runtimeDeps = [
+    brotli
+    (python3.withPackages (ps: with ps; [ fonttools ]))
+  ];
+
 in
 
-buildNpmPackage rec {
-  inherit pname src version;
+buildNpmPackage {
+  inherit pname runtimeDeps src version;
 
   npmDepsHash = "sha256-AgAMqM3SwSHyYUC4JH8y2QCx4hc2N5B6N+OihamHmag=";
 
@@ -30,12 +37,6 @@ buildNpmPackage rec {
   PUPPETEER_SKIP_DOWNLOAD = true;
 
   dontNpmBuild = true;
-
-  # Runtime dependencies that glyphhanger calls out to in the background
-  runtimeDeps = [
-    brotli
-    (python3.withPackages (ps: with ps; [ fonttools ]))
-  ];
 
   postInstall = ''
     wrapProgram $out/bin/glyphhanger \
