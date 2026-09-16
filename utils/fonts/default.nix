@@ -1,7 +1,7 @@
 { self, lib, nixpkgs, ... }:
 
 let
-  pnames = [ "glyphhanger" ];
+  pnames = [ "gfcli" "glyphhanger" ];
 in
 {
   overlays.fonts = final: prev: lib.foldFor pnames (pname: {
