@@ -1,7 +1,7 @@
 { self, lib, nixpkgs, ... }:
 
 let
-  pnames = [ "telnyx-cli" ];
+  pnames = [ "telnyx-cli" "telnyx-edge" ];
 
 in
 {
