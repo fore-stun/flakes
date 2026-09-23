@@ -83,5 +83,6 @@
 
       ./servers/caddy
       ./servers/oracle-cloud-agent
+      ./servers/telnyx
     ];
 }
