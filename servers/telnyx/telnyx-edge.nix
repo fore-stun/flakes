@@ -20,6 +20,10 @@ let
     if stdenv.hostPlatform.isx86_64 then "amd64"
     else if stdenv.hostPlatform.isAarch64 then "arm64"
     else throw "telnyx-edge: unsupported arch ${stdenv.hostPlatform.system}";
+
+  hashes = {
+    "macos-arm64" = "sha256-RMrZ7ity6S0kF+VtBOEmLHeCXu/DB55W9EkwrtufQqM=";
+  };
 in
 stdenv.mkDerivation {
   inherit pname version;
@@ -27,7 +31,7 @@ stdenv.mkDerivation {
   src = fetchurl {
     url = "https://github.com/team-telnyx/edge-compute/releases/download/v${version}/telnyx-edge-v${version}-${os}-${arch}.tar.gz";
     name = "${pname}-${version}-${os}-${arch}.tar.gz";
-    hash = "sha256-RMrZ7ity6S0kF+VtBOEmLHeCXu/DB55W9EkwrtufQqM=";
+    hash = hashes."${os}-${arch}" or lib.fakeHash;
   };
 
   nativeBuildInputs = [
