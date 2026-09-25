@@ -23,6 +23,7 @@ let
 
   hashes = {
     "macos-arm64" = "sha256-RMrZ7ity6S0kF+VtBOEmLHeCXu/DB55W9EkwrtufQqM=";
+    "linux-amd64" = "sha256-O04CC8LlePCo10e0MJ4q2E0CKjijrW1UTaEZZ64Wbss=";
   };
 in
 stdenv.mkDerivation {
