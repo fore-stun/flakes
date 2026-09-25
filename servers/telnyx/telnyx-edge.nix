@@ -25,14 +25,36 @@ let
     "macos-arm64" = "sha256-RMrZ7ity6S0kF+VtBOEmLHeCXu/DB55W9EkwrtufQqM=";
     "linux-amd64" = "sha256-O04CC8LlePCo10e0MJ4q2E0CKjijrW1UTaEZZ64Wbss=";
   };
+
+  mkSrc = { os, arch, hash ? lib.fakeHash }: fetchurl {
+    url = "https://github.com/team-telnyx/edge-compute/releases/download/v${version}/telnyx-edge-v${version}-${os}-${arch}.tar.gz";
+    name = "${pname}-${version}-${os}-${arch}.tar.gz";
+    hash = if hash == null then hashes."${os}-${arch}" or lib.fakeHash else hash;
+  };
+
+  update-hashes = stdenv.mkDerivation {
+    pname = "${pname}-update-hashes";
+    inherit version;
+
+    srcs = lib.mapAttrsToList
+      (system: _:
+        let sys = lib.strings.splitString "-" system;
+        in mkSrc { os = builtins.elemAt sys 0; arch = builtins.elemAt sys 1; })
+      hashes;
+
+    dontUnpack = true;
+    installPhase = ''
+      touch $out
+    '';
+  };
 in
 stdenv.mkDerivation {
   inherit pname version;
 
-  src = fetchurl {
-    url = "https://github.com/team-telnyx/edge-compute/releases/download/v${version}/telnyx-edge-v${version}-${os}-${arch}.tar.gz";
-    name = "${pname}-${version}-${os}-${arch}.tar.gz";
-    hash = hashes."${os}-${arch}" or lib.fakeHash;
+  src = mkSrc { inherit os arch; hash = null; };
+
+  passthru = {
+    inherit update-hashes;
   };
 
   nativeBuildInputs = [
