@@ -21,7 +21,7 @@ let
       "github.com/abiosoft/caddy-inspect@v0.0.0-20250214103948-96cdb1dfb122"
       "github.com/ggicci/caddy-jwt@v0.12.0"
     ];
-    hash = "sha256-hlOtIKuFDu98ZLYiA/3rEE/BfCiJJ/vW/sZr+VQqvXY=";
+    hash = "sha256-DTA558eZbcw72pvaeMu7b6rVJCdPqAcJ4rslh3VOF9k=";
   };
 
   withDeps = drv: drv.overrideAttrs (old: {
