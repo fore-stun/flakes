@@ -2,14 +2,14 @@
 , makeWrapper
 , sqlite
 , sqlitePlugins
-, stdenvNoCC
+, stdenv
 , symlinkJoin
 , testers
 
 , version ? sqlite.version
 }:
 let
-  pathType = if stdenvNoCC.isDarwin then "DYLD" else "LD";
+  pathType = if stdenv.hostPlatform.isDarwin then "DYLD" else "LD";
 
   plugins = lib.filterAttrs (_: a: lib.isDerivation a)
     (sqlitePlugins.override { inherit version; });
