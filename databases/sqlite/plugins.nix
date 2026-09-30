@@ -23,7 +23,7 @@ let
     , stdenv
     }:
     let
-      outFile = "${outName}.${if stdenv.isDarwin then "dylib" else "so"}";
+      outFile = "${outName}.${if stdenv.hostPlatform.isDarwin then "dylib" else "so"}";
 
       EXT_DIR = "lib/sqlite/ext/";
     in
@@ -48,7 +48,7 @@ let
         IFS='' read -ra SOURCES <<< "''${SOURCES_SEP?}"
         IFS='' read -ra INCLUDE_DIRS <<< "''${INCLUDE_DIRS_SEP?}"
         IFS='' read -ra INCLUDE_FILES <<< "''${INCLUDE_FILES_SEP?}"
-        "$CC" -v -g -fPIC ${if stdenv.isDarwin then "-dynamiclib" else "-shared"} \
+        "$CC" -v -g -fPIC ${if stdenv.hostPlatform.isDarwin then "-dynamiclib" else "-shared"} \
           -I"${sqlite.dev}/include" \
           ''${INCLUDE_DIRS[@]} \
           ''${INCLUDE_FILES[@]} \
