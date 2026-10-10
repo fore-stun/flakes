@@ -282,7 +282,7 @@ let
 
       print -- "Loading PR ''${PR_NUMBER?}…" >&2
 
-      ${lib.getExe tuicr} pr ''${PR_NUMBER?}
+      ${lib.getExe tuicr} pr ''${PR_NUMBER?} ''${@}
     '';
   };
 
