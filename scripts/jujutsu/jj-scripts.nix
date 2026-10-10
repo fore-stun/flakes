@@ -206,6 +206,8 @@ let
 
     gh-pr-view = withPR ''view --web "''${TIP}"'';
 
+    gh-pr-ready = withPR ''ready "''${TIP}"'';
+
     merge-trunk = lib.indent ''
       zparseopts -D -E -F -- \
         d:=ARG_destination
