@@ -202,6 +202,8 @@ let
         ${lib.getExe gh} pr create -H "''${CURRENT_BOOKMARK}" "$@"
     '';
 
+    gh-pr-edit = withPR ''edit "''${TIP}"'';
+
     gh-pr-view = withPR ''view --web "''${TIP}"'';
 
     merge-trunk = lib.indent ''
