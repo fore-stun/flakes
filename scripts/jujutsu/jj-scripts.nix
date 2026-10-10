@@ -180,6 +180,8 @@ let
         && ${lib.getExe jujutsu} new "trunk()"
     '';
 
+    gh-pr-checks = withPR ''checks --watch --fail-fast "''${TIP}"'';
+
     gh-pr-create = ''
         local BOOKMARK_TEMPLATE
         local CURRENT_BOOKMARK
