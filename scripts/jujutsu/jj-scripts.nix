@@ -37,6 +37,12 @@ let
     '';
   };
 
+  withPR = body: lib.indent ''
+    ${define.TIP}
+
+    ${lib.getExe gh} pr ${body}
+  '';
+
   functions = {
     track-bookmarks = lib.indent ''
       zparseopts -D -E -F -- \
@@ -165,10 +171,8 @@ let
         ${lib.getExe jujutsu} new
     '';
 
-    gh-pr-merge = lib.indent ''
-      ${define.TIP}
-
-      ${lib.getExe gh} pr merge -m "''${TIP}" \
+    gh-pr-merge = withPR ''
+      merge -m "''${TIP}" \
         && ${lib.getExe jujutsu} bookmark delete "''${TIP}" \
         && ${lib.getExe jujutsu} git fetch \
         && ${lib.getExe jujutsu} rebase -r "at_operation(@-,trunk()):: ~ ::trunk()" -d "trunk()"  \
@@ -198,11 +202,7 @@ let
         ${lib.getExe gh} pr create -H "''${CURRENT_BOOKMARK}" "$@"
     '';
 
-    gh-pr-view = lib.indent ''
-      ${define.TIP}
-
-      ${lib.getExe gh} pr view --web "''${TIP}"
-    '';
+    gh-pr-view = withPR ''view --web "''${TIP}"'';
 
     merge-trunk = lib.indent ''
       zparseopts -D -E -F -- \
